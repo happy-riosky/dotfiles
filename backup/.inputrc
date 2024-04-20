@@ -1,0 +1,3 @@
+# Many programs use the GNU Readline library for their command-line interface. 
+# Readline supports (basic) Vim emulation too, which can be enabled by adding:
+set editing-mode vi
