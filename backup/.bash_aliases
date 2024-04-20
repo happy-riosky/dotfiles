@@ -15,5 +15,6 @@ alias g.="git add ."
 alias gs="git status"
 alias gl="git log"
 alias gm="git commit -m"
-alias gp="git push origin"
+alias gp="git push"
+alias gpo="git push origin"
 
