@@ -1,12 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 # set up the dotfiles
-
-pip install mackup
-pip install testresources
+pip install mackup 1> /dev/null
 
 cp -i ~/dotfiles/.mackup.cfg ~/.mackup.cfg
 mackup restore
 
+# source the updates
 source ~/.bashrc
-source ~/.bash_alias
-
+source ~/.bash_aliases
