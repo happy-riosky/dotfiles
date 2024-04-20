@@ -6,3 +6,7 @@ pip install testresources
 
 cp -i ~/dotfiles/.mackup.cfg ~/.mackup.cfg
 mackup restore
+
+source ~/.bashrc
+source ~/.bash_alias
+

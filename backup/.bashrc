@@ -43,7 +43,7 @@ esac
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
 # should be on the output of commands, not on the prompt
-#force_color_prompt=yes
+force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
@@ -133,8 +133,3 @@ unset __conda_setup
 
 # custom terminal command PATH
 export PATH="$PATH:/home/riosky/bin"
-
-# use `musicbox` command to use wangyiyun music in the terminal
-# repo adress: https://github.com/darknessomi/musicbox
-export PATH="$PATH:/home/riosky/.local/bin"
-export TERM=xterm
