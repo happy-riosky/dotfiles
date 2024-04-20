@@ -4,7 +4,5 @@
 pip install mackup
 pip install testresources
 
-ln -sf ~/dotfiles/.mackup.cfg ~/.mackup.cfg
+cp -i ~/dotfiles/.mackup.cfg ~/.mackup.cfg
 mackup restore
-
-

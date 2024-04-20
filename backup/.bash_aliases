@@ -15,6 +15,7 @@ alias eca="cd /mnt/c/Learn/csdiy/UCB_EECS16A_Su20 && jupyter notebook"
 alias odd="cd /home/riosky/src/odoo && code . && cd -"
 
 # git relate
+alias ga="git add"
 alias gs="git status"
 alias gl="git log"
 alias gm="git commit -m"
