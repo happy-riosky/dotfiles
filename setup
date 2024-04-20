@@ -1,0 +1,10 @@
+#!/bin/sh
+# set up the dotfiles
+
+pip install mackup
+pip install testresources
+
+ln -sf ~/dotfiles/.mackup.cfg ~/.mackup.cfg
+mackup restore
+
+
