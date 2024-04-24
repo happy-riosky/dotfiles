@@ -1,5 +1,4 @@
-" Comments in Vimscript start with a `"`.
-
+" Comments in Vimscript start with a `"`.  
 " If you open this file in Vim, it'll be syntax highlighted for you.
 
 " Vim is based on Vi. Setting `nocompatible` switches from the default
@@ -79,19 +78,42 @@ inoremap <Right> <ESC>:echoe "Use l"<CR>
 inoremap <Up>    <ESC>:echoe "Use k"<CR>
 inoremap <Down>  <ESC>:echoe "Use j"<CR>
 
+
 " --------------------------------------------------------------------------------
 " the blow configuration does not belong to MIT missing semester
 " --------------------------------------------------------------------------------
+"
+" --------------------------------------------------------------------------------
+" UI config
+" --------------------------------------------------------------------------------
 
-" Change the default mapping and the default command to invoke CtrlP
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
+set number              " show line numbers
+set relativenumber      " show relative numbering
+set showcmd             " show command in bottom bar
+" set cursorline          " highlight current line
+filetype indent on      " load filetype-specific indent files
+filetype plugin on      " load filetype specific plugin files
+set wildmenu            " visual autocomplete for command menu
+set showmatch           " highlight matching [{()}]
+set laststatus=2        " Show the status line at the bottom
+set mouse+=a            " A necessary evil, mouse support
+set noerrorbells visualbell t_vb=    "Disable annoying error noises
+set splitbelow          " Open new vertical split bottom
+set splitright          " Open new horizontal splits right
+set linebreak           " Have lines wrap instead of continue off-screen
+set scrolloff=12        " Keep cursor in approximately the middle of the screen
+set updatetime=100      " Some plugins require fast updatetime
+set ttyfast             " Improve redrawing
+set hlsearch            " Highlight searches
+" Clear highlights on hitting the ESC key
+nnoremap <esc> :nohlsearch<return><esc>
 
-" configure expanding of tabs for various file types
-au BufRead,BufNewFile *.py set expandtab
-au BufRead,BufNewFile *.c set expandtab
-au BufRead,BufNewFile *.h set expandtab
-au BufRead,BufNewFile Makefile* set noexpandtab
+" --------------------------------------------------------------------------------
+" Beautify
+" --------------------------------------------------------------------------------
+" set the color scheme, 
+" use command `ls /usr/share/vim/vim81/colors | grep .vim` to check the schemes
+colorscheme peachpuff
 
 " --------------------------------------------------------------------------------
 " configure editor with tabs and nice stuff...
@@ -104,17 +126,40 @@ set shiftwidth=4        " number of spaces to use for auto indent
 set autoindent          " copy indent from current line when starting a new line
 
 " make backspaces more powerfull
-set backspace=indent,eol,start
-
+set backspace=indent,eol,start 
 set ruler               " show line and column number
 set showcmd             " show (partial) command in status line
+
+" --------------------------------------------------------------------------------
+" Movement
+" --------------------------------------------------------------------------------
+" Use ctrl-[hjkl] to select the active split!
+nmap <silent> <c-k> :wincmd k<CR>
+nmap <silent> <c-j> :wincmd j<CR>
+nmap <silent> <c-h> :wincmd h<CR>
+nmap <silent> <c-l> :wincmd l<CR>
+
+" Jump to start and end of line using the home row keys
+map H ^
+map L $
+
+" (Shift)Tab (de)indents code
+vnoremap <Tab> >
+vnoremap <S-Tab> <
+
+
+" --------------------------------------------------------------------------------
+" Undo
+" --------------------------------------------------------------------------------
+set undofile " Maintain undo history between sessions
+set undodir=~/.vim/undodir
 
 " --------------------------------------------------------------------------------
 " Use Leader
 " --------------------------------------------------------------------------------
 
 " Leader is space
-let mapleader=" "
+let mapleader = " "
 
 "  - |     --  Split with leader
 nnoremap <Leader>- :sp<CR>
@@ -136,16 +181,48 @@ nmap <Leader>P "+P
 vmap <Leader>p "+p
 vmap <Leader>P "+P
 
+" numbers
+nnoremap <Leader>1 1gt<CR>
+nnoremap <Leader>2 2gt<CR>
+nnoremap <Leader>3 3gt<CR>
+nnoremap <Leader>4 4gt<CR>
+nnoremap <Leader>5 5gt<CR>
+nnoremap <Leader>6 6gt<CR>
+nnoremap <Leader>7 7gt<CR>
+nnoremap <Leader>8 8gt<CR>
+nnoremap <Leader>9 9gt<CR>
+nnoremap <Leader>n :tabnew<CR>
+nnoremap <Leader>x :tabclose<CR>
 " --------------------------------------------------------------------------------
 " Plugins
 " --------------------------------------------------------------------------------
 
+" Change the default mapping and the default command to invoke CtrlP
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+
 " provide path directly to the library file
 let g:clang_library_path = '/usr/lib/llvm-10/lib/libclang-10.so.1'
-map <C-b> :NERDTreeToggle<CR>
 
-" Use ctrl-[hjkl] to select the active split!
-nmap <silent> <c-k> :wincmd k<CR>
-nmap <silent> <c-j> :wincmd j<CR>
-nmap <silent> <c-h> :wincmd h<CR>
-nmap <silent> <c-l> :wincmd l<CR>
+" Easymotion
+" --------------------------------------------------------------------------------
+" Use uppercase target labels and type as a lower case
+let g:EasyMotion_use_upper = 1
+let g:EasyMotion_keys = 'ASDFGHJKLQWERTYUIOPZXCVBNM;'
+" Turn on case-insensitive feature
+let g:EasyMotion_smartcase = 1
+map <Leader> <Plug>(easymotion-prefix)
+
+" hjkl  s j k t / ? g/   -- EasyMotion
+map <Leader>h <Plug>(easymotion-linebackward)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+map <Leader>l <Plug>(easymotion-lineforward)
+
+" NERDTree
+" --------------------------------------------------------------------------------
+map <C-b> :NERDTreeToggle<CR>
+" show the hidden files
+let NERDTreeShowHidden=1
+" Close vim if only window left is NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif

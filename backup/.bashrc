@@ -88,7 +88,7 @@ fi
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some more ls aliases
-alias ll='ls -alF'
+alias ll='ls -alhF'
 alias la='ls -A'
 alias l='ls -CF'
 
@@ -133,3 +133,13 @@ unset __conda_setup
 
 # custom terminal command PATH
 export PATH="$PATH:/home/riosky/bin"
+
+# colourful man pages
+export LESS_TERMCAP_mb=$'\E[01;34m'
+export LESS_TERMCAP_md=$'\E[01;34m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44m'
+export LESS_TERMCAP_se=$'\E[0m'
+

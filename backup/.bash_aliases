@@ -18,3 +18,13 @@ alias gm="git commit -m"
 alias gp="git push"
 alias gpo="git push origin"
 
+# test gitlet
+alias tgl="export PROJ2PATH='/mnt/c/Learn/csdiy/UCB_CS61B_Sp21/cs61b/sp21-s42/proj2' &&
+    export TESTGITLETPATH='/mnt/c/Learn/csdiy/UCB_CS61B_Sp21/test-gitlet' &&
+    cd $PROJ2PATH &&
+    make &&
+    cp ./gitlet/*.class $TESTGITLETPATH/gitlet &&
+    make clean &&
+    cd $TESTGITLETPATH ||
+    rm ./.gitlet &&
+    la"
