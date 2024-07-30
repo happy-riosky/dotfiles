@@ -4,4 +4,19 @@
 [credential]
 	helper = store
 [color]
-	ui = auto
+	ui = true
+[core]
+	editor = vim
+[url "https://github.com/"]
+    insteadOf = git://github.com/
+[i18n]
+    commitencoding = utf-8
+    logoutputencoding = utf-8
+[gui]
+    encoding = utf-8
+[http]
+    proxy = http://127.0.0.1:10809
+    sslVerify = false
+[credential "https://gitee.com"]
+    provider = generic
+

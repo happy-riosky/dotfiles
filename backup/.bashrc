@@ -72,30 +72,6 @@ xterm*|rxvt*)
     ;;
 esac
 
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
-
-# colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
-# some more ls aliases
-alias ll='ls -alhF'
-alias la='ls -A'
-alias l='ls -CF'
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
@@ -143,3 +119,18 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_so=$'\E[01;44m'
 export LESS_TERMCAP_se=$'\E[0m'
 
+# activate autojump
+. /usr/share/autojump/autojump.sh
+
+# Append this line to ~/.bashrc to enable fzf keybindings for Bash:
+source /usr/share/doc/fzf/examples/key-bindings.bash
+# Append this line to ~/.bashrc to enable fuzzy auto-completion for Bash:
+source /usr/share/doc/fzf/examples/completion.bash
+
+# try to share the history between the tmux panes
+export PROMPT_COMMAND="history -a; history -n"
+
+# for NJU PA
+export AM_HOME="/mnt/c/Learn/csdiy/NJU_PA_2022/ics2022/abstract-machine"
+export NEMU_HOME="/mnt/c/Learn/csdiy/NJU_PA_2022/ics2022/nemu"
+export PATH="/usr/lib/ccache:$PATH"
