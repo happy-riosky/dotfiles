@@ -9,6 +9,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="robbyrussell"
+PS1='%1d$ '
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -73,12 +74,16 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git autojump zsh-vi-mode zsh-autosuggestions)
+plugins=(git autojump zsh-vi-mode zsh-autosuggestions zsh-history-substring-search copybuffer)
 
 source $ZSH/oh-my-zsh.sh
 
 # All Debian-derived distros require manual activation for policy
 . /usr/share/autojump/autojump.sh
+
+source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $ZSH_CUSTOM/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # ------------------------------------------------------------------------------
 # User configuration
@@ -123,4 +128,3 @@ export LESS_TERMCAP_se=$'\E[0m'
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

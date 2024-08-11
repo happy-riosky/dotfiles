@@ -9,7 +9,6 @@
 " loaded some other way (e.g. saved as `foo`, and then Vim started with
 " `vim -u foo`).
 set nocompatible
-
 " Turn on syntax highlighting.
 syntax on
 
@@ -101,6 +100,7 @@ filetype plugin on      " load filetype specific plugin files
 set wildmenu            " visual autocomplete for command menu
 set wildmode=longest,list,full
 set showmatch           " highlight matching [{()}]
+set shortmess-=S        " show count of matches
 set laststatus=2        " Show the status line at the bottom
 set mouse+=a            " A necessary evil, mouse support
 set noerrorbells visualbell t_vb=    "Disable annoying error noises
@@ -115,18 +115,33 @@ set hlsearch            " Highlight searches
 nnoremap <ESC> :nohlsearch<return><esc>
 
 " ------------------------------------------------------------------------------
-" Beautify
+" Beautification
 " ------------------------------------------------------------------------------
 " set the color scheme, 
-" use command `ls /usr/share/vim/vim81/colors | grep .vim` to check the schemes
-colorscheme peachpuff
-" statusline and vertical split line
-hi StatusLine ctermbg=yellow ctermfg=darkgrey
-hi StatusLineNC ctermbg=black ctermfg=darkgrey
-hi VertSplit ctermbg=236 ctermfg=238 
-" note the significant whitespace after the '\' character
+" use command `ls /usr/share/vim/vim81/colors | grep .vim` to check the default schemes
+colorscheme iceberg
+set t_Co=256
+set bg=dark
+set cursorline
+set list " show the hidden characters
+" set the presentation of these characters
+set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:¶,precedes:«,extends:»
+let g:lightline = {
+  \ 'colorscheme': 'icebergDark',
+  \ }
+let g:lightline.component = {
+  \ 'mode': '%{lightline#mode()}',
+  \ 'absolutepath': '%F',
+  \ 'relativepath': '%f',
+  \ 'filename': '%f',
+  \ }
+
+" " statusline and vertical split line
+" hi StatusLine ctermbg=grey ctermfg=234
+" hi StatusLineNC ctermbg=darkgrey ctermfg=black
+" hi VertSplit ctermbg=darkgrey ctermfg=234 
+" " note the significant whitespace after the '\' character
 " set fillchars+=vert:\ 
-set fillchars+=vert:.
 
 " ------------------------------------------------------------------------------
 " configure editor with tabs and nice stuff...
@@ -142,6 +157,13 @@ set autoindent          " copy indent from current line when starting a new line
 set backspace=indent,eol,start 
 set ruler               " show line and column number
 set showcmd             " show (partial) command in status line
+
+" ------------------------------------------------------------------------------
+" Edit
+" ------------------------------------------------------------------------------
+nmap <silent> <c-d> :%d<CR>
+nmap <silent> <c-y> :%"+y<CR>
+vmap <silent> <c-y> :%"+y<CR>
 
 " ------------------------------------------------------------------------------
 " Movement
@@ -188,6 +210,9 @@ let mapleader = " "
 nnoremap <Leader>- :sp<CR>
 nnoremap <Leader>\| :vsp<CR>
 
+" fly between files
+nnoremap <leader>b :ls<CR>:b<space>
+
 "  w wq q   --  Quick Save
 nmap <Leader>w :w<CR>
 nmap <Leader>q :q<CR>
@@ -232,27 +257,39 @@ function ToggleColorColumn()
         highlight clear ColorColumn
     else
         set cc=80
-        highlight ColorColumn ctermbg=darkgrey guibg=darkgrey
+        " highlight ColorColumn ctermbg=darkgrey guibg=darkgrey
     endif
 endfunction
 "  Map Hc to <20>c
 map <Leader>c :Hc<CR>
 
 " ------------------------------------------------------------------------------
-" fold
+" Fold
 " ------------------------------------------------------------------------------
 set foldenable " 开始折叠
 set foldmethod=syntax " 设置语法折叠
 set foldcolumn=0 " 设置折叠区域的宽度
 setlocal foldlevel=1 " 设置折叠层数为 1
-hi Folded ctermbg=darkgrey " set the background of the folded line grey
+" hi Folded ctermbg=darkgrey " set the background of the folded line grey
 " 用空格键来开关折叠
-nnoremap <Leader>t @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR> 
+" nnoremap <Leader>t @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR> 
+
+" ------------------------------------------------------------------------------
+" Snippets / Abbrev
+" ------------------------------------------------------------------------------
+iabbrev ,c int main() {<CR><tab><CR>}
+" from: https://www.reddit.com/r/neovim/comments/16mijcz/anyone_here_use_iabbrev/
+iabbrev <expr> ,d strftime('%Y-%m-%d')
+iabbrev <expr> ,t strftime('%Y-%m-%d %T ')
+inoreabbrev <expr> ,u system('uuidgen')->trim()->tolower()
 
 " ------------------------------------------------------------------------------
 " Plugins
 " ------------------------------------------------------------------------------
 packloadall 
+
+" use Man inside vim
+runtime! ftplugin/man.vim
 
 " Change the default mapping and the default command to invoke CtrlP
 let g:ctrlp_map = '<c-p>'

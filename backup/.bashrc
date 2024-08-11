@@ -131,6 +131,8 @@ source /usr/share/doc/fzf/examples/completion.bash
 export PROMPT_COMMAND="history -a; history -n"
 
 # for NJU PA
-export AM_HOME="/mnt/c/Learn/csdiy/NJU_PA_2022/ics2022/abstract-machine"
-export NEMU_HOME="/mnt/c/Learn/csdiy/NJU_PA_2022/ics2022/nemu"
 export PATH="/usr/lib/ccache:$PATH"
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+export NEMU_HOME=/mnt/c/Learn/csdiy/NJU_PA_2020/ics2020/nemu
+export AM_HOME=/mnt/c/Learn/csdiy/NJU_PA_2022/ics2020/abstract-machine
