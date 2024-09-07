@@ -1,4 +1,4 @@
-" Comments in Vimscript start with a `"`.  
+" Comments in Vimscript start with a `"`.
 " If you open this file in Vim, it'll be syntax highlighted for you.
 
 " Vim is based on Vi. Setting `nocompatible` switches from the default
@@ -206,12 +206,15 @@ set undodir=~/.vim/undodir
 " Leader is space
 let mapleader = " "
 
+" use macros faster
+nnoremap <Leader>a :normal @
 "  - |     --  Split with leader
 nnoremap <Leader>- :sp<CR>
 nnoremap <Leader>\| :vsp<CR>
 
 " fly between files
-nnoremap <leader>b :ls<CR>:b<space>
+nnoremap <Leader>b :ls<CR>:b<space>
+nnoremap <Leader>m :marks<CR>:'
 
 "  w wq q   --  Quick Save
 nmap <Leader>w :w<CR>
@@ -245,7 +248,10 @@ nnoremap <Leader>[ :tabprevious<CR>
 nnoremap <Leader>] :tabnext<CR>
 
 " enter the visual block mode
-nnoremap <leader>v <C-v>
+nnoremap <Leader>v <C-v>
+" work with https://github.com/tpope/vim-commentary
+map <Leader>c gcc<CR>
+
 " ------------------------------------------------------------------------------
 " Custom commands
 " ------------------------------------------------------------------------------
@@ -260,8 +266,8 @@ function ToggleColorColumn()
         " highlight ColorColumn ctermbg=darkgrey guibg=darkgrey
     endif
 endfunction
-"  Map Hc to <20>c
-map <Leader>c :Hc<CR>
+"  Map Hc to <space>c
+" map <Leader>c :Hc<CR>
 
 " ------------------------------------------------------------------------------
 " Fold
@@ -270,14 +276,13 @@ set foldenable " 开始折叠
 set foldmethod=syntax " 设置语法折叠
 set foldcolumn=0 " 设置折叠区域的宽度
 setlocal foldlevel=1 " 设置折叠层数为 1
-" hi Folded ctermbg=darkgrey " set the background of the folded line grey
 " 用空格键来开关折叠
 " nnoremap <Leader>t @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR> 
 
 " ------------------------------------------------------------------------------
 " Snippets / Abbrev
 " ------------------------------------------------------------------------------
-iabbrev ,c int main() {<CR><tab><CR>}
+iabbrev ,c int main() {<CR><space><space><CR>}
 " from: https://www.reddit.com/r/neovim/comments/16mijcz/anyone_here_use_iabbrev/
 iabbrev <expr> ,d strftime('%Y-%m-%d')
 iabbrev <expr> ,t strftime('%Y-%m-%d %T ')

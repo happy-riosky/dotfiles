@@ -107,6 +107,8 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+export EDITOR=vim
+
 # custom terminal command PATH
 export PATH="$PATH:/home/riosky/bin"
 
@@ -132,7 +134,7 @@ export PROMPT_COMMAND="history -a; history -n"
 
 # for NJU PA
 export PATH="/usr/lib/ccache:$PATH"
-
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export NEMU_HOME=/mnt/c/Learn/csdiy/NJU_PA_2020/ics2020/nemu
 export AM_HOME=/mnt/c/Learn/csdiy/NJU_PA_2022/ics2020/abstract-machine
+
