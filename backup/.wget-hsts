@@ -2,6 +2,6 @@
 # Edit at your own risk.
 # <hostname>	<port>	<incl. subdomains>	<created>	<max-age>
 update.code.visualstudio.com	0	1	1722047163	31536000
-raw.githubusercontent.com	0	0	1723079077	31536000
+raw.githubusercontent.com	0	0	1725723353	31536000
 apt.llvm.org	0	0	1722065241	300
 github.com	0	1	1717579086	31536000
