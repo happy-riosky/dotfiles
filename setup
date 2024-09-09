@@ -1,4 +1,13 @@
 #!/bin/bash
+# get pip
+sudo apt install tmus git python3 pipx
+sudo apt update
+sudo apt upgrade
+sudo apt-get install python3-pip
+
+# get homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
 # set up the dotfiles
 pip install mackup 1> /dev/null
 

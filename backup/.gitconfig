@@ -15,7 +15,6 @@
 [gui]
     encoding = utf-8
 [http]
-    proxy = http://127.0.0.1:10809
     sslVerify = false
 [credential "https://gitee.com"]
     provider = generic

@@ -111,6 +111,7 @@ export EDITOR=vim
 
 # custom terminal command PATH
 export PATH="$PATH:/home/riosky/bin"
+export PATH="$PATH:/home/riosky/.local/bin"
 
 # colourful man pages
 export LESS_TERMCAP_mb=$'\E[01;34m'
