@@ -112,7 +112,7 @@ set updatetime=100      " Some plugins require fast updatetime
 set ttyfast             " Improve redrawing
 set hlsearch            " Highlight searches
 " Clear highlights on hitting the ESC key
-nnoremap <ESC> :nohlsearch<return><esc>
+nnoremap <silent> <ESC> :nohlsearch<return><esc>
 
 " ------------------------------------------------------------------------------
 " Beautification
@@ -162,8 +162,6 @@ set showcmd             " show (partial) command in status line
 " Edit
 " ------------------------------------------------------------------------------
 nmap <silent> <c-d> :%d<CR>
-nmap <silent> <c-y> :%"+y<CR>
-vmap <silent> <c-y> :%"+y<CR>
 
 " ------------------------------------------------------------------------------
 " Movement
@@ -242,7 +240,7 @@ nnoremap <Leader>6 6gt<CR>
 nnoremap <Leader>7 7gt<CR>
 nnoremap <Leader>8 8gt<CR>
 nnoremap <Leader>9 9gt<CR>
-nnoremap <Leader>n :tabnew<CR>
+nnoremap <Leader>t :tabnew<CR>
 nnoremap <Leader>x :tabclose<CR>
 nnoremap <Leader>[ :tabprevious<CR>
 nnoremap <Leader>] :tabnext<CR>
@@ -282,12 +280,11 @@ setlocal foldlevel=1 " 设置折叠层数为 1
 " ------------------------------------------------------------------------------
 " Snippets / Abbrev
 " ------------------------------------------------------------------------------
-iabbrev ,c int main() {<CR><space><space><CR>}
+iabbrev ,c int main() {<CR><tab><CR>}
 " from: https://www.reddit.com/r/neovim/comments/16mijcz/anyone_here_use_iabbrev/
 iabbrev <expr> ,d strftime('%Y-%m-%d')
 iabbrev <expr> ,t strftime('%Y-%m-%d %T ')
 inoreabbrev <expr> ,u system('uuidgen')->trim()->tolower()
-
 " ------------------------------------------------------------------------------
 " Plugins
 " ------------------------------------------------------------------------------
@@ -335,3 +332,4 @@ nnoremap <silent> {Down-Mapping} :<C-U>TmuxNavigateDown<cr>
 nnoremap <silent> {Up-Mapping} :<C-U>TmuxNavigateUp<cr>
 nnoremap <silent> {Right-Mapping} :<C-U>TmuxNavigateRight<cr>
 nnoremap <silent> {Previous-Mapping} :<C-U>TmuxNavigatePrevious<cr>
+

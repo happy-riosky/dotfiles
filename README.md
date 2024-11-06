@@ -15,6 +15,14 @@ $ git clone https://github.com/Duodecimy/dotfiles
 $ ./dotfiles/setup
 ```
 
+you-wont-regret tools:
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# need to do some more things to config brew
+sudo apt install autojump
+# need to do some more things to config autojump
+```
+
 for Vim:
 ```
 sudo apt install vim-gtk3
@@ -26,6 +34,7 @@ git clone https://github.com/christoomey/vim-tmux-navigator.git ~/.vim/pack/vend
 git clone https://github.com/easymotion/vim-easymotion ~/.vim/pack/vendor/start/vim-easymotion
 git clone https://github.com/justmao945/vim-clang.git ~/.vim/pack/completion/start/vim-clang
 git clone https://github.com/itchyny/lightline.vim.git ~/.vim/pack/vendor/start/lightline.vim
+git clone https://github.com/tpope/vim-commentary.git ~/.vim/pack/vendor/start/vim-commentary.vim
 ```
 
 for tmux:
@@ -48,7 +57,7 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$
 exec zsh
 # Keep in mind that plugins need to be added before oh-my-zsh.sh is sourced.
 # the content below shold be added in the ~/.zshrc manually
-echo "plugins += (zsh-vi-mode zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)" >> ~/.zshrc
+echo "plugins+=(zsh-vi-mode zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting colored-man-pages)" >> ~/.zshrc
 ```
 
 ## manually copy and paste

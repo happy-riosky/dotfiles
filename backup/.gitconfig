@@ -2,7 +2,7 @@
 	email = duodecimn@qq.com
 	name = Riosky
 [credential]
-	helper = store
+	helper = cache
 [color]
 	ui = true
 [core]

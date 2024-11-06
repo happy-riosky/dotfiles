@@ -6,7 +6,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -15,8 +15,8 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="powerlevel10k/powerlevel10k"
 # ZSH_THEME="robbyrussell"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -73,40 +73,23 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-# ------------------------------------------------------------------------------
-# Plulgins
-# ------------------------------------------------------------------------------
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git autojump zsh-vi-mode zsh-autosuggestions zsh-history-substring-search)
+plugins=(git)
+plugins+=(colored-man-pages zsh-vi-mode zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
-# All Debian-derived distros require manual activation for policy
-. /usr/share/autojump/autojump.sh
-
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $ZSH_CUSTOM/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# ------------------------------------------------------------------------------
 # User configuration
-# ------------------------------------------------------------------------------
 
-# ------------------------------------------------------------------------------
-# Beautify
-# ------------------------------------------------------------------------------
-# colourful man pages
-export LESS_TERMCAP_mb=$'\E[01;34m'
-export LESS_TERMCAP_md=$'\E[01;34m'
-export LESS_TERMCAP_me=$'\E[0m'
-export LESS_TERMCAP_us=$'\E[01;33m'
-export LESS_TERMCAP_ue=$'\E[0m'
-export LESS_TERMCAP_so=$'\E[01;44m'
-export LESS_TERMCAP_se=$'\E[0m'
+# from /usr/share/doc/fzf/README.Debian
+# Append this line to ~/.zshrc to enable fzf keybindings for Zsh:
+source /usr/share/doc/fzf/examples/key-bindings.zsh
+# Append this line to ~/.zshrc to enable fuzzy auto-completion for Zsh:
+source /usr/share/doc/fzf/examples/completion.zsh
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -117,7 +100,7 @@ export LESS_TERMCAP_se=$'\E[0m'
 # if [[ -n $SSH_CONNECTION ]]; then
 #   export EDITOR='vim'
 # else
-#   export EDITOR='mvim'
+#   export EDITOR='nvim'
 # fi
 
 # Compilation flags
@@ -135,7 +118,63 @@ export LESS_TERMCAP_se=$'\E[0m'
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+export EDITOR=vim
+
+# custom terminal command PATH
+export PATH="$PATH:/home/riosky/bin"
+export PATH="$PATH:/home/riosky/.local/bin"
+
+# colourful man pages
+export LESS_TERMCAP_mb=$'\E[01;34m'
+export LESS_TERMCAP_md=$'\E[01;34m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44m'
+export LESS_TERMCAP_se=$'\E[0m'
+
+# activate autojump
+. /usr/share/autojump/autojump.sh
+
+# try to share the history between the tmux panes
+export PROMPT_COMMAND="history -a; history -n"
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/riosky/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/riosky/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/riosky/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/riosky/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+# Install Ruby Gems to ~/gems
+export GEM_HOME="$HOME/gems"
+export PATH="$HOME/gems/bin:$PATH"
+
+# for VisualBox installed in Windows11
+export VB_HOME="/mnt/c/Program Files/Oracle/VirtualBox"
+export PATH="$PATH:$VB_HOME"
+alias vm='VBoxManage.exe'
+alias VBoxManage='VBoxManage.exe'
+
+# for snap
+export PATH="$PATH:/snap/bin"
+export PATH="/usr/lib/ccache:$PATH"
+
+export WIN_HOME="/mnt/c/Users/Duode"
+
+if [ -z "$TMUX" ]; then
+  tmux
+fi

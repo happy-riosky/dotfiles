@@ -125,17 +125,25 @@ export LESS_TERMCAP_se=$'\E[0m'
 # activate autojump
 . /usr/share/autojump/autojump.sh
 
-# Append this line to ~/.bashrc to enable fzf keybindings for Bash:
-source /usr/share/doc/fzf/examples/key-bindings.bash
-# Append this line to ~/.bashrc to enable fuzzy auto-completion for Bash:
-source /usr/share/doc/fzf/examples/completion.bash
+# for fzf
+if [ -f /usr/share/bash-completion/completions/fzf ]; then
+  source /usr/share/bash-completion/completions/fzf
+fi
+
+if [ -f /usr/share/doc/fzf/examples/key-bindings.bash ]; then
+  source /usr/share/doc/fzf/examples/key-bindings.bash
+fi
 
 # try to share the history between the tmux panes
 export PROMPT_COMMAND="history -a; history -n"
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
 # for NJU PA
 export PATH="/usr/lib/ccache:$PATH"
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-export NEMU_HOME=/mnt/c/Learn/csdiy/NJU_PA_2020/ics2020/nemu
-export AM_HOME=/mnt/c/Learn/csdiy/NJU_PA_2022/ics2020/abstract-machine
+export NEMU_HOME=/home/riosky/csdiy/NJU_PA_2022/ics2022/nemu
+export AM_HOME=/home/riosky/csdiy/NJU_PA_2022/ics2022/abstract-machine
 
+# Install Ruby Gems to ~/gems
+export GEM_HOME="$HOME/gems"
+export PATH="$HOME/gems/bin:$PATH"
