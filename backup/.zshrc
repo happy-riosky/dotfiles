@@ -169,9 +169,9 @@ export PATH="$PATH:$VB_HOME"
 alias vm='VBoxManage.exe'
 alias VBoxManage='VBoxManage.exe'
 
-# for snap
 export PATH="$PATH:/snap/bin"
 export PATH="/usr/lib/ccache:$PATH"
+export PATH="$PATH:/mnt/c/Windows"
 
 export WIN_HOME="/mnt/c/Users/Duode"
 
