@@ -1,3 +1,5 @@
+scriptencoding utf-8
+set encoding=utf-8
 " Comments in Vimscript start with a `"`.
 " If you open this file in Vim, it'll be syntax highlighted for you.
 
@@ -208,7 +210,9 @@ let mapleader = " "
 nnoremap <Leader>a :normal @
 "  - |     --  Split with leader
 nnoremap <Leader>- :sp<CR>
+nnoremap <Leader>" :sp<CR>
 nnoremap <Leader>\| :vsp<CR>
+nnoremap <Leader>% :vsp<CR>
 
 " fly between files
 nnoremap <Leader>b :ls<CR>:b<space>
@@ -240,7 +244,7 @@ nnoremap <Leader>6 6gt<CR>
 nnoremap <Leader>7 7gt<CR>
 nnoremap <Leader>8 8gt<CR>
 nnoremap <Leader>9 9gt<CR>
-nnoremap <Leader>t :tabnew<CR>
+nnoremap <Leader>n :tabnew<CR>
 nnoremap <Leader>x :tabclose<CR>
 nnoremap <Leader>[ :tabprevious<CR>
 nnoremap <Leader>] :tabnext<CR>

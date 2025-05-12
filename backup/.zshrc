@@ -175,6 +175,7 @@ export PATH="$PATH:/mnt/c/Windows"
 
 export WIN_HOME="/mnt/c/Users/Duode"
 
-if [ -z "$TMUX" ]; then
-  tmux
-fi
+# If not running interactively, do not do anything
+[[ $- != *i* ]] && return
+# Otherwise start tmux
+[[ -z "$TMUX" ]] && exec tmux
