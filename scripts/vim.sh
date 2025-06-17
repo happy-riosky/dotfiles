@@ -10,4 +10,4 @@ git clone https://github.com/justmao945/vim-clang.git ~/.vim/pack/completion/sta
 git clone https://github.com/itchyny/lightline.vim.git ~/.vim/pack/vendor/start/lightline.vim
 git clone https://github.com/tpope/vim-commentary.git ~/.vim/pack/vendor/start/vim-commentary.git
 vim -u NONE -c "helptags commentary/doc" -c q
-cp ~/dotfiles/backup/icebergDark.vim ~/.vim/pack/vendor/start/lightline.vim/autoload/lightline/colorscheme/icebergDark.vim ;
+cp ~/dotfiles/backup/manual/icebergDark.vim ~/.vim/pack/vendor/start/lightline.vim/autoload/lightline/colorscheme/icebergDark.vim ;

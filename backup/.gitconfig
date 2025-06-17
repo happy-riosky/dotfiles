@@ -1,5 +1,5 @@
 [user]
-	email = duodecimn@qq.com
+	email = 1559932694@qq.com
 	name = Riosky
 [credential]
 	helper = cache
@@ -19,3 +19,8 @@
 [credential "https://gitee.com"]
     provider = generic
 
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
