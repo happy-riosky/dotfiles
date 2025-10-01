@@ -1,2 +1,4 @@
+backup/.ipython/
 backup/.ssh/
 backup/.zshenv
+**/.DS_Store
