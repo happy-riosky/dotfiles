@@ -163,7 +163,7 @@ set showcmd             " show (partial) command in status line
 " ------------------------------------------------------------------------------
 " Edit
 " ------------------------------------------------------------------------------
-nmap <silent> <c-d> :%d<CR>
+" nmap <silent> <c-d> :%d<CR>
 
 " ------------------------------------------------------------------------------
 " Movement
@@ -248,6 +248,8 @@ nnoremap <Leader>n :tabnew<CR>
 nnoremap <Leader>x :tabclose<CR>
 nnoremap <Leader>[ :tabprevious<CR>
 nnoremap <Leader>] :tabnext<CR>
+nnoremap <Leader>, :tabm -1<CR>
+nnoremap <Leader>. :tabm +1<CR>
 
 " enter the visual block mode
 nnoremap <Leader>v <C-v>
@@ -321,7 +323,7 @@ map <Leader>l <Plug>(easymotion-lineforward)
 
 " NERDTree
 " ------------------------------------------------------------------------------
-map <C-b> :NERDTreeToggle<CR>
+map <C-n> :NERDTreeToggle<CR>
 " show the hidden files
 let NERDTreeShowHidden=1
 " Close vim if only window left is NERDTree
