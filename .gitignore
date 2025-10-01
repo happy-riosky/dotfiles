@@ -1,4 +1,5 @@
 backup/.ipython/
 backup/.ssh/
 backup/.zshenv
+backup/.vim/pack/vendor/
 **/.DS_Store
