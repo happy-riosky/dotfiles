@@ -8,19 +8,21 @@
 [core]
 	editor = vim
 [url "https://github.com/"]
-    insteadOf = git://github.com/
+	insteadOf = git://github.com/
 [i18n]
-    commitencoding = utf-8
-    logoutputencoding = utf-8
+	commitencoding = utf-8
+	logoutputencoding = utf-8
 [gui]
-    encoding = utf-8
+	encoding = utf-8
 [http]
-    sslVerify = false
+	sslVerify = false
+	version = HTTP/1.1
 [credential "https://gitee.com"]
-    provider = generic
-
+	provider = generic
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
+[init]
+	defaultBranch = main
