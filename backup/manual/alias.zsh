@@ -25,3 +25,7 @@ alias ca="conda activate"
 # remove all branches except current one
 alias gdo="git branch | grep -v "\*" | xargs git branch -D"
 
+# for neovim
+alias v="nvim"
+
+alias lta4="lsd -la --tree --depth=4"

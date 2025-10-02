@@ -181,9 +181,12 @@ nmap <silent> <c-l> :wincmd l<CR>
 " execute "set <A-k>=\ek"
 " nnoremap <A-k> :tabnext<CR>
 
-" Jump to the top and bottom of the screen
-noremap K H
-noremap J L
+" Have j and k navigate visual lines rather than logical ones
+nmap j gj
+nmap k gk
+
+noremap J 10j
+noremap K 10k
 
 " Jump to start and end of line using the home row keys
 map H ^
@@ -309,21 +312,22 @@ let g:clang_library_path = '/usr/lib/llvm-10/lib/libclang-10.so.1'
 " Easymotion
 " ------------------------------------------------------------------------------
 " Use uppercase target labels and type as a lower case
-let g:EasyMotion_use_upper = 1
-let g:EasyMotion_keys = 'ASDFGHJKLQWERTYUIOPZXCVBNM;'
+" let g:EasyMotion_use_upper = 1
+" let g:EasyMotion_keys = 'ASDFGHJKLQWERTYUIOPZXCVBNM;'
 " Turn on case-insensitive feature
 let g:EasyMotion_smartcase = 1
 map <Leader> <Plug>(easymotion-prefix)
 
 " hjkl  s j k t / ? g/   -- EasyMotion
-map <Leader>h <Plug>(easymotion-linebackward)
+map <Leader>h <Plug>(easymotion-b)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
-map <Leader>l <Plug>(easymotion-lineforward)
+map <Leader>l <Plug>(easymotion-w)
 
 " NERDTree
 " ------------------------------------------------------------------------------
 map <C-n> :NERDTreeToggle<CR>
+map <Leader>e :NERDTreeToggle<CR>
 " show the hidden files
 let NERDTreeShowHidden=1
 " Close vim if only window left is NERDTree
