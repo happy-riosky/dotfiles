@@ -1,4 +1,4 @@
-vim.cmd("colorscheme catppuccin-macchiato") -- set color theme
+vim.cmd.colorscheme "catppuccin"
 
 vim.opt.termguicolors = true --bufferline
 require("bufferline").setup{} --bufferline
