@@ -22,15 +22,13 @@ alias ca="conda activate"
 # remove all branches except current one
 alias gdo="git branch | grep -v "\*" | xargs git branch -D"
 
-alias vi="vim -u NONE -C"
-
-# for neovim
-alias v="nvim"
-alias lc="nvim -c ':Leet'"
+# for vim and neovim
+# alias vi="vim -u NONE -C"
+alias vim="nvim"
+alias lc="nvim leetcode.nvim"
 
 # stands for ls tree
 alias lt="lsd -la --tree --depth=4"
 
 alias pwp="pwd | pbcopy"
-
 

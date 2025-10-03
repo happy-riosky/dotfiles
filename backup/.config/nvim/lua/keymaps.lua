@@ -1,6 +1,14 @@
 -- space bar leader key
 vim.g.mapleader = " "
 
+-- movement
+vim.keymap.set("n", "j", "gj")
+vim.keymap.set("n", "k", "gk")
+vim.keymap.set("n", "H", "^")
+vim.keymap.set("n", "J", "10j")
+vim.keymap.set("n", "K", "10k")
+vim.keymap.set("n", "L", "$")
+
 -- save and quit
 vim.keymap.set("n", "<leader>w", ":w<cr>")
 vim.keymap.set("n", "<leader>q", ":q<cr>")
