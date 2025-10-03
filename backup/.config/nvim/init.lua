@@ -5,4 +5,6 @@ require("config.lsp")
 require("plugins.catppuccin")
 require("plugins.keymaps")
 require("plugins.options")
+require("plugins.obsidian")
+
 
