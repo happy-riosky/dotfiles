@@ -158,6 +158,11 @@ require("lazy").setup({
     opts = {
       -- See below for full list of options 👇
     },
+  },
+
+  {
+    "mason-org/mason.nvim",
+    opts = {}
   }
 
 })
