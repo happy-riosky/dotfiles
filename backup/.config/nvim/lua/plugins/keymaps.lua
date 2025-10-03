@@ -14,3 +14,5 @@ vim.keymap.set("n", "<leader>mp", ":MarkdownPreviewToggle<cr>")
 -- markdown preview
 vim.keymap.set({"n", "v"}, "<leader>c", ":CommentToggle<cr>")
 
+-- hop easymotion
+vim.keymap.set("n", "<leader>s", ":HopChar1<cr>")

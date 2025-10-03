@@ -33,7 +33,6 @@ require("lazy").setup({
   -- automatically check for plugin updates
   checker = { enabled = true },
 
-  
   -- color theme
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 
@@ -41,6 +40,28 @@ require("lazy").setup({
   {
   'nvim-telescope/telescope.nvim', tag = '0.1.8',
     dependencies = { 'nvim-lua/plenary.nvim' }
+  },
+
+  -- lazygit
+  {
+    "kdheepak/lazygit.nvim",
+    lazy = true,
+    cmd = {
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    -- setting the keybinding for LazyGit with 'keys' is recommended in
+    -- order to load the plugin when the command is run for the first time
+    keys = {
+      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
+    }
   },
 
   -- file tree
@@ -97,6 +118,47 @@ require("lazy").setup({
         -- refer to the configuration section below
       }
     }
+  },
+
+  {"nvim-treesitter/nvim-treesitter", branch = 'master', lazy = false, build = ":TSUpdate"},
+
+  {
+    "kawre/leetcode.nvim",
+    build = ":TSUpdate html", -- if you have `nvim-treesitter` installed
+    dependencies = {
+      -- include a picker of your choice, see picker section for more details
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+    },
+    opts = {
+      lang = "python3",  -- 默认语言
+      -- cn = { enabled = true, translator = true },  -- 中国版支持
+      picker = { provider = "telescope" },  -- 用 Telescope 选题
+    },
+  },
+
+  -- back home! sweet easymotion
+  {
+    'smoka7/hop.nvim',
+    version = "*",
+    opts = {
+        -- keys = 'etovxqpdygfblzhckisuran'
+    }
+  },
+
+  {
+    "epwalsh/pomo.nvim",
+    version = "*",  -- Recommended, use latest release instead of latest commit
+    lazy = true,
+    cmd = { "TimerStart", "TimerRepeat", "TimerSession" },
+    dependencies = {
+      -- Optional, but highly recommended if you want to use the "Default" timer
+      "rcarriga/nvim-notify",
+    },
+    opts = {
+      -- See below for full list of options 👇
+    },
   }
+
 })
 

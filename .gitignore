@@ -2,6 +2,7 @@ backup/.ipython/
 backup/.ssh/
 backup/.zshenv
 backup/.vim/pack/vendor/
+backup/.tmux/plugins/**
 backup/Library/
 .DS_Store
 .netrc

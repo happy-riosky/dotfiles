@@ -1,8 +1,5 @@
-alias bat="batcat"
 alias m="man"
 alias \?="echo $?"
-alias v="vim"
-alias vi="vim -u NONE -C"
 alias x="xclip"
 
 # use the explorer.exe to open current folder in win11
@@ -25,7 +22,15 @@ alias ca="conda activate"
 # remove all branches except current one
 alias gdo="git branch | grep -v "\*" | xargs git branch -D"
 
+alias vi="vim -u NONE -C"
+
 # for neovim
 alias v="nvim"
+alias lc="nvim -c ':Leet'"
 
-alias lta4="lsd -la --tree --depth=4"
+# stands for ls tree
+alias lt="lsd -la --tree --depth=4"
+
+alias pwp="pwd | pbcopy"
+
+
