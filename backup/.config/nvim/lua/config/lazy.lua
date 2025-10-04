@@ -137,7 +137,7 @@ require("lazy").setup({
     },
   },
 
-  -- back home! sweet easymotion
+  -- easymotion in vim, but maybe I should try neocide instead? 
   {
     'smoka7/hop.nvim',
     version = "*",
@@ -146,6 +146,7 @@ require("lazy").setup({
     }
   },
 
+  -- timer for leetcode and so on
   {
     "epwalsh/pomo.nvim",
     version = "*",  -- Recommended, use latest release instead of latest commit
@@ -160,11 +161,26 @@ require("lazy").setup({
     },
   },
 
+  -- LSP manager
   {
     "mason-org/mason.nvim",
     opts = {}
   },
 
+  {
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    config = true
+    -- use opts = {} for passing setup options
+    -- this is equivalent to setup({}) function
+  },
+
+  -- a markdown formatter for vim
+  {
+    "SidOfc/mkdx"
+  },
+
+  -- play with Obsidian
   {
     "epwalsh/obsidian.nvim",
     version = "*",  -- recommended, use latest release instead of latest commit
