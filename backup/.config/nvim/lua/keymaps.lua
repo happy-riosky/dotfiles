@@ -12,6 +12,7 @@ vim.keymap.set("n", "L", "$")
 -- save and quit
 vim.keymap.set("n", "<leader>w", ":w<cr>")
 vim.keymap.set("n", "<leader>q", ":q<cr>")
+vim.keymap.set("n", "<leader>wq", ":wq<cr>")
 vim.keymap.set("n", "<leader>Q", ":wqa<cr>")
 
 -- buffers
