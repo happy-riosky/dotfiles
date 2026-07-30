@@ -5,5 +5,8 @@
       "enabled": true
     }
   },
-  "experimental": false
+  "experimental": false,
+  "registry-mirrors": [
+    "https://registry.docker-cn.com"
+  ]
 }

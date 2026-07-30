@@ -8,6 +8,11 @@ fi
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
+# Keep MacTeX tools available in interactive non-login shells too.
+if [[ -d /Library/TeX/texbin && ":$PATH:" != *":/Library/TeX/texbin:"* ]]; then
+  export PATH="/Library/TeX/texbin:$PATH"
+fi
+
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -15,7 +20,6 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-# ZSH_THEME="robbyrussell"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set list of themes to pick from when loading at random
@@ -79,17 +83,12 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git)
-plugins+=(colored-man-pages zsh-vi-mode zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)
+
+plugins+=(zsh-vi-mode zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-
-# from /usr/share/doc/fzf/README.Debian
-# Append this line to ~/.zshrc to enable fzf keybindings for Zsh:
-source /usr/share/doc/fzf/examples/key-bindings.zsh
-# Append this line to ~/.zshrc to enable fuzzy auto-completion for Zsh:
-source /usr/share/doc/fzf/examples/completion.zsh
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -117,65 +116,73 @@ source /usr/share/doc/fzf/examples/completion.zsh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-
-export EDITOR=vim
-
-# custom terminal command PATH
-export PATH="$PATH:/home/riosky/bin"
-export PATH="$PATH:/home/riosky/.local/bin"
-
-# colourful man pages
-export LESS_TERMCAP_mb=$'\E[01;34m'
-export LESS_TERMCAP_md=$'\E[01;34m'
-export LESS_TERMCAP_me=$'\E[0m'
-export LESS_TERMCAP_us=$'\E[01;33m'
-export LESS_TERMCAP_ue=$'\E[0m'
-export LESS_TERMCAP_so=$'\E[01;44m'
-export LESS_TERMCAP_se=$'\E[0m'
-
-# activate autojump
-. /usr/share/autojump/autojump.sh
-
-# try to share the history between the tmux panes
-export PROMPT_COMMAND="history -a; history -n"
-
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+[ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+
+# export PATH="~/riosky/miniconda3/bin:$PATH"  # commented out by conda initialize
+# export PATH="~/miniconda3/bin:$PATH"  # commented out by conda initialize
+
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/riosky/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('/Users/riosky/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/riosky/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/riosky/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "/Users/riosky/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/riosky/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/riosky/anaconda3/bin:$PATH"
+        export PATH="/Users/riosky/miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-# Install Ruby Gems to ~/gems
-export GEM_HOME="$HOME/gems"
-export PATH="$HOME/gems/bin:$PATH"
+export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
 
-# for VisualBox installed in Windows11
-export VB_HOME="/mnt/c/Program Files/Oracle/VirtualBox"
-export PATH="$PATH:$VB_HOME"
-alias vm='VBoxManage.exe'
-alias VBoxManage='VBoxManage.exe'
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export PATH="$HOME/.npm-global/bin:$PATH"
 
-export PATH="$PATH:/snap/bin"
-export PATH="/usr/lib/ccache:$PATH"
-export PATH="$PATH:/mnt/c/Windows"
+# use local .venv python first 
+export PATH="./.venv/bin:$PATH"
 
-export WIN_HOME="/mnt/c/Users/Duode"
+# use go binary program
+export PATH=$PATH:$(go env GOPATH)/bin
 
-# If not running interactively, do not do anything
-[[ $- != *i* ]] && return
-# Otherwise start tmux
-[[ -z "$TMUX" ]] && exec tmux
+# add postgresql
+export PATH=$PATH:/Library/PostgreSQL/18/bin
+
+# add custom script path
+export PATH=$PATH:~/bin
+
+
+NVIM_HOME=/Users/riosky/dotfiles/backup/.config/nvim
+alias edlz="nvim $NVIM_HOME/lua/config/lazy.lua"
+
+# To customize prompt, run `p10k configure` or edit ~/dotfiles/backup/.p10k.zsh.
+[[ ! -f ~/dotfiles/backup/.p10k.zsh ]] || source ~/dotfiles/backup/.p10k.zsh
+
+export VAULT_DIR="/Users/riosky/Documents/Obsidian/Computer"
+alias oo="cd $VAULT_DIR"
+
+# if [ -z "$TMUX" ] && [ "$TERM" = "xterm-kitty" ]; then
+#   tmux attach || exec tmux new-session && exit;
+# fi
+
+# gh (GitHub CLI) needs the local proxy — api.github.com is blocked on direct
+# connection while github.com/SSH work fine. Node with good api.github.com
+# latency is selected in Clash group "🔰 选择节点".
+gh() {
+  HTTPS_PROXY=http://127.0.0.1:7897 HTTP_PROXY=http://127.0.0.1:7897 command gh "$@"
+}
+
+# OpenClaw Completion
+source "/Users/riosky/.openclaw/completions/openclaw.zsh"

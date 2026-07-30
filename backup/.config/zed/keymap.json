@@ -1,0 +1,101 @@
+// Zed keymap
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+[
+  {
+    "context": "Workspace",
+    "bindings": {
+      // "shift shift": "file_finder::Toggle"
+    },
+  },
+  {
+    "context": "Editor && vim_mode == insert",
+    "bindings": {
+      // "j k": "vim::NormalBefore"
+    },
+  },
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "y r": "workspace::CopyRelativePath",
+      "y a": "workspace::CopyPath",
+      "m r": "project_panel::Rename",
+    },
+  },
+  {
+    "context": "Editor && (vim_mode == normal || vim_mode == visual) && !VimWaiting && !menu",
+    "bindings": {
+      // Space-based leader mappings
+      "space ,": "pane::ActivatePreviousItem",
+      "space .": "pane::ActivateNextItem",
+      "space 1": ["pane::ActivateItem", 0],
+      "space 0": "pane::ActivateLastItem",
+      "space w": "workspace::Save",
+      "space <": "pane::SwapItemLeft",
+      "space >": "pane::SwapItemRight",
+      "space t o": "pane::CloseOtherItems",
+      "space c": ["editor::ToggleComments", { "advance_downwards": false }],
+      "R": "editor::Rename",
+      // "space <": [
+      //   "workspace::MoveItemToPaneInDirection",
+      //   { "direction": "left" },
+      // ],
+      // "space >": [
+      //   "workspace::MoveItemToPaneInDirection",
+      //   { "direction": "right" },
+      // ],
+
+      // Comma-based leader mappings (Alternative)
+      // ", 1": ["pane::ActivateItem", 0],
+      // ", 2": ["pane::ActivateItem", 1],
+    },
+  },
+  {
+    "context": "(vim_mode == normal || vim_mode == helix_normal) && !menu",
+    "unbind": {
+      "shift-j": "vim::JoinLines",
+    },
+  },
+  {
+    "context": "vim_mode == helix_select",
+    "unbind": {
+      "shift-j": "vim::JoinLines",
+    },
+  },
+  {
+    "context": "vim_mode == visual",
+    "unbind": {
+      "shift-j": "vim::JoinLines",
+    },
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      // 1. 让 j 和 k 按视觉行移动 (g j / g k)
+      "j": ["workspace::SendKeystrokes", "g j"],
+      "k": ["workspace::SendKeystrokes", "g k"],
+      // 2. 让 J 和 K 一次移动10行 (10 j / 10 k)
+      "J": ["workspace::SendKeystrokes", "1 0 j"],
+      "K": ["workspace::SendKeystrokes", "1 0 k"],
+      // 3. 让 H 和 L 跳转到行首和行尾 (^ / $)
+      "H": ["workspace::SendKeystrokes", "^"],
+      "L": ["workspace::SendKeystrokes", "$"],
+    },
+  },
+  {
+    "context": "Pane",
+    "unbind": {
+      "cmd-shift-g": "search::SelectPreviousMatch",
+    },
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-shift-g": "git_panel::ToggleFocus",
+    },
+  },
+]
