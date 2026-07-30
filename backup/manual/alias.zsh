@@ -13,14 +13,14 @@ alias mkc="make clean"
 # for gcc
 alias gE="gcc -E"
 
-alias sai="sudo apt install" 
-alias sp="sudo poweroff" 
+alias sai="sudo apt install"
+alias sp="sudo poweroff"
 
 alias ls="ls --color=auto"
 alias ca="conda activate"
 
 # remove all branches except current one
-alias gdo="git branch | grep -v "\*" | xargs git branch -D"
+alias lg="lazygit"
 
 # for vim and neovim
 # alias vi="vim -u NONE -C"
@@ -32,3 +32,7 @@ alias lt="lsd -la --tree --depth=4"
 
 alias pwp="pwd | pbcopy"
 
+alias oc="opencode"
+
+# pocket-harness: personal AI coding-agent harness
+alias ph="pocket-harness"

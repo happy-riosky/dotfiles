@@ -183,10 +183,10 @@ nnoremap <Leader>8 8gt<CR>
 nnoremap <Leader>9 9gt<CR>
 nnoremap <Leader>n :tabnew<CR>
 nnoremap <Leader>x :tabclose<CR>
-nnoremap <Leader>[ :tabprevious<CR>
-nnoremap <Leader>] :tabnext<CR>
-nnoremap <Leader>, :tabm -1<CR>
-nnoremap <Leader>. :tabm +1<CR>
+nnoremap <Leader>, :tabprevious<CR>
+nnoremap <Leader>. :tabnext<CR>
+nnoremap <Leader>< :tabm -1<CR>
+nnoremap <Leader>> :tabm +1<CR>
 
 " enter the visual block mode
 nnoremap <Leader>v <C-v>
