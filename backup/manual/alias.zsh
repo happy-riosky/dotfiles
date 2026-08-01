@@ -22,10 +22,8 @@ alias ca="conda activate"
 # remove all branches except current one
 alias lg="lazygit"
 
-# for vim and neovim
+# for vim
 # alias vi="vim -u NONE -C"
-alias vim="nvim"
-alias lc="nvim leetcode.nvim"
 
 # stands for ls tree
 alias lt="lsd -la --tree --depth=4"

@@ -149,6 +149,7 @@ export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+nvm use default --silent >/dev/null 2>&1
 export PATH="$HOME/.npm-global/bin:$PATH"
 
 # use local .venv python first 
@@ -162,10 +163,6 @@ export PATH=$PATH:/Library/PostgreSQL/18/bin
 
 # add custom script path
 export PATH=$PATH:~/bin
-
-
-NVIM_HOME=/Users/riosky/dotfiles/backup/.config/nvim
-alias edlz="nvim $NVIM_HOME/lua/config/lazy.lua"
 
 # To customize prompt, run `p10k configure` or edit ~/dotfiles/backup/.p10k.zsh.
 [[ ! -f ~/dotfiles/backup/.p10k.zsh ]] || source ~/dotfiles/backup/.p10k.zsh
