@@ -78,10 +78,9 @@ nnoremap <silent> <ESC> :nohlsearch<return><esc>
 
 " use real color
 set termguicolors
-" set the color scheme, 
-colorscheme catppuccin_mocha
+colorscheme catppuccin_latte_yellow
 
-let g:lightline = {'colorscheme': 'catppuccin_mocha'}
+let g:lightline = {'colorscheme': 'catppuccin_latte_yellow'}
 let g:lightline.component = {
   \ 'mode': '%{lightline#mode()}',
   \ 'absolutepath': '%F',
@@ -209,15 +208,6 @@ function ToggleColorColumn()
 endfunction
 "  Map Hc to <space>c
 " map <Leader>c :Hc<CR>
-
-" ------------------------------------------------------------------------------
-" Fold
-" ------------------------------------------------------------------------------
-
-set foldenable " 开始折叠
-set foldmethod=syntax " 设置语法折叠
-set foldcolumn=0 " 设置折叠区域的宽度
-setlocal foldlevel=1 " 设置折叠层数为 1
 
 " ------------------------------------------------------------------------------
 " Snippets / Abbrev
