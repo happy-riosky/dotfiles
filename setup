@@ -12,8 +12,10 @@ pipx install mackup 1> /dev/null
 cp -i ~/dotfiles/.mackup.cfg ~/.mackup.cfg
 mackup restore
 
-# macOS: system hotkeys + Rectangle must use real plists (not mackup symlinks)
+# macOS: Preference domains must be real plists (not mackup symlinks)
 if [[ "$(uname -s)" == "Darwin" ]]; then
+  ln -sfn ~/dotfiles/.mackup ~/.mackup
   bash ~/dotfiles/scripts/hotkeys-restore.sh
+  bash ~/dotfiles/scripts/prefs-restore.sh
 fi
 
