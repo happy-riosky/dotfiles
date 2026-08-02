@@ -8,11 +8,6 @@ fi
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
-# Keep MacTeX tools available in interactive non-login shells too.
-if [[ -d /Library/TeX/texbin && ":$PATH:" != *":/Library/TeX/texbin:"* ]]; then
-  export PATH="/Library/TeX/texbin:$PATH"
-fi
-
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -88,6 +83,9 @@ plugins+=(zsh-vi-mode zsh-autosuggestions zsh-history-substring-search zsh-synta
 
 source $ZSH/oh-my-zsh.sh
 
+# 去重 PATH：zsh 原生保证 path 数组元素唯一，多次 source .zshrc 也不会叠加
+typeset -U path
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -121,10 +119,8 @@ source $ZSH/oh-my-zsh.sh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
+# Homebrew Python (python@3.13) 提供无版本号命令 (python3/pip3/python)
+export PATH="/opt/homebrew/opt/python@3.13/libexec/bin:$PATH"
 
 # export PATH="~/riosky/miniconda3/bin:$PATH"  # commented out by conda initialize
 # export PATH="~/miniconda3/bin:$PATH"  # commented out by conda initialize
@@ -144,16 +140,11 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
-
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 nvm use default --silent >/dev/null 2>&1
 export PATH="$HOME/.npm-global/bin:$PATH"
-
-# use local .venv python first 
-export PATH="./.venv/bin:$PATH"
 
 # use go binary program
 export PATH=$PATH:$(go env GOPATH)/bin
