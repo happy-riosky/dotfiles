@@ -4,5 +4,8 @@ backup/.zshenv
 backup/.vim/pack/vendor/
 backup/.tmux/plugins/**
 backup/Library/
+!backup/Library/Application Support/
+!backup/Library/Application Support/lazygit/
+!backup/Library/Application Support/lazygit/config.yml
 .DS_Store
 .netrc
