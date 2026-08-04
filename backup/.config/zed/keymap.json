@@ -98,4 +98,9 @@
       "cmd-shift-g": "git_panel::ToggleFocus",
     },
   },
+  {
+    "bindings": {
+      "ctrl-l": "workspace::ActivateNextPane",
+    },
+  },
 ]

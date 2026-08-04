@@ -4,7 +4,8 @@
     "external_directory": {
       "*": "ask",
       "/tmp/**": "allow",
-      "~/.agents/skills/**": "allow"
+      "~/.agents/skills/**": "allow",
+      "~/.opencode/skills/**": "allow"
     }
   },
   "model": "sq/gpt-5.6-sol",
@@ -66,7 +67,28 @@
             "npm": "@ai-sdk/openai"
           },
           "options": {
-            "store": false
+            "store": false,
+            "reasoningEffort": "high",
+            "textVerbosity": "low",
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          },
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "reasoningSummary": "auto",
+              "include": ["reasoning.encrypted_content"]
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "reasoningSummary": "auto",
+              "include": ["reasoning.encrypted_content"]
+            },
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "reasoningSummary": "auto",
+              "include": ["reasoning.encrypted_content"]
+            }
           }
         }
       }

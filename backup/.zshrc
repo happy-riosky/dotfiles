@@ -83,9 +83,6 @@ plugins+=(zsh-vi-mode zsh-autosuggestions zsh-history-substring-search zsh-synta
 
 source $ZSH/oh-my-zsh.sh
 
-# 去重 PATH：zsh 原生保证 path 数组元素唯一，多次 source .zshrc 也不会叠加
-typeset -U path
-
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -144,7 +141,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 nvm use default --silent >/dev/null 2>&1
-export PATH="$HOME/.npm-global/bin:$PATH"
 
 # use go binary program
 export PATH=$PATH:$(go env GOPATH)/bin
@@ -154,6 +150,9 @@ export PATH=$PATH:/Library/PostgreSQL/18/bin
 
 # add custom script path
 export PATH=$PATH:~/bin
+
+# NVM and the entries above may rebuild PATH, so deduplicate after all updates.
+typeset -U path
 
 # To customize prompt, run `p10k configure` or edit ~/dotfiles/backup/.p10k.zsh.
 [[ ! -f ~/dotfiles/backup/.p10k.zsh ]] || source ~/dotfiles/backup/.p10k.zsh
