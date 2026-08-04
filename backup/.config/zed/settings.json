@@ -8,6 +8,7 @@
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
   "cli_default_open_behavior": "new_window",
+  "zoomed_padding": false,
   "agent_servers": {
     "opencode": {
       "default_config_options": {
