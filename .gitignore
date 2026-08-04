@@ -3,6 +3,7 @@ backup/.ssh/
 backup/.zshenv
 backup/.vim/pack/vendor/
 backup/.tmux/plugins/**
+backup/.config/karabiner/automatic_backups/
 backup/Library/
 !backup/Library/Application Support/
 !backup/Library/Application Support/lazygit/
