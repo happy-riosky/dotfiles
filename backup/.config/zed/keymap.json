@@ -19,11 +19,40 @@
     },
   },
   {
-    "context": "ProjectPanel",
+    "context": "ProjectPanel && not_editing",
     "bindings": {
+      // NERDTree-compatible navigation and open actions.
+      "o": "project_panel::OpenPermanent",
+      "enter": "project_panel::OpenPermanent",
+      "t": "project_panel::OpenPermanent",
+      "i": "project_panel::OpenSplitHorizontal",
+      "s": "project_panel::OpenSplitVertical",
+      "shift-o": "project_panel::ExpandSelectedEntryAndChildren",
+      "x": "project_panel::CollapseSelectedEntry",
+      "shift-x": "project_panel::CollapseSelectedEntryAndChildren",
+      "p": "project_panel::SelectParent",
+      "shift-p": "menu::SelectFirst",
+      "shift-i": "project_panel::ToggleHideHidden",
+      "f": "project_panel::ToggleHideGitIgnore",
+      "q": "project_panel::Toggle",
+      "shift-a": ["workspace::IncreaseActiveDockSize", { "px": 10000 }],
+      "g shift-a": "workspace::ResetActiveDockSize",
+      // Zed auto-refreshes; avoid netrw defaults that conflict with NERDTree.
+      "shift-d": null,
+      "shift-r": null,
+
+      // NERDTree-style file menu operations.
+      "m a": "project_panel::NewFile",
+      "m shift-a": "project_panel::NewDirectory",
+      "m m": "project_panel::Rename",
+      "m d": ["project_panel::Trash", { "skip_prompt": false }],
+      "m c": "project_panel::Copy",
+      "m x": "project_panel::Cut",
+      "m p": "project_panel::Paste",
+
+      // Path copy helpers without direct NERDTree equivalents.
       "y r": "workspace::CopyRelativePath",
       "y a": "workspace::CopyPath",
-      "m r": "project_panel::Rename",
     },
   },
   {
@@ -39,6 +68,8 @@
       "space >": "pane::SwapItemRight",
       "space t o": "pane::CloseOtherItems",
       "space c": ["editor::ToggleComments", { "advance_downwards": false }],
+      "space e": "project_panel::ToggleFocus",
+      "space q": "pane::CloseActiveItem",
       "R": "editor::Rename",
       // "space <": [
       //   "workspace::MoveItemToPaneInDirection",
@@ -52,6 +83,13 @@
       // Comma-based leader mappings (Alternative)
       // ", 1": ["pane::ActivateItem", 0],
       // ", 2": ["pane::ActivateItem", 1],
+    },
+  },
+  {
+    "context": "Editor && vim_mode == normal && !VimWaiting && !menu",
+    "bindings": {
+      // NERDTree entry point from .vimrc.
+      "ctrl-n": "project_panel::ToggleFocus",
     },
   },
   {
@@ -87,6 +125,14 @@
     },
   },
   {
+    "context": "Editor && vim_operator == d",
+    "bindings": {
+      // Keep dj/dk linewise even though normal j/k use display lines.
+      "j": "vim::Down",
+      "k": "vim::Up",
+    },
+  },
+  {
     "context": "Pane",
     "unbind": {
       "cmd-shift-g": "search::SelectPreviousMatch",
@@ -99,14 +145,16 @@
     },
   },
   {
-    "context": "Terminal",
     "bindings": {
-      "space z": "workspace::ToggleZoom",
-    },
-  },
-  {
-    "bindings": {
-      "ctrl-l": "workspace::ActivateNextPane",
+      // Global Ctrl-a leader matching tmux's split and zoom operations.
+      "ctrl-a |": "pane::SplitRight",
+      "ctrl-a -": "pane::SplitDown",
+      "ctrl-a z": "workspace::ToggleZoom",
+      "ctrl-a h": "workspace::ActivatePaneLeft",
+      "ctrl-a j": "workspace::ActivatePaneDown",
+      "ctrl-a k": "workspace::ActivatePaneUp",
+      "ctrl-a l": "workspace::ActivatePaneRight",
+      "ctrl-a c": "workspace::NewTerminal",
     },
   },
 ]
