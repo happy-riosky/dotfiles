@@ -5,6 +5,40 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Browsers: Command+J toggles Developer Tools",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Safari$",
+                                            "^com\\.google\\.Chrome$",
+                                            "^com\\.microsoft\\.edgemac$",
+                                            "^com\\.quark\\.desktop$",
+                                            "^company\\.thebrowser\\.dia$",
+                                            "^org\\.mozilla\\.firefox$"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "j",
+                                    "modifiers": {
+                                        "mandatory": ["command"],
+                                        "optional": ["caps_lock"]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "i",
+                                        "modifiers": ["left_command", "left_option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Mouse button 5 to Mission Control",
                         "manipulators": [
                             {
