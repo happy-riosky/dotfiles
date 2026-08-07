@@ -171,5 +171,10 @@ gh() {
   HTTPS_PROXY=http://127.0.0.1:7897 HTTP_PROXY=http://127.0.0.1:7897 command gh "$@"
 }
 
+# Keep OpenCode temporary files in its permanently allowed directory.
+opencode() {
+  TMPDIR="$HOME/.cache/opencode/tmp" command opencode "$@"
+}
+
 # OpenClaw Completion
 source "/Users/riosky/.openclaw/completions/openclaw.zsh"

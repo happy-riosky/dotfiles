@@ -147,14 +147,10 @@
   {
     "bindings": {
       // Global Ctrl-a leader matching tmux's split and zoom operations.
-      "ctrl-a |": "pane::SplitRight",
-      "ctrl-a -": "pane::SplitDown",
+      // Use "ctrl-w v" and "ctrl-w s" in the vim mode instead.
+      // "ctrl-a |": "pane::SplitRight",
+      // "ctrl-a -": "pane::SplitDown",
       "ctrl-a z": "workspace::ToggleZoom",
-      "ctrl-a h": "workspace::ActivatePaneLeft",
-      "ctrl-a j": "workspace::ActivatePaneDown",
-      "ctrl-a k": "workspace::ActivatePaneUp",
-      "ctrl-a l": "workspace::ActivatePaneRight",
-      "ctrl-a c": "workspace::NewTerminal",
     },
   },
 ]
