@@ -55,12 +55,65 @@
       },
       "models": {
         "gemini-3.1-pro-high": {
+          "name": "gemini-3.1-pro-high",
+          "options": {
+            "reasoningEffort": "high"
+          },
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "xhigh": {
+              "reasoningEffort": "xhigh"
+            }
+          }
         },
         "grok-4.5": {
-          "name": "grok-4.5"
+          "name": "grok-4.5",
+          "options": {
+            "store": false,
+            "reasoningEffort": "high",
+            "textVerbosity": "low",
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          },
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "reasoningSummary": "auto",
+              "include": ["reasoning.encrypted_content"]
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "reasoningSummary": "auto",
+              "include": ["reasoning.encrypted_content"]
+            },
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "reasoningSummary": "auto",
+              "include": ["reasoning.encrypted_content"]
+            }
+          }
         },
         "glm-5.2": {
-            "name": "glm-5.2"
+          "name": "glm-5.2",
+          "options": {
+            "reasoningEffort": "high"
+          },
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "xhigh": {
+              "reasoningEffort": "xhigh"
+            }
+          }
         },
         "gpt-5.6-sol": {
           "name": "gpt-5.6-sol",
