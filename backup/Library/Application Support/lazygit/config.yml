@@ -36,3 +36,14 @@ gui:
 #   commits:
 #     cherryPickCopy: 'c'
 #     pasteCommits: 'v'
+
+customCommands:
+  - context: 'files'
+    description: 'Generate commit message with Ollama'
+    prompts:
+      - type: 'input'
+        key: 'CommitMessage'
+        title: 'AI-generated commit message (edit before committing)'
+        initialValue: '{{ runCommand "/Users/riosky/.local/bin/ai-git-commit-message" }}'
+    command: 'git commit --message {{.Form.CommitMessage | quote}}'
+    loadingText: 'Committing...'
