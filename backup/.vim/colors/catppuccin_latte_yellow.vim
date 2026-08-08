@@ -14,7 +14,6 @@ set t_Co=256
 let s:rosewater = "#DC8A78"
 let s:flamingo = "#DD7878"
 let s:pink = "#EA76CB"
-let s:mauve = "#8839EF"
 let s:red = "#D20F39"
 let s:maroon = "#E64553"
 let s:peach = "#FE640B"
@@ -24,7 +23,6 @@ let s:teal = "#179299"
 let s:sky = "#04A5E5"
 let s:sapphire = "#209FB5"
 let s:blue = "#1E66F5"
-let s:lavender = "#7287FD"
 
 let s:text = "#4C4F69"
 let s:subtext1 = "#5C5F77"
@@ -62,53 +60,53 @@ function! s:hi(group, guisp, guifg, guibg, gui, cterm)
   endif
 endfunction
 
-call s:hi("Normal", "NONE", s:text, s:base, "NONE", "NONE")
+call s:hi("Normal", "NONE", s:text, s:mantle, "NONE", "NONE")
 call s:hi("Visual", "NONE", "NONE", s:surface1,"bold", "bold")
 call s:hi("Conceal", "NONE", s:overlay1, "NONE", "NONE", "NONE")
 call s:hi("ColorColumn", "NONE", "NONE", s:surface0, "NONE", "NONE")
 call s:hi("Cursor", "NONE", s:base, s:yellow, "NONE", "NONE")
 call s:hi("lCursor", "NONE", s:base, s:yellow, "NONE", "NONE")
 call s:hi("CursorIM", "NONE", s:base, s:yellow, "NONE", "NONE")
-call s:hi("CursorColumn", "NONE", "NONE", s:mantle, "NONE", "NONE")
-call s:hi("CursorLine", "NONE", "NONE", "#DDE0E7", "NONE", "NONE")
+call s:hi("CursorColumn", "NONE", "NONE", s:base, "NONE", "NONE")
+call s:hi("CursorLine", "NONE", "NONE", s:base, "NONE", "NONE")
 call s:hi("Directory", "NONE", s:yellow, "NONE", "NONE", "NONE")
 call s:hi("DiffAdd", "NONE", s:base, s:green, "NONE", "NONE")
 call s:hi("DiffChange", "NONE", s:base, s:yellow, "NONE", "NONE")
 call s:hi("DiffDelete", "NONE", s:base, s:red, "NONE", "NONE")
 call s:hi("DiffText", "NONE", s:base, s:blue, "NONE", "NONE")
-call s:hi("EndOfBuffer", "NONE", "NONE", "NONE", "NONE", "NONE")
+call s:hi("EndOfBuffer", "NONE", s:mantle, s:mantle, "NONE", "NONE")
 call s:hi("ErrorMsg", "NONE", s:red, "NONE", "bolditalic"    , "bold,italic")
-call s:hi("VertSplit", "NONE", s:yellow, "NONE", "NONE", "NONE")
-call s:hi("WinSeparator", "NONE", s:yellow, "NONE", "NONE", "NONE")
-call s:hi("Folded", "NONE", s:blue, s:surface1, "NONE", "NONE")
-call s:hi("FoldColumn", "NONE", s:overlay0, s:base, "NONE", "NONE")
-call s:hi("SignColumn", "NONE", s:surface1, s:base, "NONE", "NONE")
+call s:hi("VertSplit", "NONE", s:yellow, s:crust, "NONE", "NONE")
+call s:hi("WinSeparator", "NONE", s:yellow, s:crust, "NONE", "NONE")
+call s:hi("Folded", "NONE", s:blue, s:crust, "NONE", "NONE")
+call s:hi("FoldColumn", "NONE", s:overlay0, s:crust, "NONE", "NONE")
+call s:hi("SignColumn", "NONE", s:surface1, s:crust, "NONE", "NONE")
+call s:hi("CursorLineFold", "NONE", s:overlay0, s:base, "NONE", "NONE")
+call s:hi("CursorLineSign", "NONE", s:surface1, s:base, "NONE", "NONE")
 call s:hi("IncSearch", "NONE", s:base, s:yellow, "NONE", "NONE")
-call s:hi("CursorLineNR", "NONE", s:yellow, "NONE", "bold", "bold")
-call s:hi("LineNr", "NONE", s:surface1, "NONE", "NONE", "NONE")
+call s:hi("CursorLineNr", "NONE", s:yellow, s:crust, "bold", "bold")
+call s:hi("LineNr", "NONE", s:overlay0, s:crust, "NONE", "NONE")
 call s:hi("MatchParen", "NONE", s:base, s:yellow, "bold", "bold")
 call s:hi("ModeMsg", "NONE", s:text, "NONE", "bold", "bold")
 call s:hi("MoreMsg", "NONE", s:yellow, "NONE", "NONE", "NONE")
 call s:hi("NonText", "NONE", s:overlay0, "NONE", "NONE", "NONE")
-call s:hi("Pmenu", "NONE", s:overlay2, s:surface0, "NONE", "NONE")
-call s:hi("PmenuSel", "NONE", s:text, s:surface1, "bold", "bold")
-call s:hi("PmenuSbar", "NONE", "NONE", s:surface1, "NONE", "NONE")
+call s:hi("Pmenu", "NONE", s:subtext1, s:base, "NONE", "NONE")
+call s:hi("PmenuSel", "NONE", s:text, s:yellow, "bold", "bold")
+call s:hi("PmenuSbar", "NONE", "NONE", s:surface0, "NONE", "NONE")
 call s:hi("PmenuThumb", "NONE", "NONE", s:overlay0, "NONE", "NONE")
 call s:hi("Question", "NONE", s:yellow, "NONE", "NONE", "NONE")
 call s:hi("QuickFixLine", "NONE", "NONE", s:surface1, "bold", "bold")
 call s:hi("Search", "NONE", s:base, s:yellow, "NONE", "NONE")
 call s:hi("SpecialKey", "NONE", s:subtext0, "NONE", "NONE", "NONE")
-call s:hi("SpellBad", "NONE", s:base, s:red, "NONE", "NONE")
-call s:hi("SpellCap", "NONE", s:base, s:yellow, "NONE", "NONE")
-call s:hi("SpellLocal", "NONE", s:base, s:blue, "NONE", "NONE")
-call s:hi("SpellRare", "NONE", s:base, s:green, "NONE", "NONE")
-call s:hi("StatusLine", "NONE", s:text, s:mantle, "NONE", "NONE")
-call s:hi("StatusLineNC", "NONE", s:surface1, s:mantle, "NONE", "NONE")
-call s:hi("StatusLineTerm", "NONE", s:text, s:mantle, "NONE", "NONE")
-call s:hi("StatusLineTermNC", "NONE", s:surface1, s:mantle, "NONE", "NONE")
-call s:hi("TabLine", "NONE", s:surface1, s:mantle, "NONE", "NONE")
-call s:hi("TabLineFill", "NONE", "NONE", s:mantle, "NONE", "NONE")
-call s:hi("TabLineSel", "NONE", s:base, s:yellow, "bold", "bold")
+call s:hi("SpellBad", s:red, "NONE", "NONE", "undercurl", "underline")
+call s:hi("SpellCap", s:yellow, "NONE", "NONE", "undercurl", "underline")
+call s:hi("SpellLocal", s:blue, "NONE", "NONE", "undercurl", "underline")
+call s:hi("SpellRare", s:green, "NONE", "NONE", "undercurl", "underline")
+call s:hi("StatusLine", "NONE", s:text, s:surface1, "bold", "bold")
+call s:hi("StatusLineNC", "NONE", s:overlay1, s:crust, "NONE", "NONE")
+call s:hi("TabLine", "NONE", s:subtext0, s:crust, "NONE", "NONE")
+call s:hi("TabLineFill", "NONE", "NONE", s:crust, "NONE", "NONE")
+call s:hi("TabLineSel", "NONE", s:text, s:yellow, "bold", "bold")
 call s:hi("Title", "NONE", s:yellow, "NONE", "bold", "bold")
 call s:hi("VisualNOS", "NONE", "NONE", s:surface1, "bold", "bold")
 call s:hi("WarningMsg", "NONE", s:yellow, "NONE", "NONE", "NONE")
@@ -116,11 +114,11 @@ call s:hi("WildMenu", "NONE", s:base, s:yellow, "NONE", "NONE")
 call s:hi("Comment", "NONE", s:overlay0, "NONE", "NONE", "NONE")
 call s:hi("Constant", "NONE", s:peach, "NONE", "NONE", "NONE")
 call s:hi("Identifier", "NONE", s:flamingo, "NONE", "NONE", "NONE")
-call s:hi("Statement", "NONE", s:mauve, "NONE", "NONE", "NONE")
+call s:hi("Statement", "NONE", s:yellow, "NONE", "NONE", "NONE")
 call s:hi("PreProc", "NONE", s:pink, "NONE", "NONE", "NONE")
 call s:hi("Type", "NONE", s:blue, "NONE", "NONE", "NONE")
 call s:hi("Special", "NONE", s:pink, "NONE", "NONE", "NONE")
-call s:hi("Underlined", "NONE", s:text, s:base, "underline", "underline")
+call s:hi("Underlined", "NONE", s:blue, "NONE", "underline", "underline")
 call s:hi("Error", "NONE", s:red, "NONE", "NONE", "NONE")
 call s:hi("Todo", "NONE", s:base, s:flamingo, "bold", "bold")
 
@@ -141,6 +139,7 @@ call s:hi("Structure", "NONE", s:yellow, "NONE", "NONE", "NONE")
 call s:hi("Typedef", "NONE", s:yellow, "NONE", "NONE", "NONE")
 call s:hi("debugPC", "NONE", "NONE", s:crust, "NONE", "NONE")
 call s:hi("debugBreakpoint", "NONE", s:overlay0, s:base, "NONE", "NONE")
+call s:hi("NerdTreePanel", "NONE", s:text, s:crust, "NONE", "NONE")
 
 hi link Define PreProc
 hi link Macro PreProc
@@ -151,8 +150,8 @@ hi link Delimiter Special
 hi link SpecialComment Special
 hi link Debug Special
 hi link Exception Error
-hi link StatusLineTerm StatusLine
-hi link StatusLineTermNC StatusLineNC
+hi! link StatusLineTerm StatusLine
+hi! link StatusLineTermNC StatusLineNC
 hi link Terminal Normal
 hi link Ignore Comment
 

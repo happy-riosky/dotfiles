@@ -2,6 +2,7 @@ scriptencoding utf-8
 set encoding=utf-8
 
 set nocompatible
+set runtimepath^=~/dotfiles/backup/.vim
 syntax on
 
 " Disable the default Vim startup message.
@@ -63,6 +64,10 @@ set wildmode=longest,list,full
 set showmatch           " highlight matching [{()}]
 set shortmess-=S        " show count of matches
 set laststatus=2        " Show the status line at the bottom
+set showtabline=2       " Keep the editor frame visible with a single tab
+set noshowmode          " Lightline already shows the current mode
+set signcolumn=yes      " Keep text aligned when signs appear
+set fillchars=eob:\     " Hide Vim's end-of-buffer tildes
 set mouse+=a            " A necessary evil, mouse support
 set noerrorbells visualbell t_vb=    "Disable annoying error noises
 set splitbelow          " Open new vertical split bottom
@@ -78,14 +83,26 @@ nnoremap <silent> <ESC> :nohlsearch<return><esc>
 
 " use real color
 set termguicolors
+if exists('&t_SI')
+  let &t_SI = "\<Esc>[6 q"  " Steady beam in Insert mode
+  let &t_EI = "\<Esc>[2 q"  " Steady block outside Insert mode
+endif
 colorscheme catppuccin_latte_yellow
 
-let g:lightline = {'colorscheme': 'catppuccin_latte_yellow'}
-let g:lightline.component = {
-  \ 'mode': '%{lightline#mode()}',
-  \ 'absolutepath': '%F',
-  \ 'relativepath': '%f',
-  \ 'filename': '%f',
+let g:lightline = {
+  \ 'colorscheme': 'catppuccin_latte_yellow',
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'filename', 'modified' ] ],
+  \   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'filetype', 'fileencoding', 'fileformat' ] ]
+  \ },
+  \ 'inactive': {
+  \   'left': [ [ 'filename' ] ],
+  \   'right': [ [ 'lineinfo' ] ]
+  \ },
+  \ 'component': {
+  \   'filename': '%f',
+  \   'lineinfo': '%3l:%-2v'
+  \ }
   \ }
 
 " ------------------------------------------------------------------------------
@@ -247,6 +264,10 @@ map <C-n> :NERDTreeToggle<CR>
 map <Leader>e :NERDTreeToggle<CR>
 " show the hidden files
 let NERDTreeShowHidden=1
+augroup nerdtree_panel
+  autocmd!
+  autocmd FileType nerdtree setlocal wincolor=NerdTreePanel
+augroup END
 " Close vim if only window left is NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
@@ -259,4 +280,3 @@ nnoremap <silent> {Down-Mapping} :<C-U>TmuxNavigateDown<cr>
 nnoremap <silent> {Up-Mapping} :<C-U>TmuxNavigateUp<cr>
 nnoremap <silent> {Right-Mapping} :<C-U>TmuxNavigateRight<cr>
 nnoremap <silent> {Previous-Mapping} :<C-U>TmuxNavigatePrevious<cr>
-
