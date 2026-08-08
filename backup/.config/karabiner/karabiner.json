@@ -5,7 +5,7 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Browsers: Command+J toggles Developer Tools",
+                        "description": "Browsers: Left Command+J toggles Developer Tools",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -24,7 +24,7 @@
                                 "from": {
                                     "key_code": "j",
                                     "modifiers": {
-                                        "mandatory": ["command"],
+                                        "mandatory": ["left_command"],
                                         "optional": ["caps_lock"]
                                     }
                                 },
