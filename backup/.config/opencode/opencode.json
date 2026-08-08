@@ -4,6 +4,8 @@
     "external_directory": {
       "*": "ask",
       "/tmp/**": "allow",
+      "/var/folders/*/*/T/opencode/**": "allow",
+      "/private/var/folders/*/*/T/opencode/**": "allow",
       "~/.cache/opencode/tmp/**": "allow",
       "~/.agents/skills/**": "allow",
       "~/.opencode/skills/**": "allow"

@@ -1,4 +1,5 @@
 {
   "$schema": "https://opencode.ai/tui.json",
-  "theme": "catppuccin-latte-yellow"
+  "theme": "catppuccin-latte-yellow",
+  "vim_system_clipboard_register": true
 }
