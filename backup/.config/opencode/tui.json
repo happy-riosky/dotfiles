@@ -1,5 +1,13 @@
 {
   "$schema": "https://opencode.ai/tui.json",
   "theme": "catppuccin-latte-yellow",
-  "vim_system_clipboard_register": true
+  "plugin": [
+    [
+      "@leohenon/opencode-vim-plugin",
+      {
+        "vim_system_clipboard_register": true
+      }
+    ],
+    "./tui-plugins/epilogue-truecolor.js"
+  ]
 }
