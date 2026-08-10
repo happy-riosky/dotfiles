@@ -10,3 +10,4 @@ backup/Library/
 !backup/Library/Application Support/lazygit/config.yml
 .DS_Store
 .netrc
+backup/.pi/agent/auth.json

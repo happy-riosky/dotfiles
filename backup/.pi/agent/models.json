@@ -1,0 +1,18 @@
+{
+  "providers": {
+    "pytrio": {
+      "name": "pytrio",
+      "baseUrl": "https://newapi.pytrio.asia/v1",
+      "api": "openai-completions",
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+      },
+      "models": [
+        {
+          "id": "deepseek-v4-flash",
+          "name": "deepseek-v4-flash"
+        }
+      ]
+    }
+  }
+}

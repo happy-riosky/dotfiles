@@ -1,0 +1,6 @@
+{
+  "lastChangelogVersion": "0.84.1",
+  "theme": "light",
+  "defaultProvider": "pytrio",
+  "defaultModel": "deepseek-v4-flash"
+}
