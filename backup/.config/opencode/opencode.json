@@ -11,51 +11,21 @@
       "~/.opencode/skills/**": "allow"
     }
   },
-  "model": "sq/gpt-5.6-sol",
+  "model": "pytrio/gpt-5.6-sol",
   "provider": {
-    "emotion": {
-      "name": "Emotion Trio",
-      "npm": "@ai-sdk/openai",
-      "models": {
-        "gpt-5.5": {
-          "name": "gpt-5.5",
-          "options": {
-            "store": false,
-            "reasoningEffort": "xhigh",
-            "textVerbosity": "low",
-            "reasoningSummary": "auto",
-            "include": ["reasoning.encrypted_content"]
-          },
-          "variants": {
-            "medium": {
-              "reasoningEffort": "medium",
-              "reasoningSummary": "auto",
-              "include": ["reasoning.encrypted_content"]
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "reasoningSummary": "auto",
-              "include": ["reasoning.encrypted_content"]
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "reasoningSummary": "auto",
-              "include": ["reasoning.encrypted_content"]
-            }
-          }
-        }
-      },
-      "options": {
-        "baseURL": "https://newapi.pytrio.asia/v1"
-      }
-    },
-    "sq": {
-      "name": "swanlab-sq",
+    "pytrio": {
+      "name": "pytrio",
       "npm": "@ai-sdk/openai-compatible",
       "options": {
         "baseURL": "https://newapi.pytrio.asia/v1"
       },
       "models": {
+        "deepseek-v4-flash": {
+          "name": "deepseek-v4-flash",
+          "options": {
+            "reasoningEffort": "high"
+          }
+        },
         "gemini-3.1-pro-high": {
           "name": "gemini-3.1-pro-high",
           "options": {
