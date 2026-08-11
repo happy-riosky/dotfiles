@@ -72,4 +72,18 @@ for d in "${DOMAINS[@]}"; do
   export_domain "$d"
 done
 
+# Global preference keys that live in .GlobalPreferences (no per-domain plist).
+scroll_direction="$(defaults read -g com.apple.swipescrolldirection 2>/dev/null || true)"
+case "$scroll_direction" in
+  1|YES|yes|true)
+    printf 'YES\n' > "$MANUAL/global-swipescrolldirection"
+    log "exported global com.apple.swipescrolldirection"
+    ;;
+  0|NO|no|false)
+    printf 'NO\n' > "$MANUAL/global-swipescrolldirection"
+    log "exported global com.apple.swipescrolldirection"
+    ;;
+  *) warn "skip global com.apple.swipescrolldirection (unreadable)" ;;
+esac
+
 log "done → $MANUAL"

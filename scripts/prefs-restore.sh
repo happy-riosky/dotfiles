@@ -49,6 +49,21 @@ for golden in "$MANUAL"/*.plist; do
   fi
 done
 
+# Restore global keys exported from .GlobalPreferences.
+if [[ -f "$MANUAL/global-swipescrolldirection" ]]; then
+  scroll_direction="$(< "$MANUAL/global-swipescrolldirection")"
+  case "$scroll_direction" in
+    YES|NO)
+      if defaults write -g com.apple.swipescrolldirection -bool "$scroll_direction" 2>/dev/null; then
+        log "OK global com.apple.swipescrolldirection"
+      else
+        warn "could not write global com.apple.swipescrolldirection"
+      fi
+      ;;
+    *) warn "invalid global com.apple.swipescrolldirection: $scroll_direction" ;;
+  esac
+fi
+
 # Ensure custom mackup apps dir is linked (overrides stock Preference paths)
 if [[ -d "$DOTFILES/.mackup" ]]; then
   if [[ -L "$HOME/.mackup" ]] || [[ ! -e "$HOME/.mackup" ]]; then
