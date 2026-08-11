@@ -1,9 +1,11 @@
 {
   "lastChangelogVersion": "0.84.1",
-  "theme": "light",
+  "theme": "catppuccin-latte",
   "defaultProvider": "pytrio",
   "defaultModel": "deepseek-v4-flash",
   "packages": [
-    "npm:pi-vimmode"
+    "npm:pi-vimmode",
+    "git:github.com/otahontas/pi-coding-agent-catppuccin",
+    "npm:pi-session-switch"
   ]
 }
