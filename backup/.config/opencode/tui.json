@@ -5,7 +5,6 @@
     [
       "@leohenon/opencode-vim-plugin",
       {
-        "vim_enter_submit": true,
         "vim_system_clipboard_register": true
       }
     ],
