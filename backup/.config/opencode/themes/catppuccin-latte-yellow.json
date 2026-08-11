@@ -39,8 +39,8 @@
       "light": "macAccent"
     },
     "accent": {
-      "dark": "macPink",
-      "light": "macPink"
+      "dark": "macBlue",
+      "light": "macBlue"
     },
     "error": {
       "dark": "macRed",
