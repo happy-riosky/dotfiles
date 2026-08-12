@@ -64,12 +64,4 @@ if [[ -f "$MANUAL/global-swipescrolldirection" ]]; then
   esac
 fi
 
-# Ensure custom mackup apps dir is linked (overrides stock Preference paths)
-if [[ -d "$DOTFILES/.mackup" ]]; then
-  if [[ -L "$HOME/.mackup" ]] || [[ ! -e "$HOME/.mackup" ]]; then
-    ln -sfn "$DOTFILES/.mackup" "$HOME/.mackup"
-    log "linked ~/.mackup → $DOTFILES/.mackup"
-  fi
-fi
-
 log "done"

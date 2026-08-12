@@ -1,5 +1,6 @@
 backup/.ipython/
-backup/.ssh/
+backup/.ssh/*
+!backup/.ssh/config
 backup/.zshenv
 backup/.vim/pack/vendor/
 backup/.tmux/plugins/**
@@ -15,5 +16,8 @@ backup/Library/Application Support/Mouseless/*
 backup/Library/Application Support/Mouseless/configs/*
 !backup/Library/Application Support/Mouseless/configs/config.yaml
 .DS_Store
-.netrc
+backup/.netrc
+**/.netrc
 backup/.pi/agent/auth.json
+backup/**/bettertouchtool.license
+backup/**/*.bttlicense

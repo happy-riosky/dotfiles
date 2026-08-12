@@ -249,18 +249,21 @@ Git 历史不默认重写。先修复当前 HEAD 并运行 secret scan；只有�
 
 ### Phase 0：止血和备份
 
-- [ ] 创建 `refactor/dotfiles-layout` 分支。
-- [ ] 保存当前工作，确认没有其他 dotfiles 操作并行进行。
-- [ ] 备份 dotfiles 和关键 HOME 配置路径。
-- [ ] 删除 `backup/.gitconfig` 的 `sslVerify=false`，并验证生效配置。
-- [ ] 先让当前 `~/.gitconfig` include `~/.config/git/config.local`，验证 include 生效后再将 `[user]` 身份迁入 local 文件。
-- [ ] 将 SSH host 配置、`.netrc`、Pi auth 和 license 移出仓库并停止跟踪。
-- [ ] 禁用旧 `setup` 和插件脚本，停止执行 Mackup。
-- [ ] 从 Preferences 脚本删除创建 `~/.mackup` 的副作用。
-- [ ] 导出最新 Preferences 和 hotkeys golden。
-- [ ] 运行 secret scan，记录是否确有凭证需要轮换或历史清理。
+- [x] 创建 `refactor/dotfiles-layout` 分支。
+- [x] 保存当前工作，确认没有其他 dotfiles 操作并行进行。
+- [x] 备份 dotfiles 和关键 HOME 配置路径。
+- [x] 删除 `backup/.gitconfig` 的 `sslVerify=false`，并验证生效配置。
+- [x] 先让当前 `~/.gitconfig` include `~/.config/git/config.local`，验证 include 生效后再将 `[user]` 身份迁入 local 文件。
+- [x] 将 SSH host 配置、`.netrc`、Pi auth 和 license 移出仓库并停止跟踪。
+- [x] 禁用旧 `setup` 和插件脚本，停止执行 Mackup。
+- [x] 从 Preferences 脚本删除创建 `~/.mackup` 的副作用。
+- [x] 导出最新 Preferences 和 hotkeys golden。
+- [x] 运行 secret scan，记录是否确有凭证需要轮换或历史清理。
 
 验收：当前 Git 配置不关闭 TLS；HEAD 不跟踪已知秘密和 SSH hosts；现有 shell、Git、SSH、tmux 和 Vim 仍可用。
+
+执行记录（2026-08-12）：当前工作树 secret scan 通过；历史中已有的 SSH host/IP
+按第 6 节作为已知隐私暴露记录，是否重写历史留待后续单独决定。
 
 ### Phase 1：建立新目录并迁移 core
 

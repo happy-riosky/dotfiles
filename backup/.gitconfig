@@ -1,6 +1,5 @@
-[user]
-	email = 1559932694@qq.com
-	name = Riosky
+[include]
+	path = ~/.config/git/config.local
 [credential]
 	helper = cache
 [color]
@@ -15,7 +14,6 @@
 [gui]
 	encoding = utf-8
 [http]
-	sslVerify = false
 	version = HTTP/1.1
 [credential "https://gitee.com"]
 	provider = generic

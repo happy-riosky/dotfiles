@@ -2,6 +2,10 @@
 
 This repo contains the way that I manage my dotfiles with the help of [`mackup`](https://github.com/lra/mackup).
 
+> Migration in progress: follow [`MIGRATION_PLAN.md`](MIGRATION_PLAN.md). The old
+> `setup` and plugin installer scripts are disabled until the new `./install`
+> entry point is ready.
+
 ## Usage
 
 ### Set up the environment

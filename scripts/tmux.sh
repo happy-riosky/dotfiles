@@ -1,4 +1,5 @@
-ln -s ~/dotfiles/backup/.tmux ~/.tmux;
-git clone https://github.com/tmux-plugins/tpm.git ~/.tmux/plugins/tpm
-git clone https://github.com/tmux-plugins/tmux-battery.git ~/.tmux/plugins/tmux-battery
-git clone https://github.com/tmux-plugins/tmux-sensible.git ~/.tmux/plugins/tmux-sensible
+#!/usr/bin/env bash
+set -euo pipefail
+
+printf 'scripts/tmux.sh is disabled during the dotfiles layout migration.\n' >&2
+exit 1

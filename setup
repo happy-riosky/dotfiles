@@ -1,21 +1,6 @@
-#!/bin/bash
-sudo apt update
-sudo apt upgrade
+#!/usr/bin/env bash
+set -euo pipefail
 
-# get homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# set up the dotfiles
-sudo apt install -y pipx
-pipx install mackup 1> /dev/null
-
-cp -i ~/dotfiles/.mackup.cfg ~/.mackup.cfg
-mackup restore
-
-# macOS: Preference domains must be real plists (not mackup symlinks)
-if [[ "$(uname -s)" == "Darwin" ]]; then
-  ln -sfn ~/dotfiles/.mackup ~/.mackup
-  bash ~/dotfiles/scripts/hotkeys-restore.sh
-  bash ~/dotfiles/scripts/prefs-restore.sh
-fi
-
+printf 'setup is disabled during the dotfiles layout migration.\n' >&2
+printf 'Follow MIGRATION_PLAN.md; the replacement entry point will be ./install.\n' >&2
+exit 1
