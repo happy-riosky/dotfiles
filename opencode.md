@@ -8,7 +8,9 @@
 | 默认模型、`small_model`、ECC agents/commands | `~/.opencode/opencode.json` |
 | TUI | `~/.config/opencode/tui.json` |
 
-这些文件均链接到 `~/dotfiles/backup`，修改后会直接进入 dotfiles。
+`~/.config/opencode` 的公共配置链接到 `~/dotfiles/home/.config/opencode`，
+修改后会直接进入 dotfiles。`~/.opencode` 仍是本机真实目录，运行时数据库、
+session、cache、日志和安装内容不由此仓库管理。
 
 默认模型应同时设置：
 

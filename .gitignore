@@ -1,25 +1,5 @@
-backup/.ipython/
-backup/.oh-my-zsh/
-backup/.ssh/*
-!backup/.ssh/config
-backup/.zshenv
-backup/.vim/pack/
-backup/.tmux/plugins/**
-backup/manual/custom/plugins/
-backup/.config/karabiner/automatic_backups/
-backup/Library/*
-!backup/Library/Application Support/
-backup/Library/Application Support/*
-!backup/Library/Application Support/lazygit/
-!backup/Library/Application Support/lazygit/config.yml
-!backup/Library/Application Support/Mouseless/
-backup/Library/Application Support/Mouseless/*
-!backup/Library/Application Support/Mouseless/configs/
-backup/Library/Application Support/Mouseless/configs/*
-!backup/Library/Application Support/Mouseless/configs/config.yaml
+legacy/
 .DS_Store
-backup/.netrc
 **/.netrc
-backup/.pi/agent/auth.json
-backup/**/bettertouchtool.license
-backup/**/*.bttlicense
+**/auth.json
+**/*license*

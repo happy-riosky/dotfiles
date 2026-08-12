@@ -43,8 +43,25 @@ source_entries() {
   while IFS= read -r source_path; do
     relative="${source_path#"$source_root"/}"
     [[ "$relative" == .gitkeep ]] && continue
+    [[ "$relative" == .config/karabiner/* ]] && continue
     printf '%s\t%s\n' "$relative" "$source_path"
   done < <(find "$source_root" \( -type f -o -type l \) -print | LC_ALL=C sort)
+}
+
+karabiner_source() {
+  local root="$1" platform="$2"
+  [[ "$platform" == darwin && -d "$root/platforms/darwin/home/.config/karabiner" ]] || return 1
+  printf '%s\n' "$root/platforms/darwin/home/.config/karabiner"
+}
+
+check_karabiner_target() {
+  local source="$1" target="$HOME/.config/karabiner"
+  if [[ -e "$target" || -L "$target" ]]; then
+    link_matches_source "$target" "$source" || {
+      printf 'link: Karabiner target exists and is not managed: %s\n' "$target" >&2
+      return 1
+    }
+  fi
 }
 
 canonical_existing_path() {

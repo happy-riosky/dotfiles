@@ -47,14 +47,25 @@ while IFS= read -r tracked_file; do
   esac
 done < <(git -C "$ROOT" ls-files)
 
-for legacy_target in \
-  "$HOME/.zshrc" "$HOME/.zprofile" "$HOME/.bashrc" "$HOME/.bash_profile" \
-  "$HOME/.config/karabiner"; do
-  if [[ -L "$legacy_target" ]]; then
-    legacy_source="$(readlink "$legacy_target")"
-    [[ "$legacy_source" == "$ROOT/backup"/* ]] && warn "$legacy_target still points into backup/"
+while IFS= read -r -d '' legacy_target; do
+  legacy_source="$(readlink "$legacy_target")"
+  if [[ "$legacy_source" == "$ROOT/backup" || "$legacy_source" == "$ROOT/backup/"* || \
+        "$legacy_source" == "$ROOT/legacy" || "$legacy_source" == "$ROOT/legacy/"* ]]; then
+    bad "$legacy_target still points into backup/ or legacy/"
   fi
-done
+done < <(find "$HOME" \
+  \( -path "$HOME/.cache" -o -path "$HOME/Library/Caches" -o -path "$HOME/.Trash" \
+     -o -path "$ROOT" -o -path "$HOME/Library/Group Containers" \
+     -o -path "$HOME/Library/Containers" \) -prune -o -type l -print0 2>/dev/null)
+
+KARABINER_SOURCE="$(karabiner_source "$ROOT" "$PLATFORM" || true)"
+if [[ -n "$KARABINER_SOURCE" ]]; then
+  if link_matches_source "$HOME/.config/karabiner" "$KARABINER_SOURCE"; then
+    ok "$HOME/.config/karabiner"
+  else
+    bad "$HOME/.config/karabiner is not linked to $KARABINER_SOURCE"
+  fi
+fi
 
 if grep -Eq '^[[:space:]]*(Host|Hostname)[[:space:]]' "$ROOT/home/.ssh/config"; then
   bad 'public SSH config contains host definitions'

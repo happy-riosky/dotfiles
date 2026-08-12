@@ -52,7 +52,8 @@ The file can exist, but the domain does not load after reboot.
 | Config | Runtime (effective) | Golden copy in git | Tool |
 |--------|---------------------|--------------------|------|
 | Core Git, SSH, tmux and Vim files | leaf links into `home/` | `home/` | `install` / `scripts/link` |
-| Shell and Karabiner (transitional) | links into `backup/` | `backup/` | Phase 2/3 migration |
+| Shell | leaf links into `home/` | `home/` | `install` / `scripts/link` |
+| Karabiner | directory link into Darwin package | `platforms/darwin/home/.config/karabiner/` | `install` / `scripts/link` |
 | System keyboard shortcuts | **real** `com.apple.symbolichotkeys` | `platforms/darwin/managed/hotkeys/symbolichotkeys.plist` | `scripts/hotkeys-*.sh` |
 | Rectangle | **real** `com.knollsoft.Rectangle` | `platforms/darwin/managed/hotkeys/RectangleConfig.json` | `scripts/hotkeys-*.sh` |
 | Other app Preferences plists | **real** files under `~/Library/Preferences/` | `platforms/darwin/managed/preferences/*.plist` | `scripts/prefs-*.sh` |

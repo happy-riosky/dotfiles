@@ -274,29 +274,29 @@ Git 历史不默认重写。先修复当前 HEAD 并运行 secret scan；只有�
 - [x] 备份现有目标，然后切换到新链接。
 - [x] 每组切换后立即验证对应工具。
 - [x] 迁移 Preferences/hotkeys golden 到 `platforms/darwin/managed/`。
-- [ ] 所有运行时链接切换完成后，将原 `backup/` 改名为只读的 `legacy/backup/`；不要在仍有链接指向它时移动。
+- [x] 所有运行时链接切换完成后，将原 `backup/` 改名为只读的 `legacy/backup/`；不要在仍有链接指向它时移动。
 
 验收：core 配置从新目录运行；重复执行 link 不报错；没有链接指向 `legacy/backup`；Preferences 仍是真实文件。
 
 执行记录（2026-08-12）：本机未安装 GNU Stow，`scripts/link` 使用等价的
-叶子链接后端并保留 Stow 后端支持；`backup/` 仍被 Phase 2 shell 和 Phase 3
-Karabiner 使用，因此按计划暂不归档。
+叶子链接后端并保留 Stow 后端支持；Phase 2/3 切换完成并确认 HOME 零残留
+链接后，旧快照已归档到只读的 `legacy/backup/`。
 
 ### Phase 2：拆分 shell
 
-- [ ] 拆分 zsh/bash 的 core、platform、profile、host 和 local。
-- [ ] 移除硬编码主机路径和代理。
-- [ ] 为 Homebrew、Conda、NVM、Go、PostgreSQL、OpenClaw 等增加 guard。
-- [ ] 验证交互、login 和非交互 shell。
-- [ ] 验证远程命令、scp 和 cron 场景无输出污染。
+- [x] 拆分 zsh/bash 的 core、platform、profile、host 和 local。
+- [x] 移除硬编码主机路径和代理。
+- [x] 为 Homebrew、Conda、NVM、Go、PostgreSQL、OpenClaw 等增加 guard。
+- [x] 验证交互、login 和非交互 shell。
+- [x] 验证远程命令、scp 和 cron 场景无输出污染。
 
 验收：缺少可选工具时 shell 正常启动；只加载当前 platform/profile。
 
 ### Phase 3：迁移 macOS 应用配置
 
-- [ ] 将 Karabiner 切换到新的 Darwin 目录链接。
+- [x] 将 Karabiner 切换到新的 Darwin 目录链接。
 - [ ] 验证 Karabiner UI 修改会产生 Git diff。
-- [ ] 更新 prefs/hotkeys export/restore 脚本的新路径。
+- [x] 更新 prefs/hotkeys export/restore 脚本的新路径。
 - [ ] 为 Preferences 恢复增加确认、备份和失败恢复。
 - [ ] 对 Rectangle 和一个非关键 domain 做恢复测试。
 

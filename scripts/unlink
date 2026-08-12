@@ -29,6 +29,12 @@ while IFS= read -r source_root; do
   done < <(source_entries "$source_root")
 done < <(source_roots "$ROOT" "$PLATFORM")
 
+KARABINER_SOURCE="$(karabiner_source "$ROOT" "$PLATFORM" || true)"
+if [[ -n "$KARABINER_SOURCE" ]] && link_matches_source "$HOME/.config/karabiner" "$KARABINER_SOURCE"; then
+  printf 'unlink %s\n' "$HOME/.config/karabiner"
+  (( DRY_RUN == 1 )) || rm "$HOME/.config/karabiner"
+fi
+
 if (( DRY_RUN == 0 )); then
   for directory in "$HOME/.ssh" "$HOME/.tmux/colors" "$HOME/.tmux" "$HOME/.vim/colors" "$HOME/.vim"; do
     [[ -d "$directory" ]] && rmdir "$directory" 2>/dev/null || true

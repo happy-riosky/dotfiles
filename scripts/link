@@ -21,14 +21,22 @@ esac
 
 check_source_collisions "$ROOT" "$PLATFORM"
 check_target_conflicts "$ROOT" "$PLATFORM"
+KARABINER_SOURCE="$(karabiner_source "$ROOT" "$PLATFORM" || true)"
+[[ -z "$KARABINER_SOURCE" ]] || check_karabiner_target "$KARABINER_SOURCE"
 
 BACKEND="${DOTFILES_LINK_BACKEND:-}"
 if [[ -z "$BACKEND" ]]; then
-  if command -v stow >/dev/null 2>&1; then
+  if [[ "$PLATFORM" == darwin && -n "$KARABINER_SOURCE" ]]; then
+    BACKEND=direct
+  elif command -v stow >/dev/null 2>&1; then
     BACKEND=stow
   else
     BACKEND=direct
   fi
+fi
+if [[ "$BACKEND" == stow && -n "$KARABINER_SOURCE" ]]; then
+  printf 'link: Stow backend cannot manage the Karabiner directory package; use direct\n' >&2
+  exit 2
 fi
 
 if [[ "$BACKEND" == stow ]]; then
@@ -56,4 +64,12 @@ elif [[ "$BACKEND" == direct ]]; then
 else
   printf 'link: unsupported backend: %s\n' "$BACKEND" >&2
   exit 2
+fi
+
+if [[ -n "$KARABINER_SOURCE" ]] && ! link_matches_source "$HOME/.config/karabiner" "$KARABINER_SOURCE"; then
+  printf 'link %s -> %s\n' "$HOME/.config/karabiner" "$KARABINER_SOURCE"
+  if (( DRY_RUN == 0 )); then
+    mkdir -p "$HOME/.config"
+    ln -s "$KARABINER_SOURCE" "$HOME/.config/karabiner"
+  fi
 fi

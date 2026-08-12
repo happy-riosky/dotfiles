@@ -113,9 +113,27 @@ test_install_profile_validation() {
   fi
 }
 
+test_karabiner_directory_link() {
+  local fixture="$TMP_ROOT/karabiner-repo" home="$TMP_ROOT/karabiner-home"
+  make_fixture "$fixture"
+  mkdir -p "$fixture/platforms/darwin/home/.config/karabiner" "$home"
+  printf '{}\n' > "$fixture/platforms/darwin/home/.config/karabiner/karabiner.json"
+
+  HOME="$home" DOTFILES_ROOT="$fixture" DOTFILES_PLATFORM=darwin "$ROOT/scripts/link"
+  assert_link "$home/.config/karabiner" "$fixture/platforms/darwin/home/.config/karabiner"
+  HOME="$home" DOTFILES_ROOT="$fixture" DOTFILES_PLATFORM=darwin "$ROOT/scripts/unlink"
+  [[ ! -e "$home/.config/karabiner" ]] || fail 'unlink kept Karabiner directory link'
+
+  if HOME="$home" DOTFILES_ROOT="$fixture" DOTFILES_PLATFORM=darwin \
+    DOTFILES_LINK_BACKEND=stow "$ROOT/scripts/link" --dry-run >/dev/null 2>&1; then
+    fail 'link accepted Stow with the Karabiner directory package'
+  fi
+}
+
 test_link_lifecycle
 test_existing_target_conflict
 test_wrong_symlink_conflict
 test_package_collision
 test_install_profile_validation
+test_karabiner_directory_link
 printf 'phase1 integration tests passed\n'
