@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Export currently-effective macOS preference domains into
-# dotfiles/backup/manual/prefs/ as real plists (git golden copies).
+# platforms/darwin/managed/preferences/ as real plists (git golden copies).
 # Preference domains must NOT be mackup symlinks on modern macOS.
 set -euo pipefail
 
 DOTFILES="${DOTFILES:-$HOME/dotfiles}"
-MANUAL="$DOTFILES/backup/manual/prefs"
+MANUAL="$DOTFILES/platforms/darwin/managed/preferences"
 
 # Domains previously managed as mackup Preference plists (plus hotkeys/rectangle handled separately).
 DOMAINS=(

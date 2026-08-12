@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="${DOTFILES_ROOT:-$SCRIPT_ROOT}"
+# shellcheck source=scripts/lib-dotfiles.sh
+source "$SCRIPT_ROOT/scripts/lib-dotfiles.sh"
+
+PROFILE="${1:-}"
+[[ -n "$PROFILE" ]] || { printf 'usage: ./install {full|server|termux} [--dry-run]\n' >&2; exit 2; }
+shift
+
+DRY_RUN=0
+if [[ "${1:-}" == --dry-run ]]; then
+  DRY_RUN=1
+  shift
+fi
+[[ $# -eq 0 ]] || { printf 'install: unsupported option: %s\n' "$1" >&2; exit 2; }
+
+PLATFORM="$(dotfiles_platform)"
+if [[ "$PLATFORM" == linux ]]; then
+  OS_ID="${DOTFILES_OS_ID:-}"
+  if [[ -z "$OS_ID" && -r /etc/os-release ]]; then
+    # shellcheck disable=SC1091
+    source /etc/os-release
+    OS_ID="${ID:-}"
+  fi
+  case "$OS_ID" in
+    debian|ubuntu) ;;
+    *) printf 'install: Linux server profile supports Debian/Ubuntu only\n' >&2; exit 1 ;;
+  esac
+fi
+case "$PLATFORM:$PROFILE" in
+  darwin:full|linux:server|termux:termux) ;;
+  wsl:*) printf 'install: WSL is not supported in the first release\n' >&2; exit 1 ;;
+  *) printf 'install: profile %s is not supported on %s\n' "$PROFILE" "$PLATFORM" >&2; exit 1 ;;
+esac
+
+export DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM="$PLATFORM" DOTFILES_PROFILE="$PROFILE"
+if (( DRY_RUN == 1 )); then
+  "$SCRIPT_ROOT/scripts/link" --dry-run
+else
+  "$SCRIPT_ROOT/scripts/link"
+fi

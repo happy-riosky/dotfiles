@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Export currently-effective macOS symbolic hotkeys + Rectangle config into
-# dotfiles/backup/manual/ (git-friendly golden copies).
+# platforms/darwin/managed/hotkeys/ (git-friendly golden copies).
 set -euo pipefail
 
 DOTFILES="${DOTFILES:-$HOME/dotfiles}"
-MANUAL="$DOTFILES/backup/manual"
+MANUAL="$DOTFILES/platforms/darwin/managed/hotkeys"
 RECTANGLE_DOMAIN="com.knollsoft.Rectangle"
 SYMBOLIC_SRC="$HOME/Library/Preferences/com.apple.symbolichotkeys.plist"
 SYMBOLIC_GOLDEN="$MANUAL/symbolichotkeys.plist"
@@ -143,8 +143,8 @@ PY
 main() {
   export_symbolichotkeys
   export_rectangle
-  log "done. commit manual/ when ready:"
-  log "  git -C \"$DOTFILES\" add backup/manual && git -C \"$DOTFILES\" status"
+  log "done. commit managed hotkeys when ready:"
+  log "  git -C \"$DOTFILES\" add platforms/darwin/managed/hotkeys && git -C \"$DOTFILES\" status"
 }
 
 main "$@"

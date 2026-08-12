@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Restore preference domains from dotfiles/backup/manual/prefs/ into REAL
+# Restore preference domains from platforms/darwin/managed/preferences/ into REAL
 # ~/Library/Preferences/*.plist files (never mackup symlinks).
 set -euo pipefail
 
 DOTFILES="${DOTFILES:-$HOME/dotfiles}"
-MANUAL="$DOTFILES/backup/manual/prefs"
+MANUAL="$DOTFILES/platforms/darwin/managed/preferences"
 
 log() { printf '[prefs-restore] %s\n' "$*"; }
 warn() { printf '[prefs-restore] WARN: %s\n' "$*" >&2; }

@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/lib-dotfiles.sh
+source "$SCRIPT_DIR/lib-dotfiles.sh"
+
+DRY_RUN=0
+if [[ "${1:-}" == --dry-run ]]; then
+  DRY_RUN=1
+  shift
+fi
+[[ $# -eq 0 ]] || { printf 'usage: scripts/link [--dry-run]\n' >&2; exit 2; }
+
+ROOT="$(dotfiles_root)"
+PLATFORM="$(dotfiles_platform)"
+case "$PLATFORM" in
+  darwin|linux|termux) ;;
+  *) printf 'link: unsupported platform: %s\n' "$PLATFORM" >&2; exit 1 ;;
+esac
+
+check_source_collisions "$ROOT" "$PLATFORM"
+check_target_conflicts "$ROOT" "$PLATFORM"
+
+BACKEND="${DOTFILES_LINK_BACKEND:-}"
+if [[ -z "$BACKEND" ]]; then
+  if command -v stow >/dev/null 2>&1; then
+    BACKEND=stow
+  else
+    BACKEND=direct
+  fi
+fi
+
+if [[ "$BACKEND" == stow ]]; then
+  stow_args=(--no-folding --dir="$ROOT" --target="$HOME" --restow)
+  (( DRY_RUN == 1 )) && stow_args+=(--simulate --verbose=1)
+  [[ -d "$ROOT/home" ]] && stow "${stow_args[@]}" home
+  if [[ -d "$ROOT/platforms/$PLATFORM/home" ]]; then
+    stow_args[1]="--dir=$ROOT/platforms/$PLATFORM"
+    stow "${stow_args[@]}" home
+  fi
+elif [[ "$BACKEND" == direct ]]; then
+  while IFS= read -r source_root; do
+    while IFS=$'\t' read -r relative source; do
+      target="$HOME/$relative"
+      if link_matches_source "$target" "$source"; then
+        continue
+      fi
+      printf 'link %s -> %s\n' "$target" "$source"
+      if (( DRY_RUN == 0 )); then
+        mkdir -p "$(dirname "$target")"
+        ln -s "$source" "$target"
+      fi
+    done < <(source_entries "$source_root")
+  done < <(source_roots "$ROOT" "$PLATFORM")
+else
+  printf 'link: unsupported backend: %s\n' "$BACKEND" >&2
+  exit 2
+fi

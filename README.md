@@ -1,28 +1,31 @@
 ## Intro
 
-This repo contains the way that I manage my dotfiles with the help of [`mackup`](https://github.com/lra/mackup).
+This repository is migrating from Mackup to explicit, cross-platform HOME links.
 
 > Migration in progress: follow [`MIGRATION_PLAN.md`](MIGRATION_PLAN.md). The old
 > `setup` and plugin installer scripts are disabled until the new `./install`
-> entry point is ready.
+> migration is complete.
 
 ## Usage
 
 ### Set up the environment
 
-- Set up the basics
+- Preview or link the supported macOS core profile:
 
-```
-cd ~ && git clone https://github.com/happy-riosky/dotfiles
-bash ~/dotfiles/setup
+```bash
+./install full --dry-run
+./install full
+./scripts/doctor
 ```
 
-- Set up `oh-my-zsh`, `tmux`, `vim`
+- Other first-release profiles are `./install server` on Debian/Ubuntu and
+  `./install termux` in Termux. Unsupported platform/profile combinations fail.
 
-```
-bash scripts/oh-my-zsh.sh
-bash scripts/tmux.sh
-bash scripts/vim.sh
+- Install fixed-commit tmux and Vim plugins when a checkout is missing:
+
+```bash
+./scripts/plugins --dry-run --group core
+./scripts/plugins --group core
 ```
 
 - Restore macOS preference domains (macOS only; after apps are installed)
@@ -32,7 +35,13 @@ bash ~/dotfiles/scripts/hotkeys-restore.sh
 bash ~/dotfiles/scripts/prefs-restore.sh
 ```
 
-## Preference domains (macOS): not managed via mackup symlinks
+## Legacy Preference Notes
+
+The section below describes the previous Mackup behavior. Current golden files
+live under `platforms/darwin/managed/`; the export and restore scripts use that
+directory directly.
+
+### Preference domains (macOS): not managed via mackup symlinks
 
 On modern macOS, `cfprefsd` often fails to load preference **domains** when the
 plist under `~/Library/Preferences/` is a **symlink** (mackup’s default model).
@@ -42,11 +51,11 @@ The file can exist, but the domain does not load after reboot.
 
 | Config | Runtime (effective) | Golden copy in git | Tool |
 |--------|---------------------|--------------------|------|
-| Shell, editors, most app files | mackup symlink → `backup/` | mackup | `mackup backup` / `restore` |
-| System keyboard shortcuts | **real** `com.apple.symbolichotkeys` | `backup/manual/symbolichotkeys.plist` | `scripts/hotkeys-*.sh` |
-| Rectangle | **real** `com.knollsoft.Rectangle` | `backup/manual/RectangleConfig.json` | `scripts/hotkeys-*.sh` |
-| Other app Preferences plists | **real** files under `~/Library/Preferences/` | `backup/manual/prefs/*.plist` | `scripts/prefs-*.sh` |
-| Hybrid apps (iTerm2, BibDesk, Rocket, Xcode, BTT, Photoshop) | App Support / XDG still mackup; Preferences real | `~/.mackup/*.cfg` overrides drop Preference paths | mackup + prefs scripts |
+| Core Git, SSH, tmux and Vim files | leaf links into `home/` | `home/` | `install` / `scripts/link` |
+| Shell and Karabiner (transitional) | links into `backup/` | `backup/` | Phase 2/3 migration |
+| System keyboard shortcuts | **real** `com.apple.symbolichotkeys` | `platforms/darwin/managed/hotkeys/symbolichotkeys.plist` | `scripts/hotkeys-*.sh` |
+| Rectangle | **real** `com.knollsoft.Rectangle` | `platforms/darwin/managed/hotkeys/RectangleConfig.json` | `scripts/hotkeys-*.sh` |
+| Other app Preferences plists | **real** files under `~/Library/Preferences/` | `platforms/darwin/managed/preferences/*.plist` | `scripts/prefs-*.sh` |
 
 Custom mackup app definitions live in `dotfiles/.mackup/` (linked to `~/.mackup`).
 Pure Preference-only apps are listed under `applications_to_ignore` in `.mackup.cfg`.
@@ -56,7 +65,7 @@ Pure Preference-only apps are listed under `applications_to_ignore` in `.mackup.
 ```
 bash ~/dotfiles/scripts/hotkeys-export.sh
 bash ~/dotfiles/scripts/prefs-export.sh
-git -C ~/dotfiles add backup/manual
+git -C ~/dotfiles add platforms/darwin/managed
 git -C ~/dotfiles commit -m "Update macOS preference golden configs"
 ```
 
@@ -81,8 +90,8 @@ defaults read com.googlecode.iterm2 | head
 ### Apple Music note
 
 `com.apple.Music.plist` is TCC-protected on some systems (`Operation not permitted`
-when unlinking the mackup symlink). Golden copy is still in
-`backup/manual/prefs/com.apple.Music.plist`. To demote it:
+when replacing an old Mackup symlink). Golden copy is in
+`platforms/darwin/managed/preferences/com.apple.Music.plist`. To demote it:
 
 1. Grant **Full Disk Access** to Terminal (or iTerm), then re-run `prefs-restore.sh`, or
 2. Manually remove the symlink in Finder and copy the golden file.

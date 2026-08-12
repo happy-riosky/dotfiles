@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${DOTFILES_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+MANIFEST="$ROOT/plugin-manifests/plugins.tsv"
+DRY_RUN=0
+GROUP=all
+
+if [[ "${1:-}" == --dry-run ]]; then
+  DRY_RUN=1
+  shift
+fi
+if [[ "${1:-}" == --group ]]; then
+  GROUP="${2:-}"
+  [[ -n "$GROUP" ]] || { printf 'plugins: --group requires a value\n' >&2; exit 2; }
+  shift 2
+fi
+[[ $# -eq 0 ]] || { printf 'usage: scripts/plugins [--dry-run] [--group core|shell]\n' >&2; exit 2; }
+case "$GROUP" in all|core|shell) ;; *) printf 'plugins: unsupported group: %s\n' "$GROUP" >&2; exit 2 ;; esac
+[[ -f "$MANIFEST" ]] || { printf 'plugins: missing %s\n' "$MANIFEST" >&2; exit 1; }
+
+while IFS=$'\t' read -r raw_target repository commit plugin_group; do
+  [[ -n "$raw_target" && "${raw_target:0:1}" != '#' ]] || continue
+  [[ "$GROUP" == all || "$GROUP" == "$plugin_group" ]] || continue
+  target="${raw_target/#\~/$HOME}"
+  if [[ -d "$target/.git" ]]; then
+    current="$(git -C "$target" rev-parse HEAD)"
+    [[ "$current" == "$commit" ]] || {
+      printf 'plugins: existing checkout has wrong commit: %s\n' "$target" >&2
+      exit 1
+    }
+    continue
+  fi
+  if [[ -e "$target" || -L "$target" ]]; then
+    printf 'plugins: target exists and is not a Git checkout: %s\n' "$target" >&2
+    exit 1
+  fi
+  printf 'install %s at %s\n' "$repository" "$commit"
+  if (( DRY_RUN == 0 )); then
+    mkdir -p "$(dirname "$target")"
+    git clone "$repository" "$target"
+    git -C "$target" checkout --detach "$commit"
+  fi
+done < "$MANIFEST"

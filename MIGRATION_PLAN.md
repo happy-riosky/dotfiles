@@ -267,16 +267,20 @@ Git 历史不默认重写。先修复当前 HEAD 并运行 secret scan；只有�
 
 ### Phase 1：建立新目录并迁移 core
 
-- [ ] 创建 `home/`、`platforms/`、`package-lists/` 和脚本骨架。
-- [ ] 先复制 `.inputrc`、公共 Git、SSH stub、tmux 和 Vim 配置到新目录。
-- [ ] 将第三方 Gitlink 改为固定 commit 插件清单，不复制插件目录。
-- [ ] 对每组目标先运行 Stow dry-run。
-- [ ] 备份现有目标，然后切换到新链接。
-- [ ] 每组切换后立即验证对应工具。
-- [ ] 迁移 Preferences/hotkeys golden 到 `platforms/darwin/managed/`。
+- [x] 创建 `home/`、`platforms/`、`package-lists/` 和脚本骨架。
+- [x] 先复制 `.inputrc`、公共 Git、SSH stub、tmux 和 Vim 配置到新目录。
+- [x] 将第三方 Gitlink 改为固定 commit 插件清单，不复制插件目录。
+- [x] 对每组目标先运行 Stow dry-run。
+- [x] 备份现有目标，然后切换到新链接。
+- [x] 每组切换后立即验证对应工具。
+- [x] 迁移 Preferences/hotkeys golden 到 `platforms/darwin/managed/`。
 - [ ] 所有运行时链接切换完成后，将原 `backup/` 改名为只读的 `legacy/backup/`；不要在仍有链接指向它时移动。
 
 验收：core 配置从新目录运行；重复执行 link 不报错；没有链接指向 `legacy/backup`；Preferences 仍是真实文件。
+
+执行记录（2026-08-12）：本机未安装 GNU Stow，`scripts/link` 使用等价的
+叶子链接后端并保留 Stow 后端支持；`backup/` 仍被 Phase 2 shell 和 Phase 3
+Karabiner 使用，因此按计划暂不归档。
 
 ### Phase 2：拆分 shell
 

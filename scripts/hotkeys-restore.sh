@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Restore macOS symbolic hotkeys + Rectangle from dotfiles/backup/manual/
+# Restore macOS symbolic hotkeys + Rectangle from platforms/darwin/managed/hotkeys/
 # into REAL preference files (never mackup symlinks). Run manually or from setup.
 set -euo pipefail
 
 DOTFILES="${DOTFILES:-$HOME/dotfiles}"
-MANUAL="$DOTFILES/backup/manual"
+MANUAL="$DOTFILES/platforms/darwin/managed/hotkeys"
 RECTANGLE_DOMAIN="com.knollsoft.Rectangle"
 SYMBOLIC_DST="$HOME/Library/Preferences/com.apple.symbolichotkeys.plist"
 RECTANGLE_DST="$HOME/Library/Preferences/com.knollsoft.Rectangle.plist"

@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/lib-dotfiles.sh
+source "$SCRIPT_DIR/lib-dotfiles.sh"
+
+ROOT="$(dotfiles_root)"
+PLATFORM="$(dotfiles_platform)"
+PROFILE="${DOTFILES_PROFILE:-unset}"
+FAILURES=0
+
+ok() { printf 'OK: %s\n' "$*"; }
+warn() { printf 'WARN: %s\n' "$*" >&2; }
+bad() { printf 'FAIL: %s\n' "$*" >&2; FAILURES=$((FAILURES + 1)); }
+
+printf 'platform=%s profile=%s root=%s\n' "$PLATFORM" "$PROFILE" "$ROOT"
+
+while IFS= read -r source_root; do
+  while IFS=$'\t' read -r relative source; do
+    target="$HOME/$relative"
+    if link_matches_source "$target" "$source"; then
+      ok "$target"
+    else
+      bad "$target is not linked to $source"
+    fi
+  done < <(source_entries "$source_root")
+done < <(source_roots "$ROOT" "$PLATFORM")
+
+if [[ "$(git config --global --includes --get http.sslVerify 2>/dev/null || true)" == false ]]; then
+  bad 'Git TLS verification is disabled'
+else
+  ok 'Git TLS verification is enabled'
+fi
+
+if [[ -z "$(git config --global --includes --get user.email 2>/dev/null || true)" ]]; then
+  bad 'Git local identity is missing'
+else
+  ok 'Git local identity is available'
+fi
+
+while IFS= read -r tracked_file; do
+  case "$tracked_file" in
+    *.netrc|*/.netrc|*auth.json|*.license|*.bttlicense)
+      bad "private file is tracked: $tracked_file"
+      ;;
+  esac
+done < <(git -C "$ROOT" ls-files)
+
+for legacy_target in \
+  "$HOME/.zshrc" "$HOME/.zprofile" "$HOME/.bashrc" "$HOME/.bash_profile" \
+  "$HOME/.config/karabiner"; do
+  if [[ -L "$legacy_target" ]]; then
+    legacy_source="$(readlink "$legacy_target")"
+    [[ "$legacy_source" == "$ROOT/backup"/* ]] && warn "$legacy_target still points into backup/"
+  fi
+done
+
+if grep -Eq '^[[:space:]]*(Host|Hostname)[[:space:]]' "$ROOT/home/.ssh/config"; then
+  bad 'public SSH config contains host definitions'
+else
+  ok 'public SSH config is a host-free stub'
+fi
+
+if [[ "$PLATFORM" == darwin ]]; then
+  for golden in "$ROOT/platforms/darwin/managed/preferences"/*.plist; do
+    [[ -e "$golden" ]] || continue
+    preference="$HOME/Library/Preferences/$(basename "$golden")"
+    [[ -L "$preference" ]] && bad "$preference is a symlink"
+  done
+  for preference in \
+    "$HOME/Library/Preferences/com.apple.symbolichotkeys.plist" \
+    "$HOME/Library/Preferences/com.knollsoft.Rectangle.plist"; do
+    [[ -L "$preference" ]] && bad "$preference is a symlink"
+  done
+fi
+
+/bin/bash --noprofile --norc -c 'exit 0' || bad 'clean Bash startup failed'
+if [[ -x /bin/zsh ]]; then
+  /bin/zsh -f -c 'exit 0' || bad 'clean Zsh startup failed'
+fi
+
+(( FAILURES == 0 )) || exit 1
+printf 'doctor passed\n'

@@ -1,9 +1,11 @@
 backup/.ipython/
+backup/.oh-my-zsh/
 backup/.ssh/*
 !backup/.ssh/config
 backup/.zshenv
-backup/.vim/pack/vendor/
+backup/.vim/pack/
 backup/.tmux/plugins/**
+backup/manual/custom/plugins/
 backup/.config/karabiner/automatic_backups/
 backup/Library/*
 !backup/Library/Application Support/

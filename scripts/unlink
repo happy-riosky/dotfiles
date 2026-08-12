@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/lib-dotfiles.sh
+source "$SCRIPT_DIR/lib-dotfiles.sh"
+
+DRY_RUN=0
+if [[ "${1:-}" == --dry-run ]]; then
+  DRY_RUN=1
+  shift
+fi
+[[ $# -eq 0 ]] || { printf 'usage: scripts/unlink [--dry-run]\n' >&2; exit 2; }
+
+ROOT="$(dotfiles_root)"
+PLATFORM="$(dotfiles_platform)"
+case "$PLATFORM" in
+  darwin|linux|termux) ;;
+  *) printf 'unlink: unsupported platform: %s\n' "$PLATFORM" >&2; exit 1 ;;
+esac
+
+while IFS= read -r source_root; do
+  while IFS=$'\t' read -r relative source; do
+    target="$HOME/$relative"
+    if link_matches_source "$target" "$source"; then
+      printf 'unlink %s\n' "$target"
+      (( DRY_RUN == 1 )) || rm "$target"
+    fi
+  done < <(source_entries "$source_root")
+done < <(source_roots "$ROOT" "$PLATFORM")
+
+if (( DRY_RUN == 0 )); then
+  for directory in "$HOME/.ssh" "$HOME/.tmux/colors" "$HOME/.tmux" "$HOME/.vim/colors" "$HOME/.vim"; do
+    [[ -d "$directory" ]] && rmdir "$directory" 2>/dev/null || true
+  done
+fi
