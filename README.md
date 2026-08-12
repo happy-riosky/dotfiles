@@ -1,103 +1,73 @@
 ## Intro
 
-This repository is migrating from Mackup to explicit, cross-platform HOME links.
+Cross-platform dotfiles managed with explicit HOME links. Supports macOS (full),
+Debian/Ubuntu (server), and Termux.
 
-> Migration in progress: follow [`MIGRATION_PLAN.md`](MIGRATION_PLAN.md). The old
-> `setup` and plugin installer scripts are disabled until the new `./install`
-> migration is complete.
+## Layout
+
+```text
+home/                          # cross-platform, linked into $HOME
+platforms/darwin/home/         # macOS-only linked configs (Karabiner, etc.)
+platforms/darwin/managed/      # macOS Preferences goldens (real files, not linked)
+package-lists/                 # brew, apt, termux package lists
+plugin-manifests/              # pinned tmux/vim/zsh plugin sources
+scripts/                       # link, unlink, doctor, plugins, prefs/hotkeys
+install                        # entry point: ./install {full|server|termux}
+```
 
 ## Usage
 
-### Set up the environment
-
-- Preview or link the supported macOS core profile:
+### Link configs
 
 ```bash
-./install full --dry-run
+./install full --dry-run       # macOS
 ./install full
 ./scripts/doctor
 ```
 
-- Other first-release profiles are `./install server` on Debian/Ubuntu and
-  `./install termux` in Termux. Unsupported platform/profile combinations fail.
+Other profiles: `./install server` (Debian/Ubuntu), `./install termux` (Termux).
+Unsupported platform/profile combinations fail explicitly.
 
-- Install fixed-commit tmux and Vim plugins when a checkout is missing:
+### Install plugins
 
 ```bash
 ./scripts/plugins --dry-run --group core
 ./scripts/plugins --group core
 ```
 
-- Restore macOS preference domains (macOS only; after apps are installed)
+### Restore macOS Preferences (macOS only)
 
-```
-bash ~/dotfiles/scripts/hotkeys-restore.sh
-bash ~/dotfiles/scripts/prefs-restore.sh
-```
-
-## Legacy Preference Notes
-
-The section below describes the previous Mackup behavior. Current golden files
-live under `platforms/darwin/managed/`; the export and restore scripts use that
-directory directly.
-
-### Preference domains (macOS): not managed via mackup symlinks
-
-On modern macOS, `cfprefsd` often fails to load preference **domains** when the
-plist under `~/Library/Preferences/` is a **symlink** (mackup’s default model).
-The file can exist, but the domain does not load after reboot.
-
-### What is managed how
-
-| Config | Runtime (effective) | Golden copy in git | Tool |
-|--------|---------------------|--------------------|------|
-| Core Git, SSH, tmux and Vim files | leaf links into `home/` | `home/` | `install` / `scripts/link` |
-| Shell | leaf links into `home/` | `home/` | `install` / `scripts/link` |
-| Karabiner | directory link into Darwin package | `platforms/darwin/home/.config/karabiner/` | `install` / `scripts/link` |
-| System keyboard shortcuts | **real** `com.apple.symbolichotkeys` | `platforms/darwin/managed/hotkeys/symbolichotkeys.plist` | `scripts/hotkeys-*.sh` |
-| Rectangle | **real** `com.knollsoft.Rectangle` | `platforms/darwin/managed/hotkeys/RectangleConfig.json` | `scripts/hotkeys-*.sh` |
-| Other app Preferences plists | **real** files under `~/Library/Preferences/` | `platforms/darwin/managed/preferences/*.plist` | `scripts/prefs-*.sh` |
-
-Custom mackup app definitions live in `dotfiles/.mackup/` (linked to `~/.mackup`).
-Pure Preference-only apps are listed under `applications_to_ignore` in `.mackup.cfg`.
-
-### After you change shortcuts or app prefs
-
-```
-bash ~/dotfiles/scripts/hotkeys-export.sh
-bash ~/dotfiles/scripts/prefs-export.sh
-git -C ~/dotfiles add platforms/darwin/managed
-git -C ~/dotfiles commit -m "Update macOS preference golden configs"
+```bash
+bash scripts/hotkeys-restore.sh --yes
+bash scripts/prefs-restore.sh --yes
 ```
 
-### After a reboot looks wrong, or on a new machine
+Backups are saved to `~/.local/state/dotfiles/`. Omit `--yes` for a confirmation
+prompt.
 
-```
-bash ~/dotfiles/scripts/hotkeys-restore.sh
-bash ~/dotfiles/scripts/prefs-restore.sh
-```
+### Export current Preferences after changes
 
-Verify domains are real files and readable:
-
-```
-ls -l ~/Library/Preferences/com.apple.symbolichotkeys.plist
-ls -l ~/Library/Preferences/com.knollsoft.Rectangle.plist
-# should be regular files, not "-> ..."
-
-defaults read com.knollsoft.Rectangle leftHalf
-defaults read com.googlecode.iterm2 | head
+```bash
+bash scripts/hotkeys-export.sh
+bash scripts/prefs-export.sh
+git add platforms/darwin/managed
+git commit -m "Update macOS preference golden configs"
 ```
 
-### Apple Music note
+## macOS Preferences
 
-`com.apple.Music.plist` is TCC-protected on some systems (`Operation not permitted`
-when replacing an old Mackup symlink). Golden copy is in
-`platforms/darwin/managed/preferences/com.apple.Music.plist`. To demote it:
+Preferences are **real files**, never symlinks. Goldens live under
+`platforms/darwin/managed/`.
 
-1. Grant **Full Disk Access** to Terminal (or iTerm), then re-run `prefs-restore.sh`, or
-2. Manually remove the symlink in Finder and copy the golden file.
+| Config | Runtime | Golden | Tool |
+|--------|---------|--------|------|
+| Core (Git, SSH, tmux, Vim, shell) | leaf links | `home/` | `install` |
+| Karabiner | directory link | `platforms/darwin/home/.config/karabiner/` | `install` |
+| System hotkeys | real plist | `platforms/darwin/managed/hotkeys/` | `scripts/hotkeys-*.sh` |
+| Rectangle | real plist | `platforms/darwin/managed/hotkeys/` | `scripts/hotkeys-*.sh` |
+| App Preferences | real plists | `platforms/darwin/managed/preferences/` | `scripts/prefs-*.sh` |
 
-### Do not
+### TCC-protected domains
 
-- Let `mackup restore` re-create Preference symlinks for ignored / overridden apps.
-- Replace Preference plists with symlinks into `dotfiles/backup/` again.
+`com.apple.Music.plist` may refuse `cp` (`Operation not permitted`). Grant Full
+Disk Access to Terminal, or copy manually from the golden.

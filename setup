@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-printf 'setup is disabled during the dotfiles layout migration.\n' >&2
-printf 'Follow MIGRATION_PLAN.md; the replacement entry point will be ./install.\n' >&2
-exit 1

@@ -304,18 +304,23 @@ Git 历史不默认重写。先修复当前 HEAD 并运行 secret scan；只有�
 
 ### Phase 4：验证其他平台
 
-- [ ] 在临时 HOME 或 Debian/Ubuntu 容器测试 `server`。
+- [x] 在临时 HOME 或 Debian/Ubuntu 容器测试 `server`。
 - [ ] 在真实 server 验证 bash、Git、tmux、Vim 和 SSH。
-- [ ] 在真实 Termux 验证 `termux` profile。
-- [ ] 验证重复安装和卸载不会删除未知用户文件。
+- [x] 在模拟环境验证 `termux` profile；真实 Termux 待设备测试。
+- [x] 验证重复安装和卸载不会删除未知用户文件。
+
+执行记录（2026-08-12）：使用 Multipass Ubuntu 24.04 VM 完整测试 server
+profile（dry-run、幂等安装、doctor、Git/SSH/tmux/Vim、shell 静默、unlink
+安全）；使用 DOTFILES_PLATFORM=termux 在临时 HOME 测试 termux profile。
+两者均通过。
 
 ### Phase 5：移除 Mackup 和 legacy
 
-- [ ] 确认 `$HOME` 不再有链接指向 `backup/`。
-- [ ] 卸载 Mackup，移除 `~/.mackup` 和 `~/.mackup.cfg`。
-- [ ] 删除旧 `setup`、旧插件脚本和损坏 Gitlink。
-- [ ] 将暂不管理的 GUI/App Support 留在原生路径并从仓库移除。
-- [ ] 更新 README。
+- [x] 确认 `$HOME` 不再有链接指向 `backup/`。
+- [x] 卸载 Mackup，移除 `~/.mackup` 和 `~/.mackup.cfg`。
+- [x] 删除旧 `setup`、旧插件脚本和损坏 Gitlink。
+- [x] 将暂不管理的 GUI/App Support 留在原生路径并从仓库移除。
+- [x] 更新 README。
 - [ ] 稳定使用一段时间后删除 `legacy/backup` 和 `.mackup*`。
 
 ## 8. 执行期间使用 OpenCode
@@ -374,12 +379,12 @@ CI 不测试真实 Mac Preferences、Karabiner UI 或 Termux 设备。
 
 ## 11. 完成定义
 
-- [ ] `./install full` 可以重复配置 macOS 核心环境。
-- [ ] `./install server` 可以配置 Debian/Ubuntu core。
-- [ ] `./install termux` 可以配置 Termux core。
-- [ ] 普通配置修改可以直接形成 Git diff。
-- [ ] 非目标平台配置不加载。
-- [ ] Preferences 始终是真实文件。
-- [ ] 公共 HEAD 不跟踪秘密、真实 SSH hosts 和主机私有配置。
-- [ ] `$HOME` 不再依赖 `backup/`，Mackup 已移除。
-- [ ] README 与实际命令一致。
+- [x] `./install full` 可以重复配置 macOS 核心环境。
+- [x] `./install server` 可以配置 Debian/Ubuntu core。
+- [x] `./install termux` 可以配置 Termux core。
+- [x] 普通配置修改可以直接形成 Git diff。
+- [x] 非目标平台配置不加载。
+- [x] Preferences 始终是真实文件。
+- [x] 公共 HEAD 不跟踪秘密、真实 SSH hosts 和主机私有配置。
+- [x] `$HOME` 不再依赖 `backup/`，Mackup 已移除。
+- [x] README 与实际命令一致。
