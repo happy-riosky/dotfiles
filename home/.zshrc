@@ -37,6 +37,7 @@ alias mkc='make clean'
 command -v lazygit >/dev/null 2>&1 && alias lg='lazygit'
 command -v lsd >/dev/null 2>&1 && alias lt='lsd -la --tree --depth=4'
 command -v pbcopy >/dev/null 2>&1 && alias pwp='pwd | pbcopy'
+command -v opencode >/dev/null 2>&1 && alias oc='opencode'
 
 if (( $+functions[history-substring-search-up] )); then
   bindkey -M vicmd 'k' history-substring-search-up

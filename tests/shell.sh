@@ -64,6 +64,20 @@ test_bash_platform_detection() {
     fail 'bash did not detect Darwin/full'
 }
 
+test_darwin_homebrew_and_oc() {
+  [[ "$(uname -s)" == Darwin ]] || return 0
+  local home="$TMP_ROOT/darwin-home" fake_brew="$TMP_ROOT/fake-homebrew"
+  mkdir -p "$home" "$fake_brew/bin"
+  cp -R "$ROOT/home/." "$home/"
+  printf '#!/usr/bin/env sh\n' > "$fake_brew/bin/tmux"
+  printf '#!/usr/bin/env sh\n' > "$fake_brew/bin/opencode"
+  chmod +x "$fake_brew/bin/tmux" "$fake_brew/bin/opencode"
+  HOME="$home" PATH=/usr/bin:/bin DOTFILES_HOMEBREW_PREFIX="$fake_brew" \
+    DOTFILES_PLATFORM=darwin DOTFILES_PROFILE=full ZDOTDIR="$home" \
+    /bin/zsh -dfi -c 'unsetopt monitor; source "$HOME/.zshenv"; source "$HOME/.zshrc"; command -v tmux >/dev/null || exit 1; alias oc | grep -q opencode || exit 1' || \
+    fail 'Darwin shell did not expose Homebrew tmux and oc alias'
+}
+
 test_missing_optional_tools() {
   local home="$TMP_ROOT/minimal-home" path="$TMP_ROOT/minimal-bin"
   mkdir -p "$home" "$path"
@@ -80,5 +94,6 @@ test_public_paths
 test_load_order
 test_noninteractive_silence
 test_bash_platform_detection
+test_darwin_homebrew_and_oc
 test_missing_optional_tools
 printf 'shell integration tests passed\n'
