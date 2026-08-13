@@ -21,6 +21,7 @@ esac
 
 check_source_collisions "$ROOT" "$PLATFORM"
 check_target_conflicts "$ROOT" "$PLATFORM"
+remove_legacy_shell_links "$ROOT" "$DRY_RUN"
 KARABINER_SOURCE="$(karabiner_source "$ROOT" "$PLATFORM" || true)"
 [[ -z "$KARABINER_SOURCE" ]] || check_karabiner_target "$KARABINER_SOURCE"
 

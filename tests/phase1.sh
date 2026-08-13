@@ -64,6 +64,33 @@ test_existing_target_conflict() {
   [[ "$(< "$home/.gitconfig")" == local ]] || fail 'link changed existing target'
 }
 
+test_legacy_shell_links_are_removed() {
+  local fixture="$TMP_ROOT/legacy-repo" home="$TMP_ROOT/legacy-home"
+  make_fixture "$fixture"
+  mkdir -p "$fixture/home/.config/dotfiles/shell" "$home/.config/dotfiles/shell"
+  ln -s "$fixture/home/.config/dotfiles/shell/load.zsh" \
+    "$home/.config/dotfiles/shell/load.zsh"
+
+  HOME="$home" DOTFILES_ROOT="$fixture" DOTFILES_PLATFORM=darwin \
+    "$ROOT/scripts/link"
+  [[ ! -e "$home/.config/dotfiles/shell/load.zsh" ]] || \
+    fail 'link kept a legacy shell link'
+  [[ ! -d "$home/.config/dotfiles" ]] || fail 'link kept an empty legacy directory'
+}
+
+test_unmanaged_legacy_link_is_preserved() {
+  local fixture="$TMP_ROOT/unmanaged-legacy-repo" home="$TMP_ROOT/unmanaged-legacy-home"
+  make_fixture "$fixture"
+  mkdir -p "$fixture/home/.config/dotfiles/shell"
+  mkdir -p "$home/.config/dotfiles/shell"
+  ln -s "$fixture/other-load.zsh" "$home/.config/dotfiles/shell/load.zsh"
+
+  HOME="$home" DOTFILES_ROOT="$fixture" DOTFILES_PLATFORM=darwin \
+    "$ROOT/scripts/link"
+  [[ "$(readlink "$home/.config/dotfiles/shell/load.zsh")" == "$fixture/other-load.zsh" ]] || \
+    fail 'link changed an unmanaged legacy symlink'
+}
+
 test_wrong_symlink_conflict() {
   local fixture="$TMP_ROOT/symlink-repo" home="$TMP_ROOT/symlink-home"
   make_fixture "$fixture"
@@ -132,6 +159,8 @@ test_karabiner_directory_link() {
 
 test_link_lifecycle
 test_existing_target_conflict
+test_legacy_shell_links_are_removed
+test_unmanaged_legacy_link_is_preserved
 test_wrong_symlink_conflict
 test_package_collision
 test_install_profile_validation

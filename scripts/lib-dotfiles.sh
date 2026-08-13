@@ -43,9 +43,42 @@ source_entries() {
   while IFS= read -r source_path; do
     relative="${source_path#"$source_root"/}"
     [[ "$relative" == .gitkeep ]] && continue
+    [[ "$relative" == .config/dotfiles/* ]] && continue
     [[ "$relative" == .config/karabiner/* ]] && continue
     printf '%s\t%s\n' "$relative" "$source_path"
   done < <(find "$source_root" \( -type f -o -type l \) -print | LC_ALL=C sort)
+}
+
+remove_legacy_shell_links() {
+  local root="$1" dry_run="${2:-0}" relative target legacy_source
+  local legacy_targets=(
+    .config/dotfiles/shell/core.sh
+    .config/dotfiles/shell/load.bash
+    .config/dotfiles/shell/load.zsh
+    .config/dotfiles/platform/darwin.sh
+    .config/dotfiles/platform/linux.sh
+    .config/dotfiles/platform/termux.sh
+    .config/dotfiles/profiles/full.sh
+    .config/dotfiles/profiles/server.sh
+    .config/dotfiles/profiles/termux.sh
+  )
+  for relative in "${legacy_targets[@]}"; do
+    target="$HOME/$relative"
+    [[ -L "$target" ]] || continue
+    legacy_source="$root/home/$relative"
+    link_matches_source "$target" "$legacy_source" || continue
+    printf 'unlink %s\n' "$target"
+    (( dry_run == 1 )) || rm "$target"
+  done
+  if (( dry_run == 0 )); then
+    for directory in \
+      "$HOME/.config/dotfiles/shell" \
+      "$HOME/.config/dotfiles/platform" \
+      "$HOME/.config/dotfiles/profiles" \
+      "$HOME/.config/dotfiles"; do
+      [[ -d "$directory" ]] && rmdir "$directory" 2>/dev/null || true
+    done
+  fi
 }
 
 karabiner_source() {

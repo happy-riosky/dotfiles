@@ -1,1 +1,1 @@
-source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/shell/load.zsh"
+source "${DOTFILES_ROOT:-$HOME/dotfiles}/scripts/shell/load.zsh"

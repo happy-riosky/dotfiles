@@ -1,4 +1,4 @@
-source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/shell/load.bash"
+source "${DOTFILES_ROOT:-$HOME/dotfiles}/scripts/shell/load.bash"
 case $- in *i*) ;; *) return 0 ;; esac
 
 HISTCONTROL=ignoreboth

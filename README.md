@@ -12,6 +12,7 @@ platforms/darwin/managed/      # macOS Preferences goldens (real files, not link
 package-lists/                 # brew, apt, termux package lists
 plugin-manifests/              # pinned tmux/vim/zsh plugin sources
 scripts/                       # link, unlink, doctor, plugins, prefs/hotkeys
+scripts/shell/                 # shared shell loader and platform/profile fragments
 install                        # entry point: ./install {full|server|termux}
 ```
 

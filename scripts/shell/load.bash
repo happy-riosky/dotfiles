@@ -1,7 +1,9 @@
 [[ -n "${DOTFILES_BASH_LOADED:-}" ]] && return 0
 DOTFILES_BASH_LOADED=1
 
-DOTFILES_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles"
+DOTFILES_ROOT="${DOTFILES_ROOT:-$HOME/dotfiles}"
+DOTFILES_SHELL_HOME="$DOTFILES_ROOT/scripts/shell"
+DOTFILES_LOCAL_HOME="${DOTFILES_LOCAL_HOME:-$HOME}"
 DOTFILES_PLATFORM="${DOTFILES_PLATFORM:-}"
 if [[ -z "$DOTFILES_PLATFORM" ]]; then
   if [[ -n "${TERMUX_VERSION:-}" || "${PREFIX:-}" == */com.termux/* ]]; then
@@ -22,9 +24,9 @@ if [[ -z "$DOTFILES_PROFILE" ]]; then
   esac
 fi
 
-source "$DOTFILES_CONFIG_HOME/shell/core.sh"
-source "$DOTFILES_CONFIG_HOME/platform/$DOTFILES_PLATFORM.sh"
-source "$DOTFILES_CONFIG_HOME/profiles/$DOTFILES_PROFILE.sh"
-[[ -r "$DOTFILES_CONFIG_HOME/host.bash" ]] && source "$DOTFILES_CONFIG_HOME/host.bash"
-[[ -r "$DOTFILES_CONFIG_HOME/local.bash" ]] && source "$DOTFILES_CONFIG_HOME/local.bash"
-export DOTFILES_PLATFORM DOTFILES_PROFILE
+source "$DOTFILES_SHELL_HOME/core.sh"
+source "$DOTFILES_SHELL_HOME/platform/$DOTFILES_PLATFORM.sh"
+source "$DOTFILES_SHELL_HOME/profiles/$DOTFILES_PROFILE.sh"
+[[ -r "$DOTFILES_LOCAL_HOME/.bashrc.host" ]] && source "$DOTFILES_LOCAL_HOME/.bashrc.host"
+[[ -r "$DOTFILES_LOCAL_HOME/.bashrc.local" ]] && source "$DOTFILES_LOCAL_HOME/.bashrc.local"
+export DOTFILES_ROOT DOTFILES_PLATFORM DOTFILES_PROFILE

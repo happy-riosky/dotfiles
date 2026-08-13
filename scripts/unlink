@@ -19,6 +19,8 @@ case "$PLATFORM" in
   *) printf 'unlink: unsupported platform: %s\n' "$PLATFORM" >&2; exit 1 ;;
 esac
 
+remove_legacy_shell_links "$ROOT" "$DRY_RUN"
+
 while IFS= read -r source_root; do
   while IFS=$'\t' read -r relative source; do
     target="$HOME/$relative"
