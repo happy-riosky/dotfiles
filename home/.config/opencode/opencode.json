@@ -12,7 +12,7 @@
       "~/.opencode/skills/**": "allow"
     }
   },
-  "model": "pytrio/gpt-5.6-sol",
+  "model": "pytrio/glm-5.2",
   "provider": {
     "pytrio": {
       "name": "pytrio",
@@ -23,6 +23,12 @@
       "models": {
         "deepseek-v4-flash": {
           "name": "deepseek-v4-flash",
+          "options": {
+            "reasoningEffort": "high"
+          }
+        },
+        "deepseek-v4-pro": {
+          "name": "deepseek-v4-pro",
           "options": {
             "reasoningEffort": "high"
           }
@@ -52,23 +58,16 @@
             "textVerbosity": "low",
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
-          },
-          "variants": {
-            "medium": {
-              "reasoningEffort": "medium",
-              "reasoningSummary": "auto",
-              "include": ["reasoning.encrypted_content"]
-            },
-            "high": {
-              "reasoningEffort": "high",
-              "reasoningSummary": "auto",
-              "include": ["reasoning.encrypted_content"]
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "reasoningSummary": "auto",
-              "include": ["reasoning.encrypted_content"]
-            }
+          }
+        },
+        "grok-4.6": {
+          "name": "grok-4.6",
+          "options": {
+            "store": false,
+            "reasoningEffort": "high",
+            "textVerbosity": "low",
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
           }
         },
         "glm-5.2": {

@@ -5,25 +5,52 @@
 | 内容 | 修改位置 |
 | --- | --- |
 | Provider、`baseURL`、模型定义、全局权限 | `~/.config/opencode/opencode.json` |
-| 默认模型、`small_model`、ECC agents/commands | `~/.opencode/opencode.json` |
+| 默认模型 | 个人覆盖目录，见“设置默认模型” |
+| `small_model`、ECC agents/commands | `~/.opencode/opencode.json` |
 | TUI | `~/.config/opencode/tui.json` |
 
 `~/.config/opencode` 的公共配置链接到 `~/dotfiles/home/.config/opencode`，
 修改后会直接进入 dotfiles。`~/.opencode` 仍是本机真实目录，运行时数据库、
 session、cache、日志和安装内容不由此仓库管理。
 
-默认模型应同时设置：
+## 设置默认模型
+
+`~/.opencode/opencode.json` 由 ECC 管理，ECC 更新时可能被重新安装，不要把
+个人默认模型直接改在这里。建立一个 ECC 不管理、加载优先级更高的覆盖目录：
+
+```bash
+export OPENCODE_CONFIG_DIR="$HOME/.config/opencode-overrides"
+```
+
+把这行写入 `~/.zshrc`，然后创建
+`~/.config/opencode-overrides/opencode.json`。默认模型应同时覆盖顶层模型和
+ECC 的 `build` agent 模型：
 
 ```json
 {
-  "model": "sq/gpt-5.6-sol",
+  "$schema": "https://opencode.ai/config.json",
+  "model": "pytrio/deepseek-v4-flash",
   "agent": {
     "build": {
-      "model": "sq/gpt-5.6-sol"
+      "model": "pytrio/deepseek-v4-flash"
     }
   }
 }
 ```
+
+修改后完全退出 OpenCode，重新启动并新建会话。用以下命令确认最终配置：
+
+```bash
+opencode debug config
+opencode debug agent build
+```
+
+相关讨论：
+
+- [`.opencode/opencode.json` 也是配置源](https://github.com/anomalyco/opencode/issues/18953)
+- [配置加载优先级问题](https://github.com/anomalyco/opencode/issues/28177)
+- [Agent 固定模型覆盖手动选择](https://github.com/anomalyco/opencode/issues/39319)
+- [恢复旧会话时沿用旧模型](https://github.com/anomalyco/opencode/issues/26351)
 
 `gpt-5.6-sol` 必须使用 Responses API，因此在 provider 模型定义中覆盖 npm 包：
 
