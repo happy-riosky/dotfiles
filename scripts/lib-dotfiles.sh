@@ -101,17 +101,37 @@ canonical_existing_path() {
   local path="$1" parent base
   parent="$(dirname "$path")"
   base="$(basename "$path")"
-  (cd -P "$parent" && printf '%s/%s\n' "$PWD" "$base")
+  if [[ -d "$parent" ]]; then
+    (cd -P "$parent" && printf '%s/%s\n' "$PWD" "$base")
+  else
+    canonical_path "$path"
+  fi
+}
+
+canonical_path() {
+  local path="$1" part result='/'
+  local -a parts
+  [[ "$path" == /* ]] || path="$(pwd)/$path"
+  IFS='/' read -r -a parts <<< "$path"
+  for part in "${parts[@]}"; do
+    case "$part" in
+      ''|.) ;;
+      ..) result="${result%/*}"; [[ -n "$result" ]] || result=/ ;;
+      *) result="${result%/}/$part" ;;
+    esac
+  done
+  printf '%s\n' "$result"
 }
 
 link_matches_source() {
-  local target="$1" source="$2" raw resolved
+  local target="$1" source="$2" raw resolved target_parent
   [[ -L "$target" ]] || return 1
   raw="$(readlink "$target")"
   if [[ "$raw" == /* ]]; then
     resolved="$(canonical_existing_path "$raw")"
   else
-    resolved="$(canonical_existing_path "$(dirname "$target")/$raw")"
+    target_parent="$(cd -P "$(dirname "$target")" && pwd)"
+    resolved="$(canonical_path "$target_parent/$raw")"
   fi
   [[ "$resolved" == "$(canonical_existing_path "$source")" ]]
 }
