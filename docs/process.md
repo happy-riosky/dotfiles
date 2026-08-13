@@ -1,7 +1,7 @@
 # Dotfiles 重构收尾记录
 
-这份文档记录迁移计划完成后的验证、真实设备反馈和后续优化。计划本身见
-[`MIGRATION_PLAN.md`](./MIGRATION_PLAN.md)，OpenCode 配置说明见
+这份文档记录迁移计划完成后的验证、真实设备反馈和后续优化。迁移计划已归档到
+[`archive/MIGRATION_PLAN.md`](./archive/MIGRATION_PLAN.md)，OpenCode 配置说明见
 [`opencode.md`](./opencode.md)。
 
 ## 1. 当前状态
@@ -60,18 +60,31 @@ rm "$HOME/.config/lazygit/config.yml"
 
 旧版 Termux dry-run 曾列出 `.config/dotfiles/` 下的共享 shell、全部平台和全部 profile 脚本。`LINK` 和 `MKDIR` 只表示计划操作；当前结构已不再创建这些链接。
 
-## 3. 收尾检查清单
+## 3. 收尾待办清单
 
-以下项目需要在对应真实环境完成或定期复查：
+迁移计划已归档，剩余事项在此跟踪：
 
-- [ ] 真实 Termux 新开 Bash/Zsh 后确认 `DOTFILES_PLATFORM=termux` 和 `DOTFILES_PROFILE=termux`。
-- [ ] 真实 Termux 验证 Git、SSH、tmux、Vim 和 LazyGit。
-- [ ] 真实 Debian/Ubuntu server 验证 Bash、Git、tmux、Vim 和 SSH。
-- [ ] macOS 验证 Karabiner UI 修改会产生 Git diff。
-- [ ] macOS 验证 Preferences 恢复的确认、备份和失败恢复流程。
-- [ ] 对 Rectangle 和一个非关键 Preferences domain 做恢复测试。
-- [ ] 稳定运行一段时间后再删除 `legacy/backup` 和残留 `.mackup*`。
-- [ ] 继续检查仓库历史中的已知 SSH host/IP 是否需要单独处理。
+### A. 真实环境验收
+
+- [ ] macOS：验证 Karabiner UI 修改会产生 Git diff。
+- [ ] macOS：对 Rectangle 和一个非关键 Preferences domain 做恢复测试（覆盖确认、备份、失败回滚）。
+- [ ] Linux server：在真实 Debian/Ubuntu 机器验证 Bash、Git、tmux、Vim 和 SSH。
+- [ ] Termux：真实设备新开 Bash/Zsh 后确认 `DOTFILES_PLATFORM=termux` 和 `DOTFILES_PROFILE=termux`，并验证 Git、SSH、tmux、Vim 和 LazyGit。
+
+### B. 收尾清理
+
+- [ ] 稳定运行一段时间后删除 `legacy/backup` 和残留 `.mackup*`。
+- [ ] 决定是否清理仓库历史中的已知 SSH host/IP（隐私暴露，非重构前置）。
+
+### D. 包管理（未实现）
+
+- [ ] 填充 `package-lists/{brew-formulae,brew-casks,apt,termux}.txt`（当前均为占位注释）。
+- [ ] 实现装包入口：`install`/scripts 目前只 link 不装包，需补 brew/apt/termux 安装逻辑，或明确决定只维护清单不自动装包。
+
+### E. plugins 收尾
+
+- [ ] 在真实环境验证 `scripts/plugins`（dry-run 与实际克隆 tmux/vim/zsh 插件）。
+- [ ] 删除无引用的空目录 `plugin-manifests/`。
 
 ## 4. 结构问题和优化方向
 
