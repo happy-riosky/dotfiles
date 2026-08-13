@@ -65,7 +65,10 @@ dotfiles/
 │   ├── brew-casks.txt
 │   ├── apt.txt
 │   └── termux.txt
-├── plugin-manifests/
+├── plugin-lists/
+│   ├── tmux.txt                      # tmux 插件目标和仓库，不锁定 commit
+│   ├── vim.txt                       # Vim 插件目标和仓库，不锁定 commit
+│   └── zsh.txt                       # Zsh/OMZ 插件目标和仓库，不锁定 commit
 ├── scripts/
 │   ├── shell/
 │   │   ├── core.sh
@@ -187,7 +190,7 @@ OpenCode 的 provider/model/TUI 等可移植配置迁入 `home/.config/opencode/
 - mode `160000` Gitlink 内容
 - 未主动选择管理的 GUI/App Support
 
-插件由固定 commit 的清单重新安装到真实目录：
+插件目录不直接复制到仓库，但由按宿主应用拆分、且不锁定 commit 的清单重新安装到用户的真实目录：
 
 ```text
 ~/.tmux/plugins/
@@ -273,9 +276,9 @@ Git 历史不默认重写。先修复当前 HEAD 并运行 secret scan；只有�
 
 ### Phase 1：建立新目录并迁移 core
 
-- [x] 创建 `home/`、`platforms/`、`package-lists/` 和脚本骨架。
+- [x] 创建 `home/`、`platforms/`、`package-lists/`、`plugin-lists/` 和脚本骨架。
 - [x] 先复制 `.inputrc`、公共 Git、SSH stub、tmux 和 Vim 配置到新目录。
-- [x] 将第三方 Gitlink 改为固定 commit 插件清单，不复制插件目录。
+- [x] 将第三方 Gitlink 改为不锁定 commit 的插件清单，不复制插件目录。
 - [x] 对每组目标先运行 Stow dry-run。
 - [x] 备份现有目标，然后切换到新链接。
 - [x] 每组切换后立即验证对应工具。

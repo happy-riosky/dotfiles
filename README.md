@@ -10,7 +10,7 @@ home/                          # cross-platform, linked into $HOME
 platforms/darwin/home/         # macOS-only linked configs (Karabiner, lazygit macOS path, etc.)
 platforms/darwin/managed/      # macOS Preferences goldens (real files, not linked)
 package-lists/                 # brew, apt, termux package lists
-plugin-manifests/              # pinned tmux/vim/zsh plugin sources
+plugin-lists/                  # tmux/vim/zsh plugin sources
 scripts/                       # link, unlink, doctor, plugins, prefs/hotkeys
 scripts/shell/                 # shared shell loader and platform/profile fragments
 install                        # entry point: ./install {full|server|termux}
@@ -31,9 +31,12 @@ Unsupported platform/profile combinations fail explicitly.
 
 ### Install plugins
 
+Plugin repositories are grouped by host application and listed without commit
+pins, so new installs use each repository's default branch.
+
 ```bash
-./scripts/plugins --dry-run --group core
-./scripts/plugins --group core
+./scripts/plugins --dry-run --app tmux
+./scripts/plugins --app tmux
 ```
 
 ### Restore macOS Preferences (macOS only)

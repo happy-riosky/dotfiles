@@ -1,0 +1,6 @@
+# target repository
+~/.tmux/plugins/tmux https://github.com/catppuccin/tmux.git
+~/.tmux/plugins/tmux-battery https://github.com/tmux-plugins/tmux-battery.git
+~/.tmux/plugins/tmux-sensible https://github.com/tmux-plugins/tmux-sensible.git
+~/.tmux/plugins/tmux-urlview https://github.com/tmux-plugins/tmux-urlview.git
+~/.tmux/plugins/tpm https://github.com/tmux-plugins/tpm.git
