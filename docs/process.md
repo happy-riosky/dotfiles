@@ -60,14 +60,29 @@ rm "$HOME/.config/lazygit/config.yml"
 
 旧版 Termux dry-run 曾列出 `.config/dotfiles/` 下的共享 shell、全部平台和全部 profile 脚本。`LINK` 和 `MKDIR` 只表示计划操作；当前结构已不再创建这些链接。
 
+### 真实 macOS 验证（2026-08-13）
+
+- 日期：2026-08-13
+- 环境：darwin
+- 操作：
+  - 验证 Karabiner UI 修改会产生 Git diff。
+  - 对 Rectangle 和一个非关键 Preferences domain 做恢复测试。
+- 结果：通过
+- 证据：
+  - Karabiner：`~/.config/karabiner` 目录链接，UI 修改后 `git status` 可见 diff。
+  - `scripts/hotkeys-restore.sh --yes`：确认提示、备份目录生成、恢复后 `defaults read com.knollsoft.Rectangle` 回到黄金值。
+  - `scripts/prefs-restore.sh --yes`：逐 domain 输出 `OK`；`chmod 000` 模拟写入失败时回滚备份并以非零退出。
+  - 失败回滚用非 TCC 保护 domain 验证，未触及 `com.apple.Music`。
+- 后续：A3 真实 Linux server、A4 真实 Termux 验证待做。
+
 ## 3. 收尾待办清单
 
 迁移计划已归档，剩余事项在此跟踪：
 
 ### A. 真实环境验收
 
-- [ ] macOS：验证 Karabiner UI 修改会产生 Git diff。
-- [ ] macOS：对 Rectangle 和一个非关键 Preferences domain 做恢复测试（覆盖确认、备份、失败回滚）。
+- [x] macOS：验证 Karabiner UI 修改会产生 Git diff。
+- [x] macOS：对 Rectangle 和一个非关键 Preferences domain 做恢复测试（覆盖确认、备份、失败回滚）。
 - [ ] Linux server：在真实 Debian/Ubuntu 机器验证 Bash、Git、tmux、Vim 和 SSH。
 - [ ] Termux：真实设备新开 Bash/Zsh 后确认 `DOTFILES_PLATFORM=termux` 和 `DOTFILES_PROFILE=termux`，并验证 Git、SSH、tmux、Vim 和 LazyGit。
 
