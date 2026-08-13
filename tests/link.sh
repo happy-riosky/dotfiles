@@ -157,6 +157,25 @@ test_karabiner_directory_link() {
   fi
 }
 
+test_darwin_spaced_path_link() {
+  local fixture="$TMP_ROOT/spaced-repo" home="$TMP_ROOT/spaced-home"
+  make_fixture "$fixture"
+  mkdir -p "$home"
+  mkdir -p "$fixture/platforms/darwin/home/Library/Application Support/lazygit"
+
+  printf 'lazygit: {}\n' > "$fixture/platforms/darwin/home/Library/Application Support/lazygit/config.yml"
+
+  HOME="$home" DOTFILES_ROOT="$fixture" DOTFILES_PLATFORM=darwin "$ROOT/scripts/link"
+  assert_link "$home/Library/Application Support/lazygit/config.yml" \
+    "$fixture/platforms/darwin/home/Library/Application Support/lazygit/config.yml"
+  printf 'exists\n' > "$home/Library/Application Support/lazygit/local.yml"
+  HOME="$home" DOTFILES_ROOT="$fixture" DOTFILES_PLATFORM=darwin "$ROOT/scripts/unlink"
+  [[ ! -e "$home/Library/Application Support/lazygit/config.yml" ]] || \
+    fail 'unlink kept spaced-path lazygit link'
+  [[ -f "$home/Library/Application Support/lazygit/local.yml" ]] || \
+    fail 'unlink removed an unknown spaced-path file'
+}
+
 test_link_lifecycle
 test_existing_target_conflict
 test_legacy_shell_links_are_removed
@@ -165,4 +184,5 @@ test_wrong_symlink_conflict
 test_package_collision
 test_install_profile_validation
 test_karabiner_directory_link
-printf 'phase1 integration tests passed\n'
+test_darwin_spaced_path_link
+printf 'link integration tests passed\n'

@@ -125,7 +125,7 @@ git diff --check
 ```bash
 zsh -n home/.zshenv home/.zshrc scripts/shell/load.zsh
 ./tests/shell.sh
-./tests/phase1.sh
+./tests/link.sh
 ```
 
 并在临时 HOME 中验证三件事：

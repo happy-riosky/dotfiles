@@ -7,7 +7,7 @@ Debian/Ubuntu (server), and Termux.
 
 ```text
 home/                          # cross-platform, linked into $HOME
-platforms/darwin/home/         # macOS-only linked configs (Karabiner, etc.)
+platforms/darwin/home/         # macOS-only linked configs (Karabiner, lazygit macOS path, etc.)
 platforms/darwin/managed/      # macOS Preferences goldens (real files, not linked)
 package-lists/                 # brew, apt, termux package lists
 plugin-manifests/              # pinned tmux/vim/zsh plugin sources
@@ -64,6 +64,7 @@ Preferences are **real files**, never symlinks. Goldens live under
 |--------|---------|--------|------|
 | Core (Git, SSH, tmux, Vim, shell) | leaf links | `home/` | `install` |
 | Karabiner | directory link | `platforms/darwin/home/.config/karabiner/` | `install` |
+| lazygit (macOS path) | leaf link | `platforms/darwin/home/Library/Application Support/lazygit/config.yml` | `install` |
 | System hotkeys | real plist | `platforms/darwin/managed/hotkeys/` | `scripts/hotkeys-*.sh` |
 | Rectangle | real plist | `platforms/darwin/managed/hotkeys/` | `scripts/hotkeys-*.sh` |
 | App Preferences | real plists | `platforms/darwin/managed/preferences/` | `scripts/prefs-*.sh` |
