@@ -30,7 +30,10 @@
 ```text
 dotfiles/
 ├── README.md
-├── MIGRATION_PLAN.md
+├── docs/
+│   ├── MIGRATION_PLAN.md
+│   ├── opencode.md
+│   └── process.md
 ├── install
 ├── home/                              # 跨平台，可链接，镜像 $HOME
 │   ├── .zshenv
@@ -45,10 +48,6 @@ dotfiles/
 │   ├── .tmux/colors/
 │   ├── .vimrc
 │   ├── .vim/colors/
-│   ├── .config/dotfiles/
-│   │   ├── shell/core.sh
-│   │   ├── platform/{darwin,linux,termux}.sh
-│   │   └── profiles/{full,server,termux}.sh
 │   ├── .config/opencode/              # 审计后的公共配置
 │   └── .opencode/                     # 只保留跨设备静态资产
 ├── platforms/
@@ -68,6 +67,11 @@ dotfiles/
 │   └── termux.txt
 ├── plugin-manifests/
 ├── scripts/
+│   ├── shell/
+│   │   ├── core.sh
+│   │   ├── load.{bash,zsh}
+│   │   ├── platform/{darwin,linux,termux}.sh
+│   │   └── profiles/{full,server,termux}.sh
 │   ├── doctor
 │   ├── link
 │   ├── unlink
@@ -157,8 +161,10 @@ backup/manual/RectangleConfig.json
 ```text
 ~/.config/git/config.local
 ~/.ssh/config.d/hosts.conf
-~/.config/dotfiles/local.zsh
-~/.config/dotfiles/local.bash
+~/.zshenv.host
+~/.zshenv.local
+~/.bashrc.host
+~/.bashrc.local
 ```
 
 以及：
@@ -206,11 +212,11 @@ Shell 加载顺序：
 core -> platform -> profile -> host -> local
 ```
 
-host 文件固定为：
+host/local 文件固定为：
 
 ```text
-~/.config/dotfiles/host.zsh
-~/.config/dotfiles/host.bash
+~/.zshenv.host
+~/.bashrc.host
 ```
 
 local 最后加载。所有可选命令先用 `command -v` 检查；非交互 shell 不得输出内容或自动 attach tmux。
