@@ -18,6 +18,16 @@ test_loader_does_not_source_system_profile() {
     fail 'Termux loader sourced a system-owned profile script'
 }
 
+test_tmux_battery_dependencies_are_listed() {
+  local output
+  output="$(HOME="$TMP_ROOT/tmux-battery-home" DOTFILES_ROOT="$ROOT" \
+    DOTFILES_PLATFORM=termux "$ROOT/scripts/packages" termux --dry-run)"
+  [[ "$output" == *' jq '* ]] || \
+    fail 'Termux package plan is missing jq for tmux-battery'
+  [[ "$output" == *' termux-api '* ]] || \
+    fail 'Termux package plan is missing termux-api for tmux-battery'
+}
+
 test_zvm_fix() {
   local home="$TMP_ROOT/zvm-fix-home" custom out
   mkdir -p "$home/.oh-my-zsh/custom"
@@ -58,5 +68,6 @@ test_zvm_fix() {
 }
 
 test_loader_does_not_source_system_profile
+test_tmux_battery_dependencies_are_listed
 test_zvm_fix
 printf 'termux integration tests passed\n'

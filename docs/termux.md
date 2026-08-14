@@ -44,6 +44,9 @@ RUN pkg install -y ack-grep autojump ... lazygit ... tmux ... vim ... zsh
 
 ## 3. 真实安装包
 
+先从与当前 Termux 相同的来源安装并打开 Android 端的 Termux:API 应用；
+`termux-api` 包只提供命令行客户端，两者必须来源匹配。
+
 先刷新 Termux 软件源索引：
 
 ```bash
@@ -56,7 +59,7 @@ pkg update
 验证二进制：
 
 ```bash
-command -v ack autojump git ssh tmux vim zsh lazygit
+command -v ack autojump git jq ssh termux-battery-status tmux vim zsh lazygit
 ```
 
 每一项都应输出 `$PREFIX/bin/...` 路径。
@@ -71,6 +74,10 @@ tmux -V
 vim --version
 lazygit --version
 ```
+
+`jq` 和 `termux-battery-status` 分别由 `jq`、`termux-api` 提供；它们是
+tmux 电池状态栏的运行时依赖。若 `termux-battery-status` 不存在，请确认
+Termux:API 应用也已安装并与当前 Termux 来源匹配。
 
 ## 4. 验证链接 dry-run
 
