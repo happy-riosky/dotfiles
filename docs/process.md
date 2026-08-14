@@ -91,15 +91,58 @@ rm "$HOME/.config/lazygit/config.yml"
 - [ ] 稳定运行一段时间后删除 `legacy/backup` 和残留 `.mackup*`。
 - [ ] 决定是否清理仓库历史中的已知 SSH host/IP（隐私暴露，非重构前置）。
 
-### D. 包管理（未实现）
+### D. 包管理
 
-- [ ] 填充 `package-lists/{brew-formulae,brew-casks,apt,termux}.txt`（当前均为占位注释）。
-- [ ] 实现装包入口：`install`/scripts 目前只 link 不装包，需补 brew/apt/termux 安装逻辑，或明确决定只维护清单不自动装包。
+- [x] 填充 `package-lists/{brew-formulae,brew-casks,apt,termux}.txt`。
+- [x] 新增显式 `scripts/packages {full|server|termux} [--dry-run]` 入口；`install`
+  继续只 link，不隐式提权或联网。清单先完整校验，再批量调用 brew/apt/pkg。
 
 ### E. plugins 收尾
 
 - [ ] 在真实环境验证 `scripts/plugins`（dry-run 与实际克隆 tmux/vim/zsh 插件）。
-- [ ] 删除无引用的空目录 `plugin-manifests/`。
+- [x] 自动验证所有清单先预检，未知目标不覆盖，既有/新克隆检出均校验 origin 和 `git fsck`。
+- [x] 删除无引用的空目录 `plugin-manifests/`。
+
+### 真实 Debian/Ubuntu 验收
+
+以下命令留给用户在真实 Debian/Ubuntu 主机执行：
+
+```bash
+./scripts/packages server --dry-run
+./scripts/packages server
+./install server --dry-run
+./install server
+./scripts/plugins --dry-run
+./scripts/plugins
+./scripts/doctor
+command -v git ssh tmux vim zsh autojump
+bash -lic 'type j'
+zsh -lic 'type j'
+command -v lazygit || true
+```
+
+Debian/Ubuntu 清单当前不安装 LazyGit，因此最后一项允许 `lazygit` 缺失；若主机已有
+同名未受管配置或插件目标，安装器应明确中止且保留原文件。
+
+### 真实 Termux 验收
+
+以下命令留给用户在真实 Termux 设备执行：
+
+```bash
+./scripts/packages termux --dry-run
+./scripts/packages termux
+./install termux --dry-run
+./install termux
+./scripts/plugins --dry-run
+./scripts/plugins
+./scripts/doctor
+command -v git ssh tmux vim zsh autojump
+command -v lazygit || true
+bash -lic 'type j'
+zsh -lic 'type j'
+```
+
+两个 shell 都应能识别 `j`；已有真实 `~/.config/lazygit/config.yml` 时仍按第 2 节先人工决定是否保留。
 
 ## 4. 结构问题和优化方向
 
@@ -146,6 +189,8 @@ file tree refactor 的目标是采用直接加载方案：`~/.config/dotfiles` �
 ./scripts/doctor
 bash -n install scripts/link scripts/unlink scripts/doctor
 git diff --check
+./tests/packages.sh
+./tests/plugins.sh
 ```
 
 在可用环境中补充：

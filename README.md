@@ -29,10 +29,28 @@ install                        # entry point: ./install {full|server|termux}
 Other profiles: `./install server` (Debian/Ubuntu), `./install termux` (Termux).
 Unsupported platform/profile combinations fail explicitly.
 
+### Install packages
+
+Package installation is explicit so linking configs never unexpectedly uses the
+network or privilege escalation. The same platform/profile restrictions as
+`install` apply.
+
+```bash
+./scripts/packages full --dry-run       # macOS: Homebrew formulae and casks
+./scripts/packages server --dry-run     # Debian/Ubuntu: apt
+./scripts/packages termux --dry-run     # Termux: pkg
+./scripts/packages full
+```
+
+Every selected manifest is validated before the package manager runs. Dry-run
+only prints `RUN ...` commands.
+
 ### Install plugins
 
 Plugin repositories are grouped by host application and listed without commit
-pins, so new installs use each repository's default branch.
+pins, so new installs use each repository's default branch. Existing targets
+must be real checkouts with the expected origin; every checkout is verified with
+`git fsck`.
 
 ```bash
 ./scripts/plugins --dry-run --app tmux

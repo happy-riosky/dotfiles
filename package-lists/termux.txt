@@ -1,1 +1,24 @@
-# Populated after the core layout migration is stable.
+# Termux tools used by the managed shell, tmux, Vim, and LazyGit configs.
+ack-grep
+autojump
+bc
+clang
+curl
+fzf
+git
+htop
+lazygit
+make
+nodejs-lts
+openssh
+perl
+pkg-config
+python
+ripgrep
+stow
+tmux
+tree
+util-linux
+vim
+wget
+zsh

@@ -1,1 +1,32 @@
-# Populated after the core layout migration is stable.
+# One Homebrew formula or tap-qualified formula per line.
+ack
+anomalyco/tap/opencode
+autojump
+bat
+bc
+browsh-org/browsh/browsh
+fzf
+gh
+git
+htop
+lazygit
+lsd
+minikube
+mongodb/brew/mongodb-community
+mysql
+pipx
+pnpm
+python-tk@3.13
+qpdf
+redis
+ripgrep
+scrcpy
+stow
+tesseract-lang
+tldr
+tmux
+tree
+urlview
+vim
+wget
+xclip

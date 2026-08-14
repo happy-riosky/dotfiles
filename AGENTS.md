@@ -23,6 +23,7 @@ docs/                          # process.md, opencode.md, archive/MIGRATION_PLAN
 | 命令 | 用途 |
 |---|---|
 | `./install {full\|server\|termux} [--dry-run]` | 校验平台/profile，运行 `scripts/link` |
+| `scripts/packages {full\|server\|termux} [--dry-run]` | 校验平台/profile，从对应清单安装包 |
 | `scripts/link [--dry-run]` | 创建受管软链接（direct 或 Stow 后端） |
 | `scripts/unlink [--dry-run]` | 只移除指向本仓库的链接 |
 | `scripts/doctor` | 校验链接、秘密卫生、Preferences |
@@ -79,8 +80,8 @@ host/local 可选（`~/.zshenv.{host,local}` / `~/.bashrc.{host,local}`）。
 ./install <profile> --dry-run && scripts/doctor
 bash -n install scripts/link scripts/unlink scripts/doctor
 zsh -n home/.zshenv home/.zshrc scripts/shell/load.zsh
-git diff --check && tests/link.sh && tests/shell.sh
-tests/vim.sh     # 需要 vim + Lightline 插件
+git diff --check && tests/link.sh && tests/shell.sh && tests/packages.sh && tests/plugins.sh
+bash tests/vim.sh # 需要 vim + Lightline 插件
 ```
 
 测试用临时 HOME 模拟：`HOME=<tmp> DOTFILES_ROOT=<repo>
@@ -92,7 +93,8 @@ DOTFILES_PLATFORM=<p> [DOTFILES_PROFILE=<pr>]`；覆盖项：
 - Conventional Commits：`feat(<scope>):`、`fix(<scope>):`、`refactor:`、`docs:`、
   `chore:`，小且单一用途。
 - `legacy/` 是 gitignored 的迁移暂存区——绝不链接它。
-- `scripts/plugins` 克隆到真实的 `~/.tmux`、`~/.vim/pack`、`~/.oh-my-zsh`；
-  插件检出绝不提交。
+- `scripts/packages` 是显式入口；`install` 不隐式提权或联网装包。
+- `scripts/plugins` 克隆到真实的 `~/.tmux`、`~/.vim/pack`、`~/.oh-my-zsh`，
+  并校验 origin 和 Git 对象；插件检出绝不提交。
 - `docs/process.md` 为收尾记录（含 A–E 待办清单）；迁移计划已归档到
   `docs/archive/MIGRATION_PLAN.md`——动手前先读。

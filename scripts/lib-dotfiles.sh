@@ -32,6 +32,32 @@ dotfiles_platform() {
   esac
 }
 
+dotfiles_os_id() {
+  local os_id="${DOTFILES_OS_ID:-}"
+  if [[ -z "$os_id" && -r /etc/os-release ]]; then
+    # shellcheck disable=SC1091
+    source /etc/os-release
+    os_id="${ID:-}"
+  fi
+  printf '%s\n' "$os_id"
+}
+
+validate_platform_profile() {
+  local platform="$1" profile="$2" caller="$3" os_id
+  if [[ "$platform" == linux ]]; then
+    os_id="$(dotfiles_os_id)"
+    case "$os_id" in
+      debian|ubuntu) ;;
+      *) printf '%s: Linux server profile supports Debian/Ubuntu only\n' "$caller" >&2; return 1 ;;
+    esac
+  fi
+  case "$platform:$profile" in
+    darwin:full|linux:server|termux:termux) ;;
+    wsl:*) printf '%s: WSL is not supported in the first release\n' "$caller" >&2; return 1 ;;
+    *) printf '%s: profile %s is not supported on %s\n' "$caller" "$profile" "$platform" >&2; return 1 ;;
+  esac
+}
+
 source_roots() {
   local root="$1" platform="$2"
   [[ -d "$root/home" ]] && printf '%s\n' "$root/home"

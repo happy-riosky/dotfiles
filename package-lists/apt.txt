@@ -1,1 +1,24 @@
-# Populated after the core layout migration is stable.
+# Debian/Ubuntu server tools used by the managed shell, tmux, and Vim configs.
+ack
+autojump
+bc
+build-essential
+ca-certificates
+ccache
+clang
+curl
+fzf
+git
+htop
+openssh-client
+pipx
+ripgrep
+stow
+tldr
+tmux
+tree
+urlview
+uuid-runtime
+vim
+wget
+zsh

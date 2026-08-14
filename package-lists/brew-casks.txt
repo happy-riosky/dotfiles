@@ -1,1 +1,8 @@
-# Populated after the core layout migration is stable.
+# One Homebrew cask per line.
+android-platform-tools
+docker-desktop
+dropzone
+ghostty
+linearmouse
+multipass
+shortcat

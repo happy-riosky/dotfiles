@@ -87,10 +87,26 @@ test_missing_optional_tools() {
     DOTFILES_PLATFORM=linux DOTFILES_PROFILE=server /bin/bash --noprofile --norc -c 'source "$HOME/.bashrc"'
 }
 
+test_termux_autojump_is_loaded_when_installed() {
+  local home="$TMP_ROOT/termux-autojump-home" prefix="$TMP_ROOT/termux-prefix"
+  mkdir -p "$home" "$prefix/etc/profile.d"
+  printf 'DOTFILES_AUTOJUMP_LOADED=1\n' > "$prefix/etc/profile.d/autojump.sh"
+
+  HOME="$home" PREFIX="$prefix" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=termux \
+    DOTFILES_PROFILE=termux /bin/zsh -df -c \
+    'source "$DOTFILES_ROOT/scripts/shell/load.zsh"; [[ "$DOTFILES_AUTOJUMP_LOADED" == 1 ]]' || \
+    fail 'Termux zsh did not load autojump'
+  HOME="$home" PREFIX="$prefix" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=termux \
+    DOTFILES_PROFILE=termux /bin/bash --noprofile --norc -c \
+    'source "$DOTFILES_ROOT/scripts/shell/load.bash"; [[ "$DOTFILES_AUTOJUMP_LOADED" == 1 ]]' || \
+    fail 'Termux bash did not load autojump'
+}
+
 test_public_paths
 test_load_order
 test_noninteractive_silence
 test_bash_platform_detection
 test_darwin_homebrew_and_oc
 test_missing_optional_tools
+test_termux_autojump_is_loaded_when_installed
 printf 'shell integration tests passed\n'

@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="${DOTFILES_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+SCRIPT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="${DOTFILES_ROOT:-$(cd "$SCRIPT_ROOT/.." && pwd)}"
+# shellcheck source=scripts/lib-dotfiles.sh
+source "$SCRIPT_ROOT/lib-dotfiles.sh"
 DRY_RUN=0
 APP=all
 
@@ -19,23 +22,189 @@ case "$APP" in all|tmux|vim|zsh) ;; *) printf 'plugins: unsupported app: %s\n' "
 
 apps=(tmux vim zsh)
 [[ "$APP" == all ]] || apps=("$APP")
+targets=()
+repositories=()
+states=()
+home_path="$(canonical_path "$HOME")"
+
 for app in "${apps[@]}"; do
   manifest="$ROOT/plugin-lists/$app.txt"
   [[ -f "$manifest" ]] || { printf 'plugins: missing %s\n' "$manifest" >&2; exit 1; }
-  while read -r raw_target repository; do
-    [[ -n "$raw_target" && "${raw_target:0:1}" != "#" ]] || continue
-    target="${raw_target/#\~/$HOME}"
-    if [[ -d "$target/.git" ]]; then
-      continue
-    fi
-    if [[ -e "$target" || -L "$target" ]]; then
-      printf 'plugins: target exists and is not a Git checkout: %s\n' "$target" >&2
+  line_number=0
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    line_number=$((line_number + 1))
+    [[ -n "$line" && "${line:0:1}" != "#" ]] || continue
+    read -r raw_target repository extra <<< "$line"
+    if [[ -z "${raw_target:-}" || -z "${repository:-}" || -n "${extra:-}" ]]; then
+      printf 'plugins: invalid entry in %s:%s\n' "$manifest" "$line_number" >&2
       exit 1
     fi
-    printf 'install %s at %s\n' "$repository" "$target"
-    if (( DRY_RUN == 0 )); then
-      mkdir -p "$(dirname "$target")"
-      git clone "$repository" "$target"
+    case "$raw_target" in
+      '~/'*) ;;
+      *) printf 'plugins: target must be under HOME in %s:%s\n' "$manifest" "$line_number" >&2; exit 1 ;;
+    esac
+    if [[ ! "$repository" =~ ^https://github\.com/[[:alnum:]_.-]+/[[:alnum:]_.-]+\.git$ ]]; then
+      printf 'plugins: invalid repository in %s:%s: %s\n' \
+        "$manifest" "$line_number" "$repository" >&2
+      exit 1
     fi
+    target="$(canonical_path "$HOME/${raw_target#\~/}")"
+    case "$target" in
+      "$home_path"/*) ;;
+      *) printf 'plugins: target escapes HOME in %s:%s\n' "$manifest" "$line_number" >&2; exit 1 ;;
+    esac
+    if [[ ${#targets[@]} -gt 0 ]]; then
+      for existing_target in "${targets[@]}"; do
+        [[ "$existing_target" != "$target" ]] || {
+          printf 'plugins: duplicate target: %s\n' "$target" >&2
+          exit 1
+        }
+      done
+    fi
+    targets+=("$target")
+    repositories+=("$repository")
   done < "$manifest"
+done
+
+verify_checkout() {
+  local target="$1" repository="$2" inside origin checkout_root target_root
+  inside="$(git -C "$target" rev-parse --is-inside-work-tree 2>/dev/null)" || {
+    printf 'plugins: target is not a valid Git checkout: %s\n' "$target" >&2
+    return 1
+  }
+  checkout_root="$(git -C "$target" rev-parse --show-toplevel 2>/dev/null)" || {
+    printf 'plugins: target is not a checkout root: %s\n' "$target" >&2
+    return 1
+  }
+  target_root="$(cd -P "$target" && pwd)"
+  checkout_root="$(cd -P "$checkout_root" && pwd)"
+  [[ "$checkout_root" == "$target_root" ]] || {
+    printf 'plugins: target is nested in another Git checkout: %s\n' "$target" >&2
+    return 1
+  }
+  [[ "$inside" == true ]] || {
+    printf 'plugins: target is not a valid Git checkout: %s\n' "$target" >&2
+    return 1
+  }
+  origin="$(git -C "$target" remote get-url origin 2>/dev/null)" || {
+    printf 'plugins: checkout has no origin: %s\n' "$target" >&2
+    return 1
+  }
+  [[ "$origin" == "$repository" ]] || {
+    printf 'plugins: checkout origin mismatch at %s\n' "$target" >&2
+    return 1
+  }
+  git -C "$target" fsck --no-dangling >/dev/null || {
+    printf 'plugins: checkout verification failed: %s\n' "$target" >&2
+    return 1
+  }
+}
+
+staging=''
+cleanup_staging() {
+  if [[ -n "$staging" && -e "$staging" ]]; then
+    rm -rf "$staging"
+  fi
+}
+trap cleanup_staging EXIT
+
+check_target_parents() {
+  local target="$1" current="$home_path" relative component
+  relative="${target#"$home_path"/}"
+  while [[ "$relative" == */* ]]; do
+    component="${relative%%/*}"
+    relative="${relative#*/}"
+    current="$current/$component"
+    if [[ -L "$current" ]]; then
+      printf 'plugins: target parent is a symlink: %s\n' "$current" >&2
+      return 1
+    fi
+    if [[ -e "$current" && ! -d "$current" ]]; then
+      printf 'plugins: target parent is not a directory: %s\n' "$current" >&2
+      return 1
+    fi
+  done
+}
+
+check_parent_checkouts() {
+  local target="$1" current expected_target allowed
+  current="$(dirname "$target")"
+  while [[ "$current" == "$home_path"/* ]]; do
+    if [[ -e "$current/.git" ]]; then
+      allowed=0
+      for expected_target in "${targets[@]}"; do
+        if [[ "$expected_target" == "$current" ]]; then
+          allowed=1
+          break
+        fi
+      done
+      if (( allowed == 0 )); then
+        printf 'plugins: target is nested in an unmanaged checkout: %s\n' "$current" >&2
+        return 1
+      fi
+    fi
+    current="$(dirname "$current")"
+  done
+}
+
+for index in "${!targets[@]}"; do
+  target="${targets[$index]}"
+  repository="${repositories[$index]}"
+  check_target_parents "$target"
+  check_parent_checkouts "$target"
+  if [[ -L "$target" ]]; then
+    printf 'plugins: target exists and is not a managed checkout: %s\n' "$target" >&2
+    exit 1
+  fi
+  if [[ -e "$target" ]]; then
+    [[ -d "$target" ]] || {
+      printf 'plugins: target exists and is not a Git checkout: %s\n' "$target" >&2
+      exit 1
+    }
+    command -v git >/dev/null 2>&1 || {
+      printf 'plugins: required command not found: git\n' >&2
+      exit 1
+    }
+    verify_checkout "$target" "$repository"
+    states+=(existing)
+  else
+    states+=(missing)
+  fi
+done
+
+if (( DRY_RUN == 0 )); then
+  command -v git >/dev/null 2>&1 || {
+    printf 'plugins: required command not found: git\n' >&2
+    exit 1
+  }
+fi
+
+for index in "${!targets[@]}"; do
+  [[ "${states[$index]}" == missing ]] || continue
+  target="${targets[$index]}"
+  repository="${repositories[$index]}"
+  printf 'install %s at %s\n' "$repository" "$target"
+  if (( DRY_RUN == 0 )); then
+    check_target_parents "$target"
+    check_parent_checkouts "$target"
+    if [[ -e "$target" || -L "$target" ]]; then
+      printf 'plugins: target appeared during install: %s\n' "$target" >&2
+      exit 1
+    fi
+    mkdir -p "$(dirname "$target")"
+    staging="$(mktemp -d "$(dirname "$target")/.dotfiles-plugin.XXXXXX")"
+    git clone -- "$repository" "$staging"
+    verify_checkout "$staging" "$repository"
+    if [[ -e "$target" || -L "$target" ]]; then
+      printf 'plugins: target appeared during verification: %s\n' "$target" >&2
+      exit 1
+    fi
+    mv -n "$staging" "$target"
+    if [[ -e "$staging" ]]; then
+      printf 'plugins: target appeared during promotion: %s\n' "$target" >&2
+      exit 1
+    fi
+    staging=''
+    verify_checkout "$target" "$repository"
+  fi
 done
