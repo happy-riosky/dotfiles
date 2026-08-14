@@ -75,6 +75,26 @@ rm "$HOME/.config/lazygit/config.yml"
   - 失败回滚用非 TCC 保护 domain 验证，未触及 `com.apple.Music`。
 - 后续：A3 真实 Linux server、A4 真实 Termux 验证待做。
 
+### 真实 Termux 验证（2026-08-14）
+
+- 日期：2026-08-14
+- 环境：termux（真实设备）
+- 操作：按 `docs/termux.md`（整理自验收清单）完整走完安装与验证流程。
+- 结果：通过
+- 证据：
+  - `packages termux` 安装清单包成功；`install termux` 建链并幂等；`plugins` 克隆并校验全部插件。
+  - `doctor passed`（Git 身份按设计手动写入 `~/.config/git/config.local`）。
+  - Bash/Zsh 均可用 `j` 跳转、`lg` alias 生效；tmux/Vim/SSH 正常。
+  - p10k 主题在 powerlevel10k 加入清单后正常生效。
+- 过程中修复的三个真实问题：
+  - autojump hook 被拼接（`autojump_chpwdautojump_chpwd`）：Termux 系统 profile 与
+    旧版 loader 重复加载所致，已改为 loader 不再 source 系统 profile
+    （`58efd0c`）。
+  - `zsh-vi-mode` 报 `zvm_cursor_style` 正则错误：Termux zsh 无法编译上游正则，
+    新增 `scripts/termux-zvm-fix` 补丁脚本（`30c47ec`）。
+  - p10k 不生效：powerlevel10k 缺失于插件清单，已补（`ceff35e`）。
+- 后续：A3 真实 Linux server 待做；doctor 在 Termux 上依赖 `/bin/bash` 的问题待确认。
+
 ## 3. 收尾待办清单
 
 迁移计划已归档，剩余事项在此跟踪：
@@ -84,7 +104,7 @@ rm "$HOME/.config/lazygit/config.yml"
 - [x] macOS：验证 Karabiner UI 修改会产生 Git diff。
 - [x] macOS：对 Rectangle 和一个非关键 Preferences domain 做恢复测试（覆盖确认、备份、失败回滚）。
 - [ ] Linux server：在真实 Debian/Ubuntu 机器验证 Bash、Git、tmux、Vim 和 SSH。
-- [ ] Termux：真实设备新开 Bash/Zsh 后确认 `DOTFILES_PLATFORM=termux` 和 `DOTFILES_PROFILE=termux`，并验证 Git、SSH、tmux、Vim 和 LazyGit。
+- [x] Termux：真实设备完成完整安装与验证（2026-08-14，见第 2 节记录与 `docs/termux.md`）。
 
 ### B. 收尾清理
 
@@ -99,7 +119,7 @@ rm "$HOME/.config/lazygit/config.yml"
 
 ### E. plugins 收尾
 
-- [ ] 在真实环境验证 `scripts/plugins`（dry-run 与实际克隆 tmux/vim/zsh 插件）。
+- [x] 在真实 Termux 验证 `scripts/plugins`（dry-run 与实际克隆 tmux/vim/zsh 插件，2026-08-14）。
 - [x] 自动验证所有清单先预检，未知目标不覆盖，既有/新克隆检出均校验 origin 和 `git fsck`。
 - [x] 删除无引用的空目录 `plugin-manifests/`。
 
@@ -126,25 +146,8 @@ Debian/Ubuntu 清单当前不安装 LazyGit，因此最后一项允许 `lazygit`
 
 ### 真实 Termux 验收
 
-以下命令留给用户在真实 Termux 设备执行：
-
-```bash
-./scripts/packages termux --dry-run
-./scripts/packages termux
-./install termux --dry-run
-./install termux
-./scripts/plugins --dry-run
-./scripts/plugins
-./scripts/termux-zvm-fix --dry-run
-./scripts/termux-zvm-fix
-./scripts/doctor
-command -v git ssh tmux vim zsh autojump
-command -v lazygit || true
-bash -lic 'type j'
-zsh -lic 'type j'
-```
-
-两个 shell 都应能识别 `j`；已有真实 `~/.config/lazygit/config.yml` 时仍按第 2 节先人工决定是否保留。
+完整安装与验证步骤已整理为使用指南：[`termux.md`](./termux.md)。2026-08-15 已在
+真实设备按该流程验收通过（见第 2 节记录）。
 
 #### 已知 Termux 问题：zsh-vi-mode 光标样式
 
