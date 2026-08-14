@@ -12,7 +12,7 @@
       "~/.opencode/skills/**": "allow"
     }
   },
-  "model": "pytrio/glm-5.2",
+  "model": "pytrio/gpt-5.6-sol",
   "provider": {
     "pytrio": {
       "name": "pytrio",
