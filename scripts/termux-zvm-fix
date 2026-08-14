@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/lib-dotfiles.sh
+source "$SCRIPT_ROOT/lib-dotfiles.sh"
+
+DRY_RUN=0
+if [[ "${1:-}" == --dry-run ]]; then
+  DRY_RUN=1
+  shift
+fi
+[[ $# -eq 0 ]] || { printf 'usage: scripts/termux-zvm-fix [--dry-run]\n' >&2; exit 2; }
+
+PLATFORM="$(dotfiles_platform)"
+if [[ "$PLATFORM" != termux ]]; then
+  printf 'termux-zvm-fix: only applies on Termux (current platform: %s)\n' "$PLATFORM" >&2
+  exit 1
+fi
+
+CUSTOM_DIR="$HOME/.oh-my-zsh/custom"
+if [[ ! -d "$CUSTOM_DIR" ]]; then
+  printf 'termux-zvm-fix: %s not found; run scripts/plugins first\n' "$CUSTOM_DIR" >&2
+  exit 1
+fi
+
+PATCH_FILE="$CUSTOM_DIR/zz-zvm-termux.zsh"
+PATCH_CONTENT='# Termux: zsh-vi-mode cursor-style regex fails to compile in Termux zsh.
+# oh-my-zsh loads custom/*.zsh after plugins, so this override wins.
+ZVM_CURSOR_STYLE_ENABLED=false
+function zvm_zle-line-finish() {
+  zvm_switch_keyword_history=()
+}'
+
+if [[ -f "$PATCH_FILE" ]]; then
+  if [[ "$(< "$PATCH_FILE")" == "$PATCH_CONTENT" ]]; then
+    printf 'already patched: %s\n' "$PATCH_FILE"
+    exit 0
+  fi
+  printf 'termux-zvm-fix: target exists with different content: %s\n' "$PATCH_FILE" >&2
+  exit 1
+fi
+
+printf 'write %s\n' "$PATCH_FILE"
+if (( DRY_RUN == 0 )); then
+  printf '%s\n' "$PATCH_CONTENT" > "$PATCH_FILE"
+fi

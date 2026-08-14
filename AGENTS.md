@@ -28,6 +28,7 @@ docs/                          # process.md, opencode.md, archive/MIGRATION_PLAN
 | `scripts/unlink [--dry-run]` | 只移除指向本仓库的链接 |
 | `scripts/doctor` | 校验链接、秘密卫生、Preferences |
 | `scripts/plugins [--dry-run] [--app tmux\|vim\|zsh]` | 从 `plugin-lists/*.txt` 克隆插件 |
+| `scripts/termux-zvm-fix [--dry-run]` | Termux：应用 zsh-vi-mode 光标兼容补丁 |
 | `scripts/{prefs,hotkeys}-{restore,export}.sh [--yes]` | macOS：恢复/导出偏好与快捷键 |
 
 仅支持组合：`darwin:full`、`linux:server`（Debian/Ubuntu）、`termux:termux`。
@@ -80,7 +81,7 @@ host/local 可选（`~/.zshenv.{host,local}` / `~/.bashrc.{host,local}`）。
 ./install <profile> --dry-run && scripts/doctor
 bash -n install scripts/link scripts/unlink scripts/doctor
 zsh -n home/.zshenv home/.zshrc scripts/shell/load.zsh
-git diff --check && tests/link.sh && tests/shell.sh && tests/packages.sh && tests/plugins.sh
+git diff --check && tests/link.sh && tests/shell.sh && tests/packages.sh && tests/plugins.sh && tests/termux.sh
 bash tests/vim.sh # 需要 vim + Lightline 插件
 ```
 

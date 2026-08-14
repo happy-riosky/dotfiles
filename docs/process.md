@@ -135,6 +135,8 @@ Debian/Ubuntu 清单当前不安装 LazyGit，因此最后一项允许 `lazygit`
 ./install termux
 ./scripts/plugins --dry-run
 ./scripts/plugins
+./scripts/termux-zvm-fix --dry-run
+./scripts/termux-zvm-fix
 ./scripts/doctor
 command -v git ssh tmux vim zsh autojump
 command -v lazygit || true
@@ -143,6 +145,28 @@ zsh -lic 'type j'
 ```
 
 两个 shell 都应能识别 `j`；已有真实 `~/.config/lazygit/config.yml` 时仍按第 2 节先人工决定是否保留。
+
+#### 已知 Termux 问题：zsh-vi-mode 光标样式
+
+Termux 的 zsh 无法编译 `zsh-vi-mode` 中 `zvm_cursor_style` 的恢复正则，报错：
+
+```text
+zvm_cursor_style:34: failed to compile regex: trailing backslash (\)
+```
+
+仅设置 `ZVM_CURSOR_STYLE_ENABLED=false` 不够：`zvm_zle-line-finish` 每次执行命令时
+仍会无条件调用该函数。修复由显式脚本完成（写入
+`~/.oh-my-zsh/custom/zz-zvm-termux.zsh`，oh-my-zsh 在插件之后加载 custom，因此覆盖生效）：
+
+```bash
+./scripts/termux-zvm-fix --dry-run
+./scripts/termux-zvm-fix
+exec zsh -l
+```
+
+验证：启动无报错，`zvm_version` 正常输出，`Esc` 后 `0`/`w`/`b` 移动、`i` 返回插入
+均可用；光标形状不随模式变化是已知妥协。若曾手动创建过内容不同的补丁文件，先删除
+再运行脚本。
 
 ## 4. 结构问题和优化方向
 
