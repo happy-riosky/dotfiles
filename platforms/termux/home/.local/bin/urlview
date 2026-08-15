@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Minimal urlview replacement for Termux (no urlview package exists in the
+# official repos). Consumed by tmux-urlview, which passes a buffer file path.
+set -u
+
+file="${1:-}"
+[[ -n "$file" && -r "$file" ]] || exit 0
+
+url="$(grep -oEh '(https?|ftp)://[^[:space:]"'"'"'<>]+' "$file" | sort -u | \
+  fzf --height=100% --reverse --prompt='url> ')" || exit 0
+[[ -n "$url" ]] || exit 0
+
+if command -v termux-open-url >/dev/null 2>&1; then
+  termux-open-url "$url"
+elif command -v termux-open >/dev/null 2>&1; then
+  termux-open "$url"
+elif command -v xdg-open >/dev/null 2>&1; then
+  xdg-open "$url"
+else
+  printf '%s\n' "$url"
+fi

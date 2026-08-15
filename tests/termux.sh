@@ -26,8 +26,15 @@ test_tmux_battery_dependencies_are_listed() {
     fail 'Termux package plan is missing jq for tmux-battery'
   [[ "$output" == *' termux-api '* ]] || \
     fail 'Termux package plan is missing termux-api for tmux-battery'
-  [[ "$output" == *' urlview '* ]] || \
-    fail 'Termux package plan is missing urlview for tmux-urlview'
+}
+
+test_urlview_script_is_managed() {
+  local script="$ROOT/platforms/termux/home/.local/bin/urlview"
+  [[ -f "$script" && -x "$script" ]] || \
+    fail 'Termux urlview replacement script is missing or not executable'
+  bash -n "$script" || fail 'Termux urlview replacement script has syntax errors'
+  grep -q 'fzf' "$script" || \
+    fail 'Termux urlview replacement does not use fzf from the package list'
 }
 
 test_zvm_fix() {
@@ -71,5 +78,6 @@ test_zvm_fix() {
 
 test_loader_does_not_source_system_profile
 test_tmux_battery_dependencies_are_listed
+test_urlview_script_is_managed
 test_zvm_fix
 printf 'termux integration tests passed\n'

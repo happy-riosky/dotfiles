@@ -79,6 +79,10 @@ lazygit --version
 tmux 电池状态栏的运行时依赖。若 `termux-battery-status` 不存在，请确认
 Termux:API 应用也已安装并与当前 Termux 来源匹配。
 
+`urlview` 不是包，而是本仓库提供的脚本（`platforms/termux/home/.local/bin/urlview`，
+基于 fzf），由 `./install termux` 链接到 `~/.local/bin/urlview`，供
+tmux-urlview 使用。
+
 ## 4. 验证链接 dry-run
 
 ```bash
