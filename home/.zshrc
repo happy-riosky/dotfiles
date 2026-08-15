@@ -24,6 +24,21 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
 command -v nvm >/dev/null 2>&1 && nvm use default --silent >/dev/null 2>&1 || true
+
+# Load Conda only for interactive macOS shells.
+if [[ "${DOTFILES_PLATFORM:-}" == darwin ]]; then
+  export CONDA_AUTO_ACTIVATE_BASE=false
+  if [[ -x "$HOME/miniconda3/bin/conda" ]]; then
+    __conda_setup="$("$HOME/miniconda3/bin/conda" shell.zsh hook 2>/dev/null)" || __conda_setup=
+  elif command -v conda >/dev/null 2>&1; then
+    __conda_setup="$(conda shell.zsh hook 2>/dev/null)" || __conda_setup=
+  fi
+  if [[ -n "${__conda_setup:-}" ]]; then
+    eval "$__conda_setup"
+  fi
+  unset __conda_setup
+fi
+
 if command -v go >/dev/null 2>&1; then
   go_path="$(go env GOPATH 2>/dev/null || true)"
   [[ -n "$go_path" ]] && dotfiles_append_path "$go_path/bin"

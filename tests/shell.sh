@@ -87,10 +87,62 @@ test_missing_optional_tools() {
     DOTFILES_PLATFORM=linux DOTFILES_PROFILE=server /bin/bash --noprofile --norc -c 'source "$HOME/.bashrc"'
 }
 
+test_conda_darwin_zsh_only() {
+  local home="$TMP_ROOT/conda-home" zdotdir="$TMP_ROOT/conda-zdotdir"
+  local calls="$TMP_ROOT/conda-calls"
+  mkdir -p "$home/miniconda3/bin" "$zdotdir"
+  cp -R "$ROOT/home/." "$home/"
+  printf '%s\n' \
+    '#!/usr/bin/env sh' \
+    'printf "called\n" >> "$DOTFILES_TEST_CONDA_CALLS"' \
+    '[ "${CONDA_AUTO_ACTIVATE_BASE:-}" = false ] || exit 1' \
+    'if [ "${DOTFILES_TEST_CONDA_FAIL:-}" = 1 ]; then printf "export DOTFILES_TEST_CONDA_PARTIAL=1\n"; exit 1; fi' \
+    'printf "export DOTFILES_TEST_CONDA_LOADED=1\n"' \
+    > "$home/miniconda3/bin/conda"
+  chmod +x "$home/miniconda3/bin/conda"
+
+  HOME="$home" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=darwin DOTFILES_PROFILE=full \
+    DOTFILES_TEST_CONDA_CALLS="$calls" ZDOTDIR="$zdotdir" \
+    /bin/zsh -dfi -c 'unsetopt monitor; source "$HOME/.zshenv"; source "$HOME/.zshrc"; [[ "$DOTFILES_TEST_CONDA_LOADED" == 1 ]]' || \
+    fail 'Darwin zsh did not initialize Conda with base auto-activation disabled'
+
+  : > "$calls"
+  HOME="$home" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=darwin DOTFILES_PROFILE=full \
+    DOTFILES_TEST_CONDA_CALLS="$calls" DOTFILES_TEST_CONDA_FAIL=1 ZDOTDIR="$zdotdir" \
+    /bin/zsh -dfi -c 'unsetopt monitor; source "$HOME/.zshenv"; source "$HOME/.zshrc"; [[ -z "${DOTFILES_TEST_CONDA_PARTIAL:-}" ]]' || \
+    fail 'Darwin zsh evaluated output from a failed Conda hook'
+
+  : > "$calls"
+  HOME="$home" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=darwin DOTFILES_PROFILE=full \
+    DOTFILES_TEST_CONDA_CALLS="$calls" ZDOTDIR="$zdotdir" \
+    /bin/zsh -df -c 'source "$HOME/.zshenv"; source "$HOME/.zshrc"' || \
+    fail 'non-interactive Darwin zsh startup failed'
+  [[ ! -s "$calls" ]] || fail 'non-interactive Darwin zsh invoked Conda'
+
+  HOME="$home" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=linux DOTFILES_PROFILE=server \
+    DOTFILES_TEST_CONDA_CALLS="$calls" ZDOTDIR="$zdotdir" \
+    /bin/zsh -dfi -c 'unsetopt monitor; source "$HOME/.zshenv"; source "$HOME/.zshrc"; [[ -z "${DOTFILES_TEST_CONDA_LOADED:-}" ]]' || \
+    fail 'Linux zsh initialized Conda'
+  [[ ! -s "$calls" ]] || fail 'Linux zsh invoked Conda'
+
+  HOME="$home" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=termux DOTFILES_PROFILE=termux \
+    DOTFILES_TEST_CONDA_CALLS="$calls" ZDOTDIR="$zdotdir" \
+    /bin/zsh -dfi -c 'unsetopt monitor; source "$HOME/.zshenv"; source "$HOME/.zshrc"; [[ -z "${DOTFILES_TEST_CONDA_LOADED:-}" ]]' || \
+    fail 'Termux zsh initialized Conda'
+  [[ ! -s "$calls" ]] || fail 'Termux zsh invoked Conda'
+
+  HOME="$home" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=darwin DOTFILES_PROFILE=full \
+    DOTFILES_TEST_CONDA_CALLS="$calls" \
+    /bin/bash --noprofile --norc -c 'source "$HOME/.bash_profile"; [[ -z "${DOTFILES_TEST_CONDA_LOADED:-}" ]]' || \
+    fail 'Darwin bash initialized Conda'
+  [[ ! -s "$calls" ]] || fail 'Darwin bash invoked Conda'
+}
+
 test_public_paths
 test_load_order
 test_noninteractive_silence
 test_bash_platform_detection
 test_darwin_homebrew_and_oc
 test_missing_optional_tools
+test_conda_darwin_zsh_only
 printf 'shell integration tests passed\n'
