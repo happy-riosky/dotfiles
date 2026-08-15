@@ -59,7 +59,7 @@ pkg update
 验证二进制：
 
 ```bash
-command -v ack autojump git jq ssh termux-battery-status tmux vim zsh lazygit
+command -v ack autojump git jq ssh termux-battery-status tmux urlview vim zsh lazygit
 ```
 
 每一项都应输出 `$PREFIX/bin/...` 路径。

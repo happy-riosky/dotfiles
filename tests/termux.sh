@@ -26,6 +26,8 @@ test_tmux_battery_dependencies_are_listed() {
     fail 'Termux package plan is missing jq for tmux-battery'
   [[ "$output" == *' termux-api '* ]] || \
     fail 'Termux package plan is missing termux-api for tmux-battery'
+  [[ "$output" == *' urlview '* ]] || \
+    fail 'Termux package plan is missing urlview for tmux-urlview'
 }
 
 test_zvm_fix() {

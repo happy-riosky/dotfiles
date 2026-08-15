@@ -20,6 +20,7 @@ stow
 tmux
 termux-api
 tree
+urlview
 util-linux
 vim
 wget
