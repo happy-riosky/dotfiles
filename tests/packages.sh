@@ -22,6 +22,10 @@ make_fake_managers() {
   for command in brew apt-get pkg; do
     printf '#!/usr/bin/env bash\nprintf "%%s:%%s\\n" "%s" "$*" >> "$PACKAGE_LOG"\n' \
       "$command" > "$bin/$command"
+    if [[ "$command" == apt-get ]]; then
+      printf 'if [[ -n "${FAIL_PACKAGE:-}" && " $* " == *" $FAIL_PACKAGE "* ]]; then exit 42; fi\n' \
+        >> "$bin/$command"
+    fi
     chmod +x "$bin/$command"
   done
   printf '#!/usr/bin/env bash\nprintf "sudo:%%s\\n" "$*" >> "$PACKAGE_LOG"\n"$@"\n' > "$bin/sudo"
@@ -41,6 +45,39 @@ test_dry_run_is_side_effect_free() {
 
   [[ ! -e "$log" ]] || fail 'packages dry-run invoked a package manager'
   grep -Fq 'apt-get install -y alpha beta' "$output" || fail 'packages dry-run omitted apt plan'
+}
+
+test_server_manifest_includes_required_packages() {
+  local package
+  for package in autojump tealdeer zsh; do
+    grep -Fxq "$package" "$ROOT/package-lists/apt.txt" || \
+      fail "server package manifest omitted $package"
+  done
+  if grep -Fxq tldr "$ROOT/package-lists/apt.txt"; then
+    fail 'server package manifest uses unavailable Ubuntu 26.04 package tldr'
+  fi
+}
+
+test_apt_batch_failure_retries_other_packages() {
+  local fixture="$TMP_ROOT/retry-repo" home="$TMP_ROOT/retry-home"
+  local bin="$TMP_ROOT/retry-bin" log="$TMP_ROOT/retry.log"
+  make_fixture "$fixture"
+  make_fake_managers "$bin"
+  mkdir -p "$home"
+
+  if HOME="$home" PATH="$bin:/usr/bin:/bin" PACKAGE_LOG="$log" \
+    FAIL_PACKAGE=alpha DOTFILES_APT_GET="$bin/apt-get" DOTFILES_SUDO="$bin/sudo" \
+    DOTFILES_ROOT="$fixture" DOTFILES_PLATFORM=linux DOTFILES_OS_ID=ubuntu \
+    "$ROOT/scripts/packages" server >/dev/null 2>&1; then
+    fail 'packages hid a failed package after retrying'
+  fi
+  grep -Fxq 'apt-get:install -y alpha beta' "$log" || fail 'packages omitted batch install'
+  grep -Fxq 'apt-get:install -y alpha' "$log" || fail 'packages did not retry failed package'
+  grep -Fxq 'apt-get:install -y beta' "$log" || fail 'packages did not retry other packages'
+  if (( EUID != 0 )); then
+    grep -Fxq "sudo:$bin/apt-get install -y beta" "$log" || \
+      fail 'non-root package retry omitted sudo'
+  fi
 }
 
 test_profile_validation() {
@@ -84,6 +121,9 @@ test_package_manager_commands() {
     DOTFILES_APT_GET="$bin/apt-get" DOTFILES_SUDO="$bin/sudo" \
     DOTFILES_ROOT="$fixture" DOTFILES_PLATFORM=linux DOTFILES_OS_ID=ubuntu \
     "$ROOT/scripts/packages" server >/dev/null
+  if (( EUID != 0 )); then
+    grep -Fq 'sudo:' "$log" || fail 'non-root packages path omitted sudo'
+  fi
   grep -Fxq 'apt-get:update' "$log" || fail 'apt update command is missing'
   grep -Fxq 'apt-get:install -y alpha beta' "$log" || fail 'apt install command is wrong'
 
@@ -119,6 +159,8 @@ test_manifest_validation_precedes_execution() {
 }
 
 test_dry_run_is_side_effect_free
+test_server_manifest_includes_required_packages
+test_apt_batch_failure_retries_other_packages
 test_profile_validation
 test_package_manager_commands
 test_manifest_validation_precedes_execution

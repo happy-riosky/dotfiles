@@ -78,14 +78,25 @@ case "$PLATFORM:$PROFILE" in
     load_packages "$ROOT/package-lists/apt.txt"
     APT_GET="${DOTFILES_APT_GET:-/usr/bin/apt-get}"
     (( DRY_RUN == 1 )) || require_executable "$APT_GET"
+    APT_PREFIX=()
     if (( EUID == 0 )); then
       run_command "$APT_GET" update
-      run_command "$APT_GET" install -y "${PACKAGES[@]}"
     else
       SUDO="${DOTFILES_SUDO:-/usr/bin/sudo}"
       (( DRY_RUN == 1 )) || require_executable "$SUDO"
-      run_command "$SUDO" "$APT_GET" update
-      run_command "$SUDO" "$APT_GET" install -y "${PACKAGES[@]}"
+      APT_PREFIX=("$SUDO")
+      run_command "${APT_PREFIX[@]}" "$APT_GET" update
+    fi
+    if ! run_command "${APT_PREFIX[@]}" "$APT_GET" install -y "${PACKAGES[@]}"; then
+      printf 'packages: batch install failed; retrying packages individually\n' >&2
+      failures=0
+      for package in "${PACKAGES[@]}"; do
+        if ! run_command "${APT_PREFIX[@]}" "$APT_GET" install -y "$package"; then
+          printf 'packages: failed to install %s\n' "$package" >&2
+          failures=$((failures + 1))
+        fi
+      done
+      (( failures == 0 ))
     fi
     ;;
   termux:termux)

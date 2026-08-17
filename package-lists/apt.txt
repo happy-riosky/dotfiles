@@ -14,7 +14,7 @@ openssh-client
 pipx
 ripgrep
 stow
-tldr
+tealdeer
 tmux
 tree
 urlview
