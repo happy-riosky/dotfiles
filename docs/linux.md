@@ -21,13 +21,25 @@ uname -s
 . /etc/os-release
 printf 'ID=%s\n' "$ID"
 grep -i microsoft /proc/version || true
+df -h /
 ```
 
 确认：
 
 - `uname -s` 输出 `Linux`。
 - `ID` 是 `debian` 或 `ubuntu`。
-- 最后一条命令没有输出；若包含 `Microsoft`，当前环境是 WSL，不受支持。
+- `grep -i microsoft /proc/version` 没有输出；若包含 `Microsoft`，当前环境是 WSL，
+  不受支持。
+
+`server` 清单会安装 `clang`、`build-essential` 等体积较大的工具。Multipass 根磁盘
+建议至少 10–12 GiB；5 GiB 磁盘可能在下载或解包时耗尽。开始安装前应确认根分区还有
+数 GiB 可用空间。
+
+新建 Multipass 实例时可以直接指定容量：
+
+```bash
+multipass launch --name dotfiles-linux --disk 12G
+```
 
 若系统尚未安装 Git，先安装最小引导依赖：
 
@@ -483,6 +495,53 @@ zsh -lic 'type j'
 `./scripts/plugins` 后重新登录；首次启动可能进入配置向导，按 `q` 可继续使用仓库的
 `~/.p10k.zsh`，也可以执行 `p10k configure` 重新生成。后者会写回仓库文件，运行后
 应检查 `git diff`。
+
+### _p9k_dump_state 报 no space left on device
+
+例如：
+
+```text
+_p9k_dump_state:print:13: write error: no space left on device
+```
+
+这不是 Powerlevel10k 配置错误，而是根分区已满，导致主题无法写入缓存。先确认块空间
+和 inode：
+
+```bash
+df -h /
+df -i /
+```
+
+APT 下载缓存通常可以安全清理，用于立即恢复少量空间：
+
+```bash
+sudo apt-get clean
+df -h /
+```
+
+若 Multipass 磁盘只有 5 GiB，应在宿主机扩容。下面将实例扩到 12 GiB；磁盘只能
+增大，不能用此方法缩小：
+
+```bash
+instance=omnipotent-dingo
+multipass stop "$instance"
+multipass set "local.$instance.disk=12G"
+multipass start "$instance"
+multipass shell "$instance"
+```
+
+重新进入实例后，确认容量并修复可能被磁盘耗尽中断的 dpkg/APT 操作：
+
+```bash
+df -h /
+sudo dpkg --configure -a
+sudo apt-get -f install
+sudo apt-get clean
+exec zsh
+```
+
+不要通过删除 `/usr`、`/var/lib/dpkg` 或未知系统文件来腾空间。释放空间并重新启动
+Zsh 后，Powerlevel10k 通常会自动重新生成缓存。
 
 ### lg alias 不存在
 
