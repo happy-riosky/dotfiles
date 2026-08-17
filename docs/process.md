@@ -95,6 +95,25 @@ rm "$HOME/.config/lazygit/config.yml"
   - p10k 不生效：powerlevel10k 缺失于插件清单，已补（`ceff35e`）。
 - 后续：A3 真实 Linux server 待做；doctor 在 Termux 上依赖 `/bin/bash` 的问题待确认。
 
+### Linux server 验收（2026-08-17）
+
+- 日期：2026-08-17
+- 环境：Ubuntu 26.04 LTS（Multipass VM，`server` profile）
+- 操作：按 [`linux.md`](./linux.md) 完成包安装、建链、插件和 shell/工具验证。
+- 结果：通过
+- 证据：
+  - `packages server` 的 dry-run、实际安装和失败后逐包重试正常。
+  - `install server` dry-run、正式建链和重复执行幂等性正常。
+  - tmux、Vim、SSH、Bash、Zsh、autojump、tldr 和 `doctor` 验证通过。
+  - 私有 Git 身份和 SSH host 配置保持在公开仓库之外。
+- 过程中修复的问题：
+  - Ubuntu 26.04 不提供 `tldr` 包，改用提供同名命令的 `tealdeer`；APT 整批失败后
+    自动逐包重试，避免一个不可用包阻断其他包（`910d224`）。
+  - Multipass 默认用户密码锁定，默认 shell 需用 `sudo chsh -s ... "$USER"` 修改。
+  - 5 GiB 根磁盘在安装 server 工具时耗尽；指南现要求预留 10–12 GiB，并记录 APT
+    清理、磁盘扩容及 dpkg 恢复流程（`d4bdac2`）。
+- 后续：Linux `server` profile 验收完成。
+
 ## 3. 收尾待办清单
 
 迁移计划已归档，剩余事项在此跟踪：
@@ -103,7 +122,7 @@ rm "$HOME/.config/lazygit/config.yml"
 
 - [x] macOS：验证 Karabiner UI 修改会产生 Git diff。
 - [x] macOS：对 Rectangle 和一个非关键 Preferences domain 做恢复测试（覆盖确认、备份、失败回滚）。
-- [ ] Linux server：在真实 Debian/Ubuntu 机器验证 Bash、Git、tmux、Vim 和 SSH。
+- [x] Linux server：在 Ubuntu 26.04 Multipass VM 验证包安装、Bash、Git、tmux、Vim 和 SSH（2026-08-17）。
 - [x] Termux：真实设备完成完整安装与验证（2026-08-14，见第 2 节记录与 `docs/termux.md`）。
 
 ### B. 收尾清理
@@ -115,7 +134,7 @@ rm "$HOME/.config/lazygit/config.yml"
 
 - [x] 填充 `package-lists/{brew-formulae,brew-casks,apt,termux}.txt`。
 - [x] 新增显式 `scripts/packages {full|server|termux} [--dry-run]` 入口；`install`
-  继续只 link，不隐式提权或联网。清单先完整校验，再批量调用 brew/apt/pkg。
+  继续只 link，不隐式提权或联网。清单先完整校验；APT 整批失败后逐包重试。
 
 ### E. plugins 收尾
 
@@ -123,26 +142,11 @@ rm "$HOME/.config/lazygit/config.yml"
 - [x] 自动验证所有清单先预检，未知目标不覆盖，既有/新克隆检出均校验 origin 和 `git fsck`。
 - [x] 删除无引用的空目录 `plugin-manifests/`。
 
-### 真实 Debian/Ubuntu 验收
+### Debian/Ubuntu 验收
 
-以下命令留给用户在真实 Debian/Ubuntu 主机执行：
-
-```bash
-./scripts/packages server --dry-run
-./scripts/packages server
-./install server --dry-run
-./install server
-./scripts/plugins --dry-run
-./scripts/plugins
-./scripts/doctor
-command -v git ssh tmux vim zsh autojump
-bash -lic 'type j'
-zsh -lic 'type j'
-command -v lazygit || true
-```
-
-Debian/Ubuntu 清单当前不安装 LazyGit，因此最后一项允许 `lazygit` 缺失；若主机已有
-同名未受管配置或插件目标，安装器应明确中止且保留原文件。
+2026-08-17 已在 Ubuntu 26.04 Multipass VM 按 [`linux.md`](./linux.md) 完整验收
+`server` profile 并通过，过程和问题修复见第 2 节记录。Debian/Ubuntu 清单不安装
+LazyGit；若主机已有同名未受管配置或插件目标，安装器仍应明确中止并保留原文件。
 
 ### 真实 Termux 验收
 
