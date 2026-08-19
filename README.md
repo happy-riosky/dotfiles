@@ -29,6 +29,12 @@ install                        # entry point: ./install {full|server|termux}
 Other profiles: `./install server` (Debian/Ubuntu), `./install termux` (Termux).
 Unsupported platform/profile combinations fail explicitly.
 
+Docker Desktop's `$HOME/.docker/daemon.json` is intentionally not managed by
+this repository. [Docker documents it](https://docs.docker.com/desktop/settings-and-maintenance/settings/#docker-engine)
+as the Docker Engine configuration file and directs users to edit it in Docker
+Desktop or a text editor. It remains a real local file because Docker Desktop
+can reject a symlink during startup.
+
 ### Install packages
 
 Package installation is explicit so linking configs never unexpectedly uses the
