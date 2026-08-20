@@ -12,6 +12,18 @@
       "~/.opencode/skills/**": "allow"
     }
   },
+  "mcp": {
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "enabled": true
+    },
+    "parallel-search": {
+      "type": "remote",
+      "url": "https://search.parallel.ai/mcp",
+      "enabled": true
+    }
+  },
   "model": "pytrio/gpt-5.6-sol",
   "provider": {
     "pytrio": {
