@@ -11,6 +11,7 @@ platforms/darwin/home/         # macOS-only linked configs (Karabiner, lazygit m
 platforms/darwin/managed/      # macOS Preferences goldens (real files, not linked)
 package-lists/                 # brew, apt, termux package lists
 plugin-lists/                  # tmux/vim/zsh plugin sources
+manual/                        # manually-applied overrides, kept out of the managed link domain
 scripts/                       # link, unlink, doctor, plugins, prefs/hotkeys
 scripts/shell/                 # shared shell loader and platform/profile fragments
 install                        # entry point: ./install {full|server|termux}

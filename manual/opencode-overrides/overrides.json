@@ -1,0 +1,7 @@
+{
+  "model": "pytrio/gpt-5.6-sol",
+  "small_model": "pytrio/gpt-5.6-sol",
+  "agents": {
+    "*": "pytrio/gpt-5.6-sol"
+  }
+}

@@ -12,6 +12,7 @@ platforms/<platform>/home/     # 平台专属可链接配置
 platforms/darwin/managed/      # macOS Preferences 黄金文件（真实文件，绝不链接）
 package-lists/                 # brew/apt/termux 包名
 plugin-lists/                  # tmux/vim/zsh 插件 TARGET+REPO（不锁 commit）
+manual/                        # 手动应用的覆盖配置与脚本（不链接，不受 link/unlink/doctor 管理）
 scripts/shell/                 # core + platform/ + profiles/ 加载片段，load.zsh/load.bash
 install                        # 入口：./install {full|server|termux} [--dry-run]
 tests/                         # link.sh, shell.sh, vim.sh

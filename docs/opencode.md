@@ -5,7 +5,7 @@
 | 内容 | 修改位置 |
 | --- | --- |
 | Provider、`baseURL`、模型定义、全局权限 | `~/.config/opencode/opencode.json` |
-| 默认模型 | 个人覆盖目录，见“设置默认模型” |
+| 模型覆写 | `~/dotfiles/manual/opencode-overrides/`，见「模型覆写」 |
 | `small_model`、ECC agents/commands | `~/.opencode/opencode.json` |
 | TUI | `~/.config/opencode/tui.json` |
 
@@ -13,37 +13,44 @@
 修改后会直接进入 dotfiles。`~/.opencode` 仍是本机真实目录，运行时数据库、
 session、cache、日志和安装内容不由此仓库管理。
 
-## 设置默认模型
+## 模型覆写
 
-`~/.opencode/opencode.json` 由 ECC 管理，ECC 更新时可能被重新安装，不要把
-个人默认模型直接改在这里。建立一个 ECC 不管理、加载优先级更高的覆盖目录：
+`~/.opencode/opencode.json` 由 ECC 管理，出厂钉死 `anthropic/*` 模型，且
+ECC 更新或 `ecc repair` 会重新安装该文件。统一改法是 dotfiles 里的
+`manual/opencode-overrides/`：`apply.sh` 直接就地改写
+`~/.opencode/opencode.json`（只动 `model`、`small_model`、
+`agent.*.model`，其余字段原样保留），没有软链、环境变量或拷贝中间层。
 
 ```bash
-export OPENCODE_CONFIG_DIR="$HOME/.config/opencode-overrides"
+cd ~/dotfiles
+bash manual/opencode-overrides/apply.sh link    # 一次性安装 ~/bin/ocor 快捷命令
+ocor show
+ocor set pytrio/gpt-5.6-sol
+ocor set-small pytrio/gpt-5.6-sol
+ocor set-agent planner zhipuai-coding-plan/glm-5.3
+ocor models                                    # 生效模型速览（按模型分组）
 ```
 
-把这行写入 `~/.zshrc`，然后创建
-`~/.config/opencode-overrides/opencode.json`。默认模型应同时覆盖顶层模型和
-ECC 的 `build` agent 模型：
+规则保存在 `manual/opencode-overrides/overrides.json`（由 CLI 维护，进
+git）。`set` 只改 `model` 和 `agents."*"`；`small_model` 由 `set-small`
+单独管理；`set-agent` 的精确规则优先于 `"*"`。ECC 新增 agent 后重跑一次
+`apply.sh` 即自动覆盖（`"*"` 匹配所有 agent 名）。检查是否漏配：
 
-```json
-{
-  "$schema": "https://opencode.ai/config.json",
-  "model": "pytrio/deepseek-v4-flash",
-  "agent": {
-    "build": {
-      "model": "pytrio/deepseek-v4-flash"
-    }
-  }
-}
+```bash
+rg -i anthropic ~/.opencode/opencode.json
 ```
 
-修改后完全退出 OpenCode，重新启动并新建会话。用以下命令确认最终配置：
+修改后完全退出 OpenCode，重新启动并新建会话。确认最终配置：
 
 ```bash
 opencode debug config
 opencode debug agent build
 ```
+
+`ecc repair`/`ecc auto-update`/重装 ECC 后需要重跑 `ocor`。注意
+`ecc repair` 会把整份文件还原为 ECC 出厂内容——除了模型，还会丢掉手工
+合并的 `opencode-models-discovery` plugin 条目和其他手改，还原后先重新
+合并再跑 `ocor`。`ecc doctor` 对该文件报 drift 属预期。
 
 相关讨论：
 
