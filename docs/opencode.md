@@ -1,65 +1,116 @@
-# OpenCode 配置
+# OpenCode 与 ECC 配置
 
-## 权威修改位置
+## 核心结论
 
-| 内容 | 修改位置 |
-| --- | --- |
-| Provider、`baseURL`、模型定义、全局权限 | `~/.config/opencode/opencode.json` |
-| 模型覆写 | `~/dotfiles/manual/opencode-overrides/`，见「模型覆写」 |
-| `small_model`、ECC agents/commands | `~/.opencode/opencode.json` |
-| TUI | `~/.config/opencode/tui.json` |
+本机同时存在两套全局目录：
 
-`~/.config/opencode` 的公共配置链接到 `~/dotfiles/home/.config/opencode`，
-修改后会直接进入 dotfiles。`~/.opencode` 仍是本机真实目录，运行时数据库、
-session、cache、日志和安装内容不由此仓库管理。
+- `~/.config/opencode`：OpenCode 官方全局配置目录，由 dotfiles 管理。
+- `~/.opencode`：ECC 的 OpenCode home 安装目录，由 ECC 管理。
 
-## 模型覆写
+`~/.opencode` 虽不是官方全局配置目录，但 OpenCode `1.18.18` 会在读取项目配置后
+继续扫描它，并合并其中的 `opencode.json`、agents、commands 和 plugins。因此，
+ECC 配置会覆盖项目中的同名配置字段、agent 和 command。
 
-`~/.opencode/opencode.json` 由 ECC 管理，出厂钉死 `anthropic/*` 模型，且
-ECC 更新或 `ecc repair` 会重新安装该文件。统一改法是 dotfiles 里的
-`manual/opencode-overrides/`：`apply.sh` 直接就地改写
-`~/.opencode/opencode.json`（只动 `model`、`small_model`、
-`agent.*.model`，其余字段原样保留），没有软链、环境变量或拷贝中间层。
+`~/.opencode/opencode.json` 优先级很高，但不是最高优先级。其后仍有
+`OPENCODE_CONFIG_DIR`、`OPENCODE_CONFIG_CONTENT`、活动 Console 组织配置、系统
+受管配置和插件 `config()` hook。
+
+## 本机目录
+
+| 路径 | 用途 | 管理方 |
+| --- | --- | --- |
+| `~/.config/opencode/opencode.json` | Provider、模型定义、权限等个人默认值 | dotfiles |
+| `~/.config/opencode/tui.json` | TUI 设置 | dotfiles |
+| `~/.opencode/` | ECC agents、commands、skills、plugins 和安装状态 | ECC |
+| `~/.opencode/opencode.json` | ECC 顶层配置和 agent 配置 | ECC |
+| `manual/opencode-overrides/` | ECC 模型覆写规则与工具 | dotfiles |
+
+`~/.config/opencode` 链接到本仓库的 `home/.config/opencode`；修改会直接进入
+Git。`~/.opencode` 是本机真实目录，不由本仓库链接或清理。
+
+运行时状态不在以上配置中：
+
+- 数据库、session、日志：`~/.local/share/opencode/`
+- 最近模型：`~/.local/state/opencode/model.json`
+
+## 实际加载流程
+
+OpenCode 深合并各配置源；冲突时后加载者覆盖前者。按本机版本的实际执行顺序
+概括如下（弱 → 强）：
+
+1. 远程组织配置
+2. `~/.config/opencode/opencode.json`
+3. `OPENCODE_CONFIG` 指定的文件
+4. 从项目根到当前目录逐级加载的 `opencode.json`、`opencode.jsonc`
+5. `~/.config/opencode` 中的 agents、commands、plugins 等组件
+6. 项目内沿途 `.opencode` 中的配置和组件
+7. `~/.opencode` 中的配置和组件
+8. `OPENCODE_CONFIG_DIR` 中的配置和组件
+9. `OPENCODE_CONFIG_CONTENT`
+10. 活动 Console 组织配置（如有）
+11. 系统受管配置和 macOS MDM 配置
+
+插件加载后还可通过 `config()` hook 修改最终配置；这不属于文件加载顺序。
+
+这里最关键的是第 7 步。源码在完成项目配置和项目 `.opencode` 扫描后，显式将
+`$HOME/.opencode` 加入目录列表，并读取其中的 `opencode.json` 和
+`opencode.jsonc`。所以：
+
+- 项目 `model` 不能覆盖 ECC 中同名的顶层 `model`。
+- 项目同名 agent、command 会被 ECC 版本覆盖。
+- 相同 npm plugin 身份以后加载者为准；不同路径的本地 plugin 可能同时运行。
+- 排查“项目配置为何不生效”时，必须检查 `~/.opencode`。
+
+官方文档只把这类来源统称为“.opencode 目录”，没有单独说明 home 下
+`~/.opencode` 的位置；以上细分来自 OpenCode `1.18.18` 源码。升级 OpenCode 后
+若行为变化，应重新核对源码。
+
+## 修改原则
+
+- Provider、`baseURL`、模型定义和全局权限改
+  `~/.config/opencode/opencode.json`。
+- TUI 设置改 `~/.config/opencode/tui.json`。
+- 项目专属设置优先放项目 `opencode.json` 或 `.opencode/`。避免与 ECC 定义同名的
+  叶子字段、agent 或 command；确需覆盖时，检查 `~/.opencode`。
+- 不手工长期维护 `~/.opencode/opencode.json` 的模型字段；使用下节的 `ocor`。
+- ECC 的其他手工改动会被 `ecc repair` 或更新覆盖，必须另行记录和恢复。
+
+## ECC 模型覆写
+
+ECC 默认在 `~/.opencode/opencode.json` 中固定 `anthropic/*` 模型。由于该文件
+晚于项目配置加载，必须直接覆写 ECC 文件中的模型字段。仓库提供的 `ocor` 会原位
+修改该文件，不增加软链接或额外运行时配置层。
+
+首次安装快捷命令并应用规则：
 
 ```bash
 cd ~/dotfiles
-bash manual/opencode-overrides/apply.sh link    # 一次性安装 ~/bin/ocor 快捷命令
+bash manual/opencode-overrides/apply.sh link
 ocor show
 ocor set pytrio/gpt-5.6-sol
 ocor set-small pytrio/gpt-5.6-sol
 ocor set-agent planner zhipuai-coding-plan/glm-5.3
-ocor models                                    # 生效模型速览（按模型分组）
+ocor models
 ```
 
-规则保存在 `manual/opencode-overrides/overrides.json`（由 CLI 维护，进
-git）。`set` 只改 `model` 和 `agents."*"`；`small_model` 由 `set-small`
-单独管理；`set-agent` 的精确规则优先于 `"*"`。ECC 新增 agent 后重跑一次
-`apply.sh` 即自动覆盖（`"*"` 匹配所有 agent 名）。检查是否漏配：
+规则保存在 `manual/opencode-overrides/overrides.json`：
+
+- `set` 设置顶层 `model` 和所有 ECC agent 的默认模型。
+- `set-small` 单独设置 `small_model`。
+- `set-agent` 设置单个 agent，优先于通配规则。
+- 工具只修改 `model`、`small_model` 和 `agent.*.model`。
+
+`ecc repair`、`ecc auto-update` 或重装 ECC 后需要重新运行 `ocor`。
+`ecc repair` 会恢复整份 ECC 配置，手工加入的 plugin 等字段也会丢失；先恢复这些
+字段，再应用模型覆写。`ecc doctor` 对该文件报告 drift 属预期。
+
+检查是否仍有 ECC 默认模型：
 
 ```bash
 rg -i anthropic ~/.opencode/opencode.json
 ```
 
-修改后完全退出 OpenCode，重新启动并新建会话。确认最终配置：
-
-```bash
-opencode debug config
-opencode debug agent build
-```
-
-`ecc repair`/`ecc auto-update`/重装 ECC 后需要重跑 `ocor`。注意
-`ecc repair` 会把整份文件还原为 ECC 出厂内容——除了模型，还会丢掉手工
-合并的 `opencode-models-discovery` plugin 条目和其他手改，还原后先重新
-合并再跑 `ocor`。`ecc doctor` 对该文件报 drift 属预期。
-
-相关讨论：
-
-- [`.opencode/opencode.json` 也是配置源](https://github.com/anomalyco/opencode/issues/18953)
-- [配置加载优先级问题](https://github.com/anomalyco/opencode/issues/28177)
-- [Agent 固定模型覆盖手动选择](https://github.com/anomalyco/opencode/issues/39319)
-- [恢复旧会话时沿用旧模型](https://github.com/anomalyco/opencode/issues/26351)
-
-`gpt-5.6-sol` 必须使用 Responses API，因此在 provider 模型定义中覆盖 npm 包：
+`gpt-5.6-sol` 使用 Responses API，Provider 模型定义需要指定 OpenAI SDK：
 
 ```json
 "gpt-5.6-sol": {
@@ -69,41 +120,41 @@ opencode debug agent build
 }
 ```
 
-## 加载与覆盖顺序
+## 验证与排查
 
-后加载的同名字段覆盖先加载的字段：
+OpenCode 启动时加载配置，不会热更新。修改后完全退出，重新启动并新建会话。
 
-1. `~/.config/opencode/opencode.json`
-2. 当前项目的 `.opencode/opencode.json`
-3. `~/.opencode/opencode.json`
-4. `OPENCODE_CONFIG*` 环境覆盖
-5. 插件 `config()` hook
-
-不要用插件 `config()` 设置默认模型。此前的 `default-model.ts` 会强制使用
-`sq/grok-4.5`，现已删除。
-
-## 模型选择优先级
-
-1. UI、命令或 API 显式选择
-2. `agent.<name>.model`
-3. 当前会话保留的模型
-4. 顶层 `model`
-5. `~/.local/state/opencode/model.json` 中的最近模型
-
-修改配置后必须完全重启 OpenCode，并新建会话验证。
-
-## 排查
+查看最终配置和 agent：
 
 ```bash
-# 查找所有模型覆盖
+opencode debug config
+opencode debug agent build
+```
+
+查找所有可能的模型覆盖：
+
+```bash
 rg -n 'model|config\.model' ~/.config/opencode ~/.opencode .opencode 2>/dev/null
-
-# 检查环境覆盖
 env | rg '^OPENCODE_(CONFIG|CONFIG_DIR|CONFIG_CONTENT)='
+```
 
-# 查看实际调用模型
+查看实际调用的模型：
+
+```bash
 rg 'stream providerID=' ~/.local/share/opencode/log/opencode.log | tail
 ```
 
-`~/.local/state/opencode/model.json` 和 `~/.local/share/opencode/opencode.db`
-属于运行时状态，不是权威配置来源。
+若配置正确但模型仍不符，还要检查当前会话保存的模型、agent 自身的 `model` 和
+`~/.local/state/opencode/model.json`。agent 显式模型优先于顶层默认模型；已有会话
+也可能继续使用原模型。
+
+## 核对依据
+
+- [官方配置优先级](https://opencode.ai/docs/config/#precedence-order)
+- [OpenCode `1.18.18` `config.ts`](https://github.com/anomalyco/opencode/blob/v1.18.18/packages/opencode/src/config/config.ts)
+- [OpenCode `1.18.18` `paths.ts`](https://github.com/anomalyco/opencode/blob/v1.18.18/packages/opencode/src/config/paths.ts)
+- [官方 agents 文档](https://opencode.ai/docs/agents/)
+- [`.opencode/opencode.json` 作为配置源的讨论](https://github.com/anomalyco/opencode/issues/18953)
+- [配置加载优先级讨论](https://github.com/anomalyco/opencode/issues/28177)
+- [Agent 固定模型覆盖讨论](https://github.com/anomalyco/opencode/issues/39319)
+- [旧会话沿用模型讨论](https://github.com/anomalyco/opencode/issues/26351)
