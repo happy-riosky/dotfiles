@@ -163,6 +163,17 @@
                             },
                             {
                                 "from": {
+                                    "key_code": "slash",
+                                    "modifiers": {
+                                        "mandatory": ["right_command"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "key_code": "backslash" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
                                     "key_code": "tab",
                                     "modifiers": {
                                         "mandatory": ["right_command"],
