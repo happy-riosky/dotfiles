@@ -7,7 +7,7 @@ Debian/Ubuntu (server), and Termux.
 
 ```text
 home/                          # cross-platform, linked into $HOME
-platforms/darwin/home/         # macOS-only linked configs (Karabiner, lazygit macOS path, etc.)
+platforms/darwin/home/         # macOS-only linked configs (Karabiner, Hammerspoon, etc.)
 platforms/darwin/managed/      # macOS Preferences goldens (real files, not linked)
 package-lists/                 # brew, apt, termux package lists
 plugin-lists/                  # tmux/vim/zsh plugin sources
@@ -92,6 +92,7 @@ Preferences are **real files**, never symlinks. Goldens live under
 |--------|---------|--------|------|
 | Core (Git, SSH, tmux, Vim, shell) | leaf links | `home/` | `install` |
 | Karabiner | directory link | `platforms/darwin/home/.config/karabiner/` | `install` |
+| Hammerspoon | leaf link | `platforms/darwin/home/.hammerspoon/init.lua` | `install` |
 | lazygit (macOS path) | leaf link | `platforms/darwin/home/Library/Application Support/lazygit/config.yml` | `install` |
 | System hotkeys | real plist | `platforms/darwin/managed/hotkeys/` | `scripts/hotkeys-*.sh` |
 | Rectangle | real plist | `platforms/darwin/managed/hotkeys/` | `scripts/hotkeys-*.sh` |
@@ -112,6 +113,46 @@ precedence over GUI settings. Manage each setting from one source to avoid
 confusing behavior, restart Amethyst after editing the YAML file, and run
 `./scripts/doctor` to verify the managed link. The app's configuration-file
 warning is expected whenever a custom configuration is present.
+
+### Configure Hammerspoon Space controls (macOS only)
+
+The Hammerspoon configuration is maintained at
+`platforms/darwin/home/.hammerspoon/init.lua` and linked to
+`~/.hammerspoon/init.lua` by `./install full`. Install Hammerspoon explicitly with
+`./scripts/packages full` or `brew install --cask hammerspoon`. Launch the app,
+grant it Accessibility access in System Settings, and choose `Reload Config` from
+its menu bar menu after changing the configuration. See Hammerspoon's [Getting
+Started guide](https://www.hammerspoon.org/go/) and [`hs.spaces` API
+documentation](https://www.hammerspoon.org/docs/hs.spaces.html) for the underlying
+runtime and Space operations.
+
+The current shortcuts use **Left Command+Control+Shift** to avoid the Amethyst
+bindings and the existing Karabiner Right Command layer:
+
+| Shortcut | Action |
+|----------|--------|
+| `Left Command+Control+Shift+N` | Create and switch to a native Space |
+| `Left Command+Control+Shift+E` | Move ordinary windows from the current Space to an adjacent Space |
+| `Left Command+Control+Shift+D` twice | Switch away and delete the current native Space |
+| `Left Command+Control+Shift+F` | Exit the focused application's native full-screen mode |
+
+Hammerspoon receives Command as an aggregate modifier and cannot distinguish the
+left and right Command keys itself. Use the Left Command key for these bindings;
+the Right Command key remains reserved for the existing Karabiner layer.
+
+Space operations use Hammerspoon's `hs.spaces` module and may briefly show Mission
+Control. The module depends on macOS Accessibility behavior and private APIs; if
+deleting a Space fails after a macOS update, use Mission Control manually rather
+than closing windows blindly. Do not bind the clear action to a close-all-windows
+workflow unless unsaved documents have been accounted for. `N` also works while the
+focused Space is full-screen or Split View; `E` and `D` deliberately refuse those
+Spaces until you press `F` or the native `Control+Command+F` shortcut first.
+
+The clear action moves only ordinary windows that belong exclusively to the current
+Space. Windows assigned to All Desktops, full-screen applications, Split View, or
+other special Spaces are skipped. Deleting a Space moves its remaining windows to
+another Space; it does not close those applications. The delete shortcut requires
+two presses within two seconds and never removes the last regular Desktop Space.
 
 ### TCC-protected domains
 

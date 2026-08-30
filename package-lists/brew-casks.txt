@@ -3,6 +3,7 @@ android-platform-tools
 docker-desktop
 dropzone
 ghostty
+hammerspoon
 linearmouse
 multipass
 shortcat
