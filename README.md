@@ -97,6 +97,22 @@ Preferences are **real files**, never symlinks. Goldens live under
 | Rectangle | real plist | `platforms/darwin/managed/hotkeys/` | `scripts/hotkeys-*.sh` |
 | App Preferences | real plists | `platforms/darwin/managed/preferences/` | `scripts/prefs-*.sh` |
 
+### Configure Amethyst (macOS only)
+
+The Amethyst YAML configuration is maintained at
+`platforms/darwin/home/.config/amethyst/amethyst.yml` and linked to
+`~/.config/amethyst/amethyst.yml` by `./install full`. See Amethyst's [official
+Configuration Files documentation](https://github.com/ianyh/Amethyst/blob/development/docs/configuration-files.md)
+for supported locations, settings, and command syntax; the [official sample
+configuration](https://github.com/ianyh/Amethyst/blob/development/.amethyst.sample.yml)
+is a useful reference.
+
+Amethyst stores GUI preferences separately, and a custom YAML configuration takes
+precedence over GUI settings. Manage each setting from one source to avoid
+confusing behavior, restart Amethyst after editing the YAML file, and run
+`./scripts/doctor` to verify the managed link. The app's configuration-file
+warning is expected whenever a custom configuration is present.
+
 ### TCC-protected domains
 
 `com.apple.Music.plist` may refuse `cp` (`Operation not permitted`). Grant Full

@@ -1,0 +1,38 @@
+mod1:
+  - option
+
+mod2:
+  - option
+  - shift
+
+floating:
+  # Browsers
+  - com.apple.Safari
+  - com.google.Chrome
+  - com.microsoft.edgemac
+  - org.mozilla.firefox
+  - company.thebrowser.dia
+  - com.quark.desktop
+  - com.brave.Browser
+  - company.thebrowser.Browser
+  - com.operasoftware.Opera
+  - com.vivaldi.Vivaldi
+  - com.kagi.kagimacOS
+
+  # Terminal emulators
+  - com.apple.Terminal
+  - com.googlecode.iterm2
+  - net.kovidgoyal.kitty
+  - com.mitchellh.ghostty
+  - dev.warp.Warp-Stable
+  - org.wezfurlong.wezterm
+  - org.alacritty
+
+  # Other applications
+  - md.obsidian
+  - com.apple.finder
+
+# The listed applications are tiled; all other applications float.
+floating-is-blacklist: false
+float-small-windows: false
+small-window-size: 500
