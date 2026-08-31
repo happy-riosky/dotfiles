@@ -578,6 +578,34 @@
                         ]
                     },
                     {
+                        "description": "Right Option to left click on single press, Right Option on press and hold.",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "right_option",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "right_option" }],
+                                "to_if_alone": [{ "pointing_button": "button1" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Right Control to right click on single press, Right Control on press and hold.",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "right_control",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "key_code": "right_control" }],
+                                "to_if_alone": [{ "pointing_button": "button2" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Emacs key bindings [control+keys] (rev 11)",
                         "enabled": false,
                         "manipulators": [
@@ -1272,14 +1300,6 @@
             "name": "Default profile",
             "selected": true,
             "simple_modifications": [
-                {
-                    "from": { "key_code": "right_option" },
-                    "to": [{ "pointing_button": "button1" }]
-                },
-                {
-                    "from": { "key_code": "right_control" },
-                    "to": [{ "pointing_button": "button2" }]
-                },
                 {
                     "from": { "key_code": "stop" },
                     "to": [{ "apple_vendor_top_case_key_code": "keyboard_fn" }]
