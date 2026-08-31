@@ -92,6 +92,7 @@ Preferences are **real files**, never symlinks. Goldens live under
 |--------|---------|--------|------|
 | Core (Git, SSH, tmux, Vim, shell) | leaf links | `home/` | `install` |
 | Karabiner | directory link | `platforms/darwin/home/.config/karabiner/` | `install` |
+| AeroSpace | leaf link | `platforms/darwin/home/.config/aerospace/` | `install` |
 | Hammerspoon | leaf link | `platforms/darwin/home/.hammerspoon/init.lua` | `install` |
 | lazygit (macOS path) | leaf link | `platforms/darwin/home/Library/Application Support/lazygit/config.yml` | `install` |
 | System hotkeys | real plist | `platforms/darwin/managed/hotkeys/` | `scripts/hotkeys-*.sh` |
@@ -113,6 +114,13 @@ precedence over GUI settings. Manage each setting from one source to avoid
 confusing behavior, restart Amethyst after editing the YAML file, and run
 `./scripts/doctor` to verify the managed link. The app's configuration-file
 warning is expected whenever a custom configuration is present.
+
+### Configure AeroSpace (macOS only)
+
+The AeroSpace TOML configuration is maintained at
+`platforms/darwin/home/.config/aerospace/aerospace.toml` and linked to
+`~/.config/aerospace/aerospace.toml` by `./install full`. Changes made through the
+linked file are therefore visible in Git immediately.
 
 ### Configure Hammerspoon Space controls (macOS only)
 
