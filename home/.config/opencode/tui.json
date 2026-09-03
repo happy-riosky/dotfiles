@@ -1,13 +1,28 @@
 {
   "$schema": "https://opencode.ai/tui.json",
-  "theme": "catppuccin-latte-yellow",
+  "vim": true,
+  "vim_modal_input": true,
+  "vim_system_clipboard_register": true,
+  "keybinds": {
+    "session_pin_toggle": "none",
+    "session_rename": "none",
+    "session_delete": "none",
+    "vim.normal": {
+      "session_pin_toggle": "P",
+      "session_rename": "R",
+      "session_delete": "D",
+      "session_quick_switch_1": "1",
+      "session_quick_switch_2": "2",
+      "session_quick_switch_3": "3",
+      "session_quick_switch_4": "4",
+      "session_quick_switch_5": "5",
+      "session_quick_switch_6": "6",
+      "session_quick_switch_7": "7",
+      "session_quick_switch_8": "8",
+      "session_quick_switch_9": "9"
+    }
+  },
   "plugin": [
-    [
-      "@leohenon/opencode-vim-plugin",
-      {
-        "vim_system_clipboard_register": true
-      }
-    ],
-    "./tui-plugins/epilogue-truecolor.js"
+    "oh-my-openagent@latest"
   ]
 }

@@ -1,0 +1,77 @@
+// OMO configuration — model routing: pytrio/zhipuai only (no official subscriptions)
+// Mapping follows agent-model compatibility matrix from OMO install guide:
+//   Claude-like agents -> pytrio/glm-5.2 (GLM-5.2-calibrated prompts)
+//   GPT-native agents  -> pytrio/gpt-5.6-sol
+//   Utility agents     -> pytrio/deepseek-v4-flash
+//   Vision             -> zhipuai/glm-5.3-flash
+{
+  "[opencode]": {
+    "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/omo.schema.json",
+    "agents": {
+      "sisyphus": {
+        "model": "zhipuai-coding-plan/glm-5.3"
+      },
+      "sisyphus-junior": {
+        "model": "pytrio/glm-5.2"
+      },
+      "prometheus": {
+        "model": "pytrio/gpt-5.6-sol"
+      },
+      "metis": {
+        "model": "pytrio/glm-5.2"
+      },
+      "momus": {
+        "model": "pytrio/gpt-5.6-sol"
+      },
+      "atlas": {
+        "model": "pytrio/gpt-5.6-sol"
+      },
+            "hephaestus": {
+        "model": "pytrio/gpt-5.6-sol"
+      },
+      "oracle": {
+        "model": "pytrio/gpt-5.6-sol"
+      },
+      "explore": {
+        "model": "pytrio/deepseek-v4-flash"
+      },
+      "librarian": {
+        "model": "pytrio/deepseek-v4-flash"
+      },
+      "multimodal-looker": {
+        // "model": "pytrio/gemini-3.1-pro-high"
+        "model": "zhipuai/glm-5.3-flash"
+      }
+    },
+    "categories": {
+      "visual-engineering": {
+        // "model": "pytrio/gemini-3.1-pro-high"
+        "model": "zhipuai/glm-5.3-flash"
+      },
+      "ultrabrain": {
+        "model": "pytrio/gpt-5.6-sol"
+      },
+      "deep": {
+        "model": "pytrio/gpt-5.6-sol"
+      },
+      "artistry": {
+        "model": "pytrio/glm-5.2"
+      },
+      "quick": {
+        "model": "pytrio/deepseek-v4-flash"
+      },
+      "unspecified-low": {
+        "model": "pytrio/deepseek-v4-flash"
+      },
+      "unspecified-high": {
+        "model": "pytrio/gpt-5.6-sol"
+      },
+      "writing": {
+        "model": "pytrio/glm-5.2"
+      }
+    }
+  },
+  "_migrations": [
+    "2026-08-reasoning-unification"
+  ]
+}

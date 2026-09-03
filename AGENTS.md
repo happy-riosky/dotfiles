@@ -98,5 +98,10 @@ DOTFILES_PLATFORM=<p> [DOTFILES_PROFILE=<pr>]`；覆盖项：
 - `scripts/packages` 是显式入口；`install` 不隐式提权或联网装包。
 - `scripts/plugins` 克隆到真实的 `~/.tmux`、`~/.vim/pack`、`~/.oh-my-zsh`，
   并校验 origin 和 Git 对象；插件检出绝不提交。
+- OMO/OpenCode：`home/.omo/omo.jsonc` 与 `home/.config/opencode/` 由本仓库
+  leaf-link 管理；`~/.omo/{codegraph,lsp-daemon}/`、`node_modules/`、
+  `lsp-install-decisions.json` 与各 `*.bak*` 为本机运行时/备份，绝不入库。
+  `.gitignore` 的 `/.omo/` 必须保持锚定（未锚定会误伤 `home/.omo/`）。
+  细节见 `docs/opencode.md`。
 - `docs/process.md` 为收尾记录（含 A–E 待办清单）；迁移计划已归档到
   `docs/archive/MIGRATION_PLAN.md`——动手前先读。

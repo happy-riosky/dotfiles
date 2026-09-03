@@ -21,12 +21,29 @@ ECC 配置会覆盖项目中的同名配置字段、agent 和 command。
 | --- | --- | --- |
 | `~/.config/opencode/opencode.json` | Provider、模型定义、权限等个人默认值 | dotfiles |
 | `~/.config/opencode/tui.json` | TUI 设置 | dotfiles |
+| `~/.config/opencode/themes/*.json` | 自定义主题 | dotfiles |
+| `~/.config/opencode/agents/`、`commands/` | 链到 `~/.agents/personal-harness`（另一体系） | personal-harness |
+| `~/.config/opencode/plugins/`、`package*.json`、`node_modules/`、`lsp-install-decisions.json`、各 `*.bak*` | 本机插件与运行时产物，不入库 | 本机 |
+| `~/.omo/omo.jsonc` | OMO（oh-my-openagent）agent/category 模型路由 | dotfiles |
+| `~/.omo/{codegraph,lsp-daemon}/` | OMO 运行时状态 | 本机 |
 | `~/.opencode/` | ECC agents、commands、skills、plugins 和安装状态 | ECC |
 | `~/.opencode/opencode.json` | ECC 顶层配置和 agent 配置 | ECC |
 | `manual/opencode-overrides/` | ECC 模型覆写规则与工具 | dotfiles |
 
-`~/.config/opencode` 链接到本仓库的 `home/.config/opencode`；修改会直接进入
-Git。`~/.opencode` 是本机真实目录，不由本仓库链接或清理。
+`~/.config/opencode` 与 `~/.omo/omo.jsonc` 以 leaf link 指向本仓库的
+`home/.config/opencode`、`home/.omo`；修改会直接进入 Git。`~/.opencode` 是
+本机真实目录，不由本仓库链接或清理。
+
+## OMO 注意事项
+
+- `~/.omo/omo.jsonc` 是 OMO 的统一配置（`[opencode].agents/.categories` 模型
+  路由）。`omo install` / `omo config migrate` 会原位重写该文件（先落
+  `omo.jsonc.bak.*`），可能把软链接替换回真实文件——重跑这类命令后执行
+  `scripts/doctor` 检查漂移；如漂移，将新内容拷回仓库后重新 `scripts/link`。
+- 仓库根的 `/.omo/`（会话运行时状态）已在 `.gitignore` 锚定忽略；勿改成
+  未锚定的 `.omo/`，否则会误忽略 `home/.omo/`。
+- OpenCode TUI 退出时可能原子重写 `tui.json`，同样会把链接变回真实文件；
+  `scripts/doctor` 会报告该漂移。
 
 运行时状态不在以上配置中：
 

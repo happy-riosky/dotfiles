@@ -1,5 +1,6 @@
 legacy/
 .DS_Store
+/.omo/
 **/.netrc
 **/auth.json
 **/*license*
