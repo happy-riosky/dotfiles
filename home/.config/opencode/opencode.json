@@ -23,9 +23,9 @@
       "type": "remote",
       "url": "https://search.parallel.ai/mcp",
       "enabled": true
-    },
+    }
   },
-  "model": "pytrio/gpt-5.6-sol",
+  "model": "pytrio/gpt-6-astra",
   "provider": {
     "pytrio": {
       "name": "pytrio",
@@ -34,6 +34,51 @@
         "baseURL": "https://newapi.pytrio.asia/v1"
       },
       "models": {
+        "gpt-6-astra": {
+          "name": "gpt-6-astra",
+          "provider": {
+            "npm": "@ai-sdk/openai"
+          },
+          "options": {
+            "store": false,
+            "reasoningEffort": "high",
+            "textVerbosity": "low",
+            "reasoningSummary": "auto",
+            "include": [
+              "reasoning.encrypted_content"
+            ]
+          },
+          "variants": {
+            "medium": {
+              "reasoningEffort": "medium",
+              "reasoningSummary": "auto",
+              "include": [
+                "reasoning.encrypted_content"
+              ]
+            },
+            "high": {
+              "reasoningEffort": "high",
+              "reasoningSummary": "auto",
+              "include": [
+                "reasoning.encrypted_content"
+              ]
+            },
+            "xhigh": {
+              "reasoningEffort": "xhigh",
+              "reasoningSummary": "auto",
+              "include": [
+                "reasoning.encrypted_content"
+              ]
+            },
+            "max": {
+              "reasoningEffort": "max",
+              "reasoningSummary": "auto",
+              "include": [
+                "reasoning.encrypted_content"
+              ]
+            }
+          }
+        },
         "deepseek-v4-flash": {
           "name": "deepseek-v4-flash",
           "options": {
@@ -144,8 +189,5 @@
         }
       }
     }
-  },
-  "plugin": [
-    "oh-my-openagent@latest"
-  ]
+  }
 }

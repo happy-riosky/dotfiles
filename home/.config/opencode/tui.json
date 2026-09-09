@@ -21,8 +21,5 @@
       "session_quick_switch_8": "8",
       "session_quick_switch_9": "9"
     }
-  },
-  "plugin": [
-    "oh-my-openagent@latest"
-  ]
+  }
 }
