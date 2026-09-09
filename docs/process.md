@@ -250,3 +250,20 @@ zsh -n home/.zshenv home/.zshrc scripts/shell/load.zsh
 证据：关键输出、diff 或测试命令
 后续：仍需处理的事项
 ```
+
+### Otty Latte 配置纳入（2026-09-08）
+
+- 日期：2026-09-08
+- 环境：darwin（真实设备，`full` profile）
+- 操作：将 Otty 主配置和 Catppuccin Latte 主题纳入
+  `platforms/darwin/home/.config/otty/`，本机对应文件改为叶子软链接；固定使用 Latte，
+  不随系统深色模式切换。其他主题、字体和运行时文件保持在仓库外。
+- 备份：原文件分别保留为 `~/.config/otty/config.toml.pre-dotfiles-20260908.bak`
+  和 `~/.config/otty/themes/catppuccin-latte.ottytheme.pre-dotfiles-20260908.bak`。
+- 结果：通过。
+- 证据：`./install full --dry-run`、`scripts/doctor`、Bash/Zsh 语法检查、
+  `git diff --check`、link/packages/plugins/termux/vim 测试通过；Otty 的
+  `config validate` 和 `config reload` 成功，重载后两个软链接仍在。
+- 测试说明：`tests/shell.sh` 在未设置 `DOTFILES_ROOT` 时因临时 HOME 缺少
+  `dotfiles/` 目录失败；显式设置 `DOTFILES_ROOT="$PWD"` 后通过。
+- 后续：无 Otty 配置迁移遗留项。
