@@ -295,7 +295,7 @@ keymaps:
     edit config: Tab
     enter free mode: null
     execute mouse action: Space
-    execute mouse move: OptionLeft tap
+    execute mouse move: null
     exit free mode: Escape
     force overlay resize: null
     forward click: null
@@ -335,7 +335,7 @@ keymaps:
     right click: null
     right mouse button: R
     right mouse button (w/o overlay): null
-    show overlay: CommandLeft tap
+    show overlay: null
     subgrid nudge down:
     - D
     - K
@@ -353,8 +353,8 @@ keymaps:
     toggle app enabled: null
     toggle continuous mode: null
     toggle continuous mode until closed: '1'
-    toggle free mode: OptionLeft tap
-    toggle overlay: null
+    toggle free mode: ctrl+alt+shift+F
+    toggle overlay: ctrl+alt+shift+M
     toggle overlay lock: null
     undo last key: Backspace
     wheel down: null

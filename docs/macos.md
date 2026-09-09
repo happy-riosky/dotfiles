@@ -163,15 +163,19 @@ The current `mac` keymap includes:
 | Shortcut | Action |
 |----------|--------|
 | Meh+M (`Control+Option+Shift+M`) | Toggle the overlay (`toggle overlay`) |
-| Left Command tap | Show the overlay |
 | `Escape` | Hide the overlay |
-| Left Option tap | Toggle free mode |
+| Meh+F (`Control+Option+Shift+F`) | Toggle free mode (`toggle free mode`) |
+| `Escape` | Exit free mode |
 | `Tab` while the overlay is visible | Open the config editor |
 
 Meh means Control+Option+Shift, without Command. The YAML binding is
-`toggle overlay: ctrl+alt+shift+M`. Karabiner passes this chord through using an
-exception before its Control+M-to-Enter mapping; keep that exception ahead of the
-general mapping. Other Control+M editing shortcuts are unchanged.
+`toggle overlay: ctrl+alt+shift+M` and `toggle free mode: ctrl+alt+shift+F`.
+Karabiner turns a tap of Left Command into Meh+M and a tap of Left Option into
+Meh+F on keyboards that are not ignored by the active Karabiner profile. Holding
+either modifier still passes through the original Left Command or Left Option,
+so Mouseless `hold for drag` and `hold for move` remain available. The Meh+M and
+Meh+F pass-through exceptions must stay ahead of the general Control mappings.
+Other Control editing shortcuts are unchanged.
 
 Settings are also available from the Mouseless menu. Changes made in the config
 editor apply immediately; save them in the editor to persist them to disk.
@@ -198,9 +202,11 @@ open -a "Mouseless"
 ```
 
 Opening an already running application does not restart it. After startup, confirm
-that Settings shows Control+Option+Shift+M for `toggle overlay` and press Meh+M to
-test both showing and hiding the overlay. Check the saved diff and managed link
-separately:
+that Settings shows Control+Option+Shift+M for `toggle overlay` and
+Control+Option+Shift+F for `toggle free mode`. Tap Left Command to toggle the
+overlay, tap Left Option to toggle free mode on or off, and press Escape to exit
+either state.
+Check the saved diff and managed link separately:
 
 ```bash
 git diff -- "platforms/darwin/home/Library/Application Support/Mouseless/configs/config.yaml"

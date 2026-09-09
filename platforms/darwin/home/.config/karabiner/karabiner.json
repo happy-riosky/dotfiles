@@ -19,6 +19,49 @@
                         ]
                     },
                     {
+                        "description": "Mouseless: tap Left Command/Option for Meh shortcuts",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "left_command",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    { "key_code": "left_command", "lazy": true }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "m",
+                                        "modifiers": ["left_control", "left_option", "left_shift"]
+                                    }
+                                ],
+                                "parameters": {
+                                    "basic.to_if_alone_timeout_milliseconds": 250
+                                },
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "left_option",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    { "key_code": "left_option", "lazy": true }
+                                ],
+                                "to_if_alone": [
+                                    {
+                                        "key_code": "f",
+                                        "modifiers": ["left_control", "left_option", "left_shift"]
+                                    }
+                                ],
+                                "parameters": {
+                                    "basic.to_if_alone_timeout_milliseconds": 250
+                                },
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Right Command number and symbol layer",
                         "manipulators": [
                             {
@@ -523,6 +566,23 @@
                     {
                         "description": "Emacs-inspired control editing shortcuts",
                         "manipulators": [
+                            {
+                                "description": "Pass Meh+F through for Mouseless before Control+F mappings",
+                                "from": {
+                                    "key_code": "f",
+                                    "modifiers": {
+                                        "mandatory": ["control", "option", "shift"],
+                                        "optional": ["caps_lock"]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "f",
+                                        "modifiers": ["left_control", "left_option", "left_shift"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
                             {
                                 "description": "Pass Meh+M through for Mouseless before Control+M becomes Enter",
                                 "from": {
