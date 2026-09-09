@@ -19,3 +19,11 @@ alias mk='make'
 alias mka='make all'
 alias mkc='make clean'
 command -v lazygit >/dev/null 2>&1 && alias lg='lazygit'
+
+# >>> otty shell integration >>>
+# Added by Otty — toggle in Settings > Shell > Shell Integration.
+# Inert unless launched by Otty (it sets $OTTY_SHELL_INTEGRATION).
+if [ -n "$OTTY_SHELL_INTEGRATION" ] && [ -r "$OTTY_SHELL_INTEGRATION/otty-integration.bash" ]; then
+  . "$OTTY_SHELL_INTEGRATION/otty-integration.bash"
+fi
+# <<< otty shell integration <<<
