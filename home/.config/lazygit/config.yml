@@ -30,12 +30,17 @@ gui:
   authorColors:
     '*': '#7287fd'
 
-# keybinding:
-#   universal:
-#     toggleRangeSelect: 'v'
-#   commits:
-#     cherryPickCopy: 'c'
-#     pasteCommits: 'v'
+git:
+  diffRenderers:
+    - name: delta (unified)
+      command: delta --light --paging=never --line-numbers
+    - name: delta (split)
+      command: delta --light --paging=never --line-numbers --side-by-side
+
+keybinding:
+  universal:
+    cycleDiffRenderers: '|'
+    cycleDiffRenderersReverse: '<disabled>'
 
 customCommands:
   - context: 'files'
@@ -47,3 +52,7 @@ customCommands:
         initialValue: '{{ runCommand "/Users/riosky/.local/bin/ai-git-commit-message" }}'
     command: 'git commit --message {{.Form.CommitMessage | quote}}'
     loadingText: 'Committing...'
+  - context: 'worktrees'
+    description: 'Copy worktree path to clipboard'
+    command: 'printf "%s" "{{.SelectedWorktree.Path}}" | pbcopy'
+    output: none
