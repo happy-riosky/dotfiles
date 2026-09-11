@@ -30,3 +30,4 @@ urlview
 vim
 wget
 xclip
+yazi

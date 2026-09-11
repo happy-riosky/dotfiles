@@ -1,0 +1,5 @@
+[preview]
+max_width = 2560
+max_height = 3840
+image_filter = "lanczos3"
+image_quality = 90
