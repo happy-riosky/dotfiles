@@ -8,6 +8,15 @@
                         "description": "Caps Lock to Escape on single press, Control on press and hold.",
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "caps_lock",
                                     "modifiers": { "optional": ["any"] }
@@ -22,6 +31,15 @@
                         "description": "Mouseless: tap Left Command/Option for Meh shortcuts",
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "left_command",
                                     "modifiers": { "optional": ["any"] }
@@ -41,6 +59,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "left_option",
                                     "modifiers": { "optional": ["any"] }
@@ -65,6 +92,15 @@
                         "description": "Right Command number and symbol layer",
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "n",
                                     "modifiers": {
@@ -76,6 +112,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "m",
                                     "modifiers": {
@@ -87,6 +132,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "q",
                                     "modifiers": {
@@ -98,6 +152,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "w",
                                     "modifiers": {
@@ -109,6 +172,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "e",
                                     "modifiers": {
@@ -120,6 +192,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "r",
                                     "modifiers": {
@@ -131,6 +212,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "t",
                                     "modifiers": {
@@ -142,6 +232,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "y",
                                     "modifiers": {
@@ -153,6 +252,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "u",
                                     "modifiers": {
@@ -164,6 +272,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "i",
                                     "modifiers": {
@@ -175,6 +292,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "o",
                                     "modifiers": {
@@ -186,6 +312,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "p",
                                     "modifiers": {
@@ -197,6 +332,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "comma",
                                     "modifiers": {
@@ -208,6 +352,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "period",
                                     "modifiers": {
@@ -219,6 +372,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "slash",
                                     "modifiers": {
@@ -230,6 +392,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "tab",
                                     "modifiers": {
@@ -246,6 +417,15 @@
                         "description": "Change right_command+hjkl to arrow keys",
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "h",
                                     "modifiers": {
@@ -257,6 +437,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "j",
                                     "modifiers": {
@@ -268,6 +457,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "k",
                                     "modifiers": {
@@ -279,6 +477,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "l",
                                     "modifiers": {
@@ -295,6 +502,15 @@
                         "description": "Change right_command+asdfgzxcvb to right_shift+number keys",
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "a",
                                     "modifiers": { "mandatory": ["right_command"] }
@@ -308,6 +524,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "s",
                                     "modifiers": { "mandatory": ["right_command"] }
@@ -321,6 +546,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "d",
                                     "modifiers": { "mandatory": ["right_command"] }
@@ -334,6 +568,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "f",
                                     "modifiers": { "mandatory": ["right_command"] }
@@ -347,6 +590,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "g",
                                     "modifiers": { "mandatory": ["right_command"] }
@@ -360,6 +612,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "z",
                                     "modifiers": { "mandatory": ["right_command"] }
@@ -373,6 +634,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "x",
                                     "modifiers": { "mandatory": ["right_command"] }
@@ -386,6 +656,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "c",
                                     "modifiers": { "mandatory": ["right_command"] }
@@ -399,6 +678,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "v",
                                     "modifiers": { "mandatory": ["right_command"] }
@@ -412,6 +700,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "b",
                                     "modifiers": { "mandatory": ["right_command"] }
@@ -482,6 +779,15 @@
                         "description": "HHKB Fn number row to F1-F10",
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "1",
                                     "modifiers": { "mandatory": ["fn"] }
@@ -490,6 +796,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "2",
                                     "modifiers": { "mandatory": ["fn"] }
@@ -498,6 +813,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "3",
                                     "modifiers": { "mandatory": ["fn"] }
@@ -506,6 +830,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "4",
                                     "modifiers": { "mandatory": ["fn"] }
@@ -514,6 +847,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "5",
                                     "modifiers": { "mandatory": ["fn"] }
@@ -522,6 +864,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "6",
                                     "modifiers": { "mandatory": ["fn"] }
@@ -530,6 +881,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "7",
                                     "modifiers": { "mandatory": ["fn"] }
@@ -538,6 +898,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "8",
                                     "modifiers": { "mandatory": ["fn"] }
@@ -546,6 +915,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "9",
                                     "modifiers": { "mandatory": ["fn"] }
@@ -554,6 +932,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "0",
                                     "modifiers": { "mandatory": ["fn"] }
@@ -568,6 +955,15 @@
                         "manipulators": [
                             {
                                 "description": "Pass Meh+F through for Mouseless before Control+F mappings",
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "f",
                                     "modifiers": {
@@ -585,6 +981,15 @@
                             },
                             {
                                 "description": "Pass Meh+M through for Mouseless before Control+M becomes Enter",
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "m",
                                     "modifiers": {
@@ -601,6 +1006,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "m",
                                     "modifiers": {
@@ -612,6 +1026,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "m",
                                     "modifiers": { "mandatory": ["left_command", "control"] }
@@ -625,6 +1048,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "h",
                                     "modifiers": {
@@ -636,6 +1068,15 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "i",
                                     "modifiers": {
@@ -658,6 +1099,15 @@
                         "description": "Right Option to left click on single press, Right Option on press and hold.",
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "right_option",
                                     "modifiers": { "optional": ["any"] }
@@ -672,6 +1122,15 @@
                         "description": "Right Control to right click on single press, Right Control on press and hold.",
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "type": "device_unless",
+                                        "identifiers": [
+                                            { "vendor_id": 21972, "product_id": 1121, "is_keyboard": true },
+                                            { "vendor_id": 65261, "is_keyboard": true }
+                                        ]
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "right_control",
                                     "modifiers": { "optional": ["any"] }
@@ -1558,15 +2017,13 @@
                         "is_keyboard": true,
                         "product_id": 1121,
                         "vendor_id": 21972
-                    },
-                    "ignore": true
+                    }
                 },
                 {
                     "identifiers": {
                         "is_keyboard": true,
                         "vendor_id": 65261
-                    },
-                    "ignore": true
+                    }
                 }
             ],
             "name": "Default profile",
