@@ -42,3 +42,13 @@ palette-15 = "#6c6f85"
 # selection-background = "#edc4be" (reset to default)
 # cursor-color = "#cc8595" (reset to default)
 # cursor-text = "#f5f0f0" (reset to default)
+
+copy-on-select = true
+
+keybind = "cmd+shift+j=toggle_hint_mode"
+
+privilege-notification-on-finish = true
+
+notification-foreground = "tab-unfocused"
+
+font-size = 14
