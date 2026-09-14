@@ -267,3 +267,21 @@ zsh -n home/.zshenv home/.zshrc scripts/shell/load.zsh
 - 测试说明：`tests/shell.sh` 在未设置 `DOTFILES_ROOT` 时因临时 HOME 缺少
   `dotfiles/` 目录失败；显式设置 `DOTFILES_ROOT="$PWD"` 后通过。
 - 后续：无 Otty 配置迁移遗留项。
+
+### Neovim 配置纳入（2026-09-14）
+
+- 日期：2026-09-14
+- 环境：darwin（真实设备，`full` profile），Neovim 0.12.5。
+- 操作：将 Kickstart 配置纳入 `home/.config/nvim/`（Diffview 定制、Lua 模块、
+  帮助正文、插件锁文件；上游 Git/CI 元数据不入库，MIT 声明保存在
+  `docs/third-party/kickstart-MIT.md`），本机文件改为叶子软链接；主题定为官方
+  `catppuccin-frappe`（无自定义高亮），启用 Nerd Font（kitty 字体行单独提交），
+  neo-tree 改 `reveal` 定位当前文件。原配置备份在
+  `~/.config/nvim.backup-20260910-140650/`。使用说明见 [`neovim.md`](./neovim.md)。
+- 锁文件：清除未引用的 `tokyonight.nvim` 残留条目，其余为机器实际锁定版本。
+- 结果：通过。`nvim --headless +qa` 退出 0；StyLua、Bash/Zsh 语法检查、
+  `git diff --check`、link/shell/packages/plugins/termux/tmux/vim 测试通过；
+  配置目录无 `latte/yellow` 残留。不维护主题测试文件。
+- 后续：`./install full --dry-run` 与 `scripts/doctor` 仍被既有
+  `~/.config/otty/config.toml` 未受管目标阻挡，留待单独处理；Vim 侧保留
+  Latte Yellow，两编辑器不再视觉统一。

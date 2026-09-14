@@ -59,6 +59,12 @@ must be real checkouts with the expected origin; every checkout is verified with
 ./scripts/plugins --app tmux
 ```
 
+## Neovim
+
+The current Kickstart-based configuration lives in `home/.config/nvim/`, including
+custom Diffview mappings and the plugin revision lockfile. See [the Neovim guide](docs/neovim.md)
+for requirements, linking, and plugin updates.
+
 ## macOS Application Configuration
 
 See [the macOS guide](docs/macos.md) for application configuration paths,
