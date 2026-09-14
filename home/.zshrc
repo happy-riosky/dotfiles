@@ -62,6 +62,8 @@ bindkey -M emacs '^O' clear-screen
 bindkey -M viins '^O' clear-screen
 bindkey -M vicmd '^O' clear-screen
 
+[ -r "$HOME/.config/broot/launcher/bash/br" ] && source "$HOME/.config/broot/launcher/bash/br"
+
 # >>> otty shell integration >>>
 # Added by Otty — toggle in Settings > Shell > Shell Integration.
 # Inert unless launched by Otty (it sets $OTTY_SHELL_INTEGRATION).

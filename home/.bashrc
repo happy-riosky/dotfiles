@@ -20,6 +20,9 @@ alias mka='make all'
 alias mkc='make clean'
 command -v lazygit >/dev/null 2>&1 && alias lg='lazygit'
 
+
+[ -r "$HOME/.config/broot/launcher/bash/br" ] && source "$HOME/.config/broot/launcher/bash/br"
+
 # >>> otty shell integration >>>
 # Added by Otty — toggle in Settings > Shell > Shell Integration.
 # Inert unless launched by Otty (it sets $OTTY_SHELL_INTEGRATION).
