@@ -1,0 +1,14 @@
+[[mgr.prepend_keymap]]
+on = "T"
+run = "plugin cycle-preview"
+desc = "Cycle preview pane layouts"
+
+[[mgr.prepend_keymap]]
+on = "<C-Left>"
+run = "plugin resize-preview -1"
+desc = "Narrow the preview pane"
+
+[[mgr.prepend_keymap]]
+on = "<C-Right>"
+run = "plugin resize-preview 1"
+desc = "Widen the preview pane"
