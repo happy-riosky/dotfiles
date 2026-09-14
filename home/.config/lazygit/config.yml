@@ -1,5 +1,7 @@
 gui:
   language: "en"
+  fileTreeSortOrder: filesFirst
+  showNumstatInFilesView: true
   theme:
     activeBorderColor:
       - '#df8e1d'
