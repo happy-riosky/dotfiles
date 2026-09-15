@@ -83,13 +83,13 @@ git log -1 --oneline
 
 ```text
 RUN /usr/bin/sudo /usr/bin/apt-get update
-RUN /usr/bin/sudo /usr/bin/apt-get install -y ack autojump ... stow ... tmux ... vim ... zsh
+RUN /usr/bin/sudo /usr/bin/apt-get install -y ack ... stow ... tmux ... vim ... zoxide zsh
 ```
 
 root 用户的输出没有 `/usr/bin/sudo`。确认：
 
-- 使用的是 `apt-get`，包清单包含 `autojump`、`fzf`、`stow`、`tealdeer`、`tmux`、
-  `vim` 和 `zsh`。
+- 使用的是 `apt-get`，包清单包含 `fzf`、`stow`、`tealdeer`、`tmux`、`vim`、
+  `zoxide` 和 `zsh`。
 - 普通用户的安装计划以 `/usr/bin/sudo /usr/bin/apt-get install -y` 开头；无需再
   手动逐个执行 `sudo apt install`。
 - 没有真正刷新索引、下载或安装软件包。
@@ -105,7 +105,7 @@ root 用户的输出没有 `/usr/bin/sudo`。确认：
 应正常返回命令提示符，没有 `E:`、`ERROR` 或非零退出。
 
 包安装与配置建链是两个刻意分开的入口：必须先运行 `./scripts/packages server`。
-`./install server` 只建立链接，不会联网、提权或补装 `autojump`、Zsh 等软件包。
+`./install server` 只建立链接，不会联网、提权或补装 `zoxide`、Zsh 等软件包。
 
 APT 清单中的某个包不可用时，脚本会先尝试整批安装；整批失败后自动逐包重试，能正常
 下载的包仍会继续安装。若仍有包失败，脚本最后以非零状态退出并保留失败包信息；修复
@@ -114,13 +114,13 @@ APT 清单中的某个包不可用时，脚本会先尝试整批安装；整批�
 验证主要二进制：
 
 ```bash
-command -v ack autojump bc clang curl fzf git pipx rg stow tldr tmux tree urlview vim zsh
+command -v ack bc clang curl fzf git pipx rg stow tldr tmux tree urlview vim zoxide zsh
 ```
 
 每一项都应输出路径。额外检查：
 
 ```bash
-autojump --version
+zoxide --version
 git --version
 ssh -V
 tmux -V
@@ -268,8 +268,8 @@ git -C "$HOME/.vim/pack/vendor/start/lightline.vim" remote get-url origin
 ```bash
 bash -lic 'printf "platform=%s profile=%s\n" "$DOTFILES_PLATFORM" "$DOTFILES_PROFILE"'
 zsh -lic 'printf "platform=%s profile=%s\n" "$DOTFILES_PLATFORM" "$DOTFILES_PROFILE"'
-bash -lic 'type j'
-zsh -lic 'type j'
+bash -lic 'type z'
+zsh -lic 'type z'
 ```
 
 前两条都应输出：
@@ -278,14 +278,14 @@ zsh -lic 'type j'
 platform=linux profile=server
 ```
 
-后两条都应显示 `j` 是函数或命令，而不是 `j: not found`。
+后两条都应显示 `z` 是函数或命令，而不是 `z: not found`。
 
-验证 autojump 实际跳转：
+验证 zoxide 实际跳转：
 
 ```bash
-autojump --add "$HOME/dotfiles"
+zoxide add "$HOME/dotfiles"
 cd "$HOME"
-j dotfiles
+z dotfiles
 pwd
 ```
 
@@ -429,14 +429,14 @@ Bash/Zsh + tmux/Vim/SSH + doctor：PASS/FAIL
 
 ### 命令提示 can be installed with sudo apt install
 
-例如 `autojump: command not found` 表示 APT 包安装步骤尚未成功完成。不要逐个手动安装，
+例如 `zoxide: command not found` 表示 APT 包安装步骤尚未成功完成。不要逐个手动安装，
 回到仓库执行完整清单：
 
 ```bash
 cd "$HOME/dotfiles"
 ./scripts/packages server --dry-run
 ./scripts/packages server
-command -v autojump zsh
+command -v zoxide zsh
 ```
 
 最后一条应输出两个绝对路径。`./install server` 只管理软链接，即使执行成功也不会
@@ -449,7 +449,7 @@ Package tldr is not available
 E: Package 'tldr' has no installation candidate
 ```
 
-APT 会在解析阶段中止整批安装，所以随后检查 `autojump`、Zsh 等命令也会显示未安装。
+APT 会在解析阶段中止整批安装，所以随后检查 `zoxide`、Zsh 等命令也会显示未安装。
 更新仓库后重新运行 `./scripts/packages server`；当前清单使用提供同名 `tldr` 命令的
 `tealdeer` 包。
 
@@ -475,19 +475,20 @@ getent passwd "$USER" | cut -d: -f7
 确认最后一行与 `expected` 路径相同后退出实例，并从宿主机重新执行
 `multipass shell <实例名>`。修改不会改变已经运行中的 shell，重新登录后才会生效。
 
-### autojump 的 j 不生效
+### zoxide 的 z 不生效
 
-先确认包和系统脚本存在：
+先确认包和 loader 初始化：
 
 ```bash
-command -v autojump
-ls -l /usr/share/autojump/autojump.sh
-bash -lic 'type j'
-zsh -lic 'type j'
+command -v zoxide
+bash -lic 'type z'
+zsh -lic 'type z'
 ```
 
-若系统脚本不存在，保留发行版、包版本和以上输出，再检查该发行版的 `autojump` 包
-布局。
+`zoxide` 存在但 `z` 不是函数：说明 shell 没有走本仓库 loader，检查
+`~/.bashrc`、`~/.zshenv` 是否为指向仓库的软链接。`z` 是函数但跳不到目标：
+zoxide 数据库还是空的，多 `cd` 几个目录后重试，或 `zoxide add <路径>` 补录；
+交互筛选用 `zi`。
 
 ### powerlevel10k 主题未生效
 

@@ -285,3 +285,25 @@ zsh -n home/.zshenv home/.zshrc scripts/shell/load.zsh
 - 后续：`./install full --dry-run` 与 `scripts/doctor` 仍被既有
   `~/.config/otty/config.toml` 未受管目标阻挡，留待单独处理；Vim 侧保留
   Latte Yellow，两编辑器不再视觉统一。
+
+### autojump 替换为 zoxide（2026-09-15）
+
+- 日期：2026-09-15
+- 环境：darwin（真实设备，`full` profile），zoxide 0.10.0。
+- 操作：三个包清单删 `autojump`、加 `zoxide`；`load.zsh`/`load.bash` 在
+  platform/profile 之后、host/local 之前各自 `eval "$(zoxide init zsh|bash)"`
+  （`command -v` 守卫；不放 core.sh 是因为 brew prefix 的 PATH 在
+  `platform/darwin.sh` 才就绪）；删除 darwin.sh/linux.sh 的 autojump source。
+  命令名用默认 `z`/`zi`，不迁移 autojump 历史数据。
+- 测试：`tests/packages.sh` manifest 检查改 zoxide；`tests/termux.sh` 的
+  系统 profile fixture 改中性 sentinel 名；`tests/shell.sh` 新增
+  `test_zoxide_init`（假 zoxide 验证 zsh/bash loader 均会 eval）。
+- 结果：通过。
+- 证据：link/shell/packages/plugins/termux 测试与 Bash/Zsh 语法检查、
+  `git diff --check` 通过；真机 `packages full --dry-run` 计划含 zoxide、
+  无 autojump；交互式 zsh/bash 中 `z`/`zi` 均为函数，临时 XDG 数据目录下
+  `z dotfiles` 跳转成功。`./install full --dry-run` 与 `scripts/doctor`
+  仍被上述 otty 未受管目标阻挡（既有问题，与本次无关）。
+- 后续：各机器手动 `brew uninstall autojump` / `apt remove autojump` /
+  `pkg uninstall autojump` 并运行 `./scripts/packages <profile>` 安装
+  zoxide；可选删除 `~/.local/share/autojump/`。

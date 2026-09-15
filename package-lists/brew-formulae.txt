@@ -1,7 +1,6 @@
 # One Homebrew formula or tap-qualified formula per line.
 ack
 anomalyco/tap/opencode
-autojump
 bat
 bc
 browsh-org/browsh/browsh
@@ -31,3 +30,4 @@ vim
 wget
 xclip
 yazi
+zoxide

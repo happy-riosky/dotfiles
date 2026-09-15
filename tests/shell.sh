@@ -87,6 +87,19 @@ test_missing_optional_tools() {
     DOTFILES_PLATFORM=linux DOTFILES_PROFILE=server /bin/bash --noprofile --norc -c 'source "$HOME/.bashrc"'
 }
 
+test_zoxide_init() {
+  local home="$TMP_ROOT/zoxide-home" bin="$TMP_ROOT/zoxide-bin"
+  mkdir -p "$home" "$bin"
+  printf '#!/usr/bin/env sh\nprintf "export DOTFILES_TEST_ZOXIDE_LOADED=1\\n"\n' > "$bin/zoxide"
+  chmod +x "$bin/zoxide"
+  HOME="$home" PATH="$bin:/usr/bin:/bin" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=linux DOTFILES_PROFILE=server \
+    /bin/zsh -df -c 'source "$DOTFILES_ROOT/scripts/shell/load.zsh"; [[ "${DOTFILES_TEST_ZOXIDE_LOADED:-}" == 1 ]]' || \
+    fail 'zsh loader did not initialize zoxide'
+  HOME="$home" PATH="$bin:/usr/bin:/bin" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=linux DOTFILES_PROFILE=server \
+    /bin/bash --noprofile --norc -c 'source "$DOTFILES_ROOT/scripts/shell/load.bash"; [[ "${DOTFILES_TEST_ZOXIDE_LOADED:-}" == 1 ]]' || \
+    fail 'bash loader did not initialize zoxide'
+}
+
 test_conda_darwin_zsh_only() {
   local home="$TMP_ROOT/conda-home" zdotdir="$TMP_ROOT/conda-zdotdir"
   local calls="$TMP_ROOT/conda-calls"
@@ -144,5 +157,6 @@ test_noninteractive_silence
 test_bash_platform_detection
 test_darwin_homebrew_and_oc
 test_missing_optional_tools
+test_zoxide_init
 test_conda_darwin_zsh_only
 printf 'shell integration tests passed\n'

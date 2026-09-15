@@ -49,7 +49,7 @@ test_dry_run_is_side_effect_free() {
 
 test_server_manifest_includes_required_packages() {
   local package
-  for package in autojump tealdeer zsh; do
+  for package in zoxide tealdeer zsh; do
     grep -Fxq "$package" "$ROOT/package-lists/apt.txt" || \
       fail "server package manifest omitted $package"
   done

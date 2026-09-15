@@ -9,7 +9,6 @@ if [[ -z "$brew_prefix" ]]; then
 fi
 if [[ -n "$brew_prefix" ]]; then
   dotfiles_prepend_path "$brew_prefix/bin"
-  [[ -r "$brew_prefix/etc/profile.d/autojump.sh" ]] && source "$brew_prefix/etc/profile.d/autojump.sh"
 fi
 unset brew_prefix candidate
 DOTFILES_LOAD_TRACE="${DOTFILES_LOAD_TRACE}:darwin"

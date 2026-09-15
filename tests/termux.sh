@@ -10,11 +10,11 @@ fail() { printf 'FAIL: %s\n' "$*" >&2; exit 1; }
 test_loader_does_not_source_system_profile() {
   local home="$TMP_ROOT/termux-profile-home" prefix="$TMP_ROOT/termux-profile-prefix"
   mkdir -p "$home" "$prefix/etc/profile.d"
-  printf 'DOTFILES_AUTOJUMP_LOADED=1\n' > "$prefix/etc/profile.d/autojump.sh"
+  printf 'DOTFILES_SYSTEM_PROFILE_LOADED=1\n' > "$prefix/etc/profile.d/system-tool.sh"
 
   HOME="$home" PREFIX="$prefix" DOTFILES_ROOT="$ROOT" \
     DOTFILES_PLATFORM=termux DOTFILES_PROFILE=termux /bin/zsh -df -c \
-    'source "$DOTFILES_ROOT/scripts/shell/load.zsh"; [[ -z "${DOTFILES_AUTOJUMP_LOADED:-}" ]]' || \
+    'source "$DOTFILES_ROOT/scripts/shell/load.zsh"; [[ -z "${DOTFILES_SYSTEM_PROFILE_LOADED:-}" ]]' || \
     fail 'Termux loader sourced a system-owned profile script'
 }
 

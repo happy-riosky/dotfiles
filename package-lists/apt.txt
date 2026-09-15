@@ -1,6 +1,5 @@
 # Debian/Ubuntu server tools used by the managed shell, tmux, and Vim configs.
 ack
-autojump
 bc
 build-essential
 ca-certificates
@@ -21,4 +20,5 @@ urlview
 uuid-runtime
 vim
 wget
+zoxide
 zsh

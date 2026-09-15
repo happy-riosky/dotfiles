@@ -33,12 +33,12 @@ git log -1 --oneline
 应只出现一行计划：
 
 ```text
-RUN pkg install -y ack-grep autojump ... lazygit ... tmux ... vim ... zsh
+RUN pkg install -y ack-grep ... lazygit ... tmux ... vim ... zoxide zsh
 ```
 
 确认：
 
-- 包含 autojump 和 lazygit。
+- 包含 zoxide 和 lazygit。
 - 没有 sudo。
 - 没有真正下载或安装输出。
 
@@ -59,7 +59,7 @@ pkg update
 验证二进制：
 
 ```bash
-command -v ack autojump git jq ssh termux-battery-status tmux urlview vim zsh lazygit
+command -v ack git jq ssh termux-battery-status tmux urlview vim zoxide zsh lazygit
 ```
 
 每一项都应输出 `$PREFIX/bin/...` 路径。
@@ -67,7 +67,7 @@ command -v ack autojump git jq ssh termux-battery-status tmux urlview vim zsh la
 额外检查：
 
 ```bash
-autojump --version
+zoxide --version
 git --version
 ssh -V
 tmux -V
@@ -198,22 +198,22 @@ exec zsh -l
 最好新开一个 Termux 会话，然后执行：
 
 ```bash
-bash -lic 'type j'
-zsh -lic 'type j'
+bash -lic 'type z'
+zsh -lic 'type z'
 ```
 
-两者都应显示 j 是函数或命令，而不是：
+两者都应显示 z 是函数或命令，而不是：
 
 ```text
-j: not found
+z: not found
 ```
 
-验证 autojump 实际跳转：
+验证 zoxide 实际跳转：
 
 ```bash
-autojump --add "$HOME/dotfiles"
+zoxide add "$HOME/dotfiles"
 cd "$HOME"
-j dotfiles
+z dotfiles
 pwd
 ```
 
@@ -314,19 +314,26 @@ packages dry-run：PASS/FAIL
 packages 实际安装：PASS/FAIL
 install dry-run + 实际链接：PASS/FAIL
 plugins dry-run + 实际克隆：PASS/FAIL
-Bash/Zsh + autojump + doctor：PASS/FAIL
+Bash/Zsh + zoxide + doctor：PASS/FAIL
 ```
 
 若失败，保留完整命令和原始错误输出，不要先删除冲突文件。
 
 ## 常见问题
 
-### autojump 的 j 不生效
+### zoxide 的 z 不生效
 
-`j` 存在但无法跳转，且 `print -r -- "$chpwd_functions"` 输出
-`autojump_chpwdautojump_chpwd`：说明 autojump 被加载了两次（Termux 系统
-profile 与旧版 dotfiles loader），hook 名被拼接。当前版本 loader 已不再重复
-加载；更新仓库后重新打开 shell 即可。
+`z` 不存在时，先确认包已安装且 loader 完成初始化：
+
+```bash
+command -v zoxide
+zsh -ic 'type z'
+```
+
+`zoxide` 存在但 `z` 不是函数：说明 shell 没有走本仓库 loader，检查
+`~/.zshenv`、`~/.bashrc` 是否为指向仓库的软链接。`z` 是函数但跳不到目标：
+zoxide 数据库还是空的，多 `cd` 几个目录后重试，或 `zoxide add <路径>` 补录；
+交互筛选用 `zi`。
 
 ### zsh-vi-mode 报 zvm_cursor_style 正则错误
 

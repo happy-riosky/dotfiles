@@ -27,6 +27,7 @@ fi
 source "$DOTFILES_SHELL_HOME/core.sh"
 source "$DOTFILES_SHELL_HOME/platform/$DOTFILES_PLATFORM.sh"
 source "$DOTFILES_SHELL_HOME/profiles/$DOTFILES_PROFILE.sh"
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init bash)"
 [[ -r "$DOTFILES_LOCAL_HOME/.bashrc.host" ]] && source "$DOTFILES_LOCAL_HOME/.bashrc.host"
 [[ -r "$DOTFILES_LOCAL_HOME/.bashrc.local" ]] && source "$DOTFILES_LOCAL_HOME/.bashrc.local"
 export DOTFILES_ROOT DOTFILES_PLATFORM DOTFILES_PROFILE

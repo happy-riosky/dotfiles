@@ -1,6 +1,5 @@
 # Termux tools used by the managed shell, tmux, Vim, and LazyGit configs.
 ack-grep
-autojump
 bc
 clang
 curl
@@ -23,4 +22,5 @@ tree
 util-linux
 vim
 wget
+zoxide
 zsh
