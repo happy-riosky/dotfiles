@@ -94,7 +94,6 @@ DOTFILES_PLATFORM=<p> [DOTFILES_PROFILE=<pr>]`；覆盖项：
 
 - Conventional Commits：`feat(<scope>):`、`fix(<scope>):`、`refactor:`、`docs:`、
   `chore:`，小且单一用途。
-- `legacy/` 是 gitignored 的迁移暂存区——绝不链接它。
 - `scripts/packages` 是显式入口；`install` 不隐式提权或联网装包。
 - `scripts/plugins` 克隆到真实的 `~/.tmux`、`~/.vim/pack`、`~/.oh-my-zsh`，
   并校验 origin 和 Git 对象；插件检出绝不提交。

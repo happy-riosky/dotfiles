@@ -1,8 +1,11 @@
 # Dotfiles 重构收尾记录
 
+> **已归档（2026-09-16）**：重构收尾完成，本文档仅作历史记录。仍活跃的待办与
+> 今后的操作记录见 [`../todo.md`](../todo.md)。
+
 这份文档记录迁移计划完成后的验证、真实设备反馈和后续优化。迁移计划已归档到
-[`archive/MIGRATION_PLAN.md`](./archive/MIGRATION_PLAN.md)，OpenCode 配置说明见
-[`opencode.md`](./opencode.md)。
+[`MIGRATION_PLAN.md`](./MIGRATION_PLAN.md)，OpenCode 配置说明见
+[`opencode.md`](../opencode.md)。
 
 ## 1. 当前状态
 
@@ -99,7 +102,7 @@ rm "$HOME/.config/lazygit/config.yml"
 
 - 日期：2026-08-17
 - 环境：Ubuntu 26.04 LTS（Multipass VM，`server` profile）
-- 操作：按 [`linux.md`](./linux.md) 完成包安装、建链、插件和 shell/工具验证。
+- 操作：按 [`linux.md`](../linux.md) 完成包安装、建链、插件和 shell/工具验证。
 - 结果：通过
 - 证据：
   - `packages server` 的 dry-run、实际安装和失败后逐包重试正常。
@@ -146,15 +149,23 @@ rm "$HOME/.config/lazygit/config.yml"
 - [x] 自动验证所有清单先预检，未知目标不覆盖，既有/新克隆检出均校验 origin 和 `git fsck`。
 - [x] 删除无引用的空目录 `plugin-manifests/`。
 
+### F. Neovim AI 补全
+
+- [ ] 接入 GitHub Copilot ghost text（已有订阅）：`vim.pack.add { gh 'github/copilot.vim' }`
+      + `:Copilot setup`（需 Node.js），Tab 接受建议；与 blink `preset = 'default'`
+      （`<C-y>` 接受）无按键冲突。
+- [ ] 可选：从 stash 恢复 minuet/DeepSeek FIM 作手动后备（`<A-y>` 触发；恢复时需把
+      minuet 移出 blink `default` sources，避免与 Copilot 双自动请求、双成本）。
+
 ### Debian/Ubuntu 验收
 
-2026-08-17 已在 Ubuntu 26.04 Multipass VM 按 [`linux.md`](./linux.md) 完整验收
+2026-08-17 已在 Ubuntu 26.04 Multipass VM 按 [`linux.md`](../linux.md) 完整验收
 `server` profile 并通过，过程和问题修复见第 2 节记录。Debian/Ubuntu 清单不安装
 LazyGit；若主机已有同名未受管配置或插件目标，安装器仍应明确中止并保留原文件。
 
 ### 真实 Termux 验收
 
-完整安装与验证步骤已整理为使用指南：[`termux.md`](./termux.md)。2026-08-15 已在
+完整安装与验证步骤已整理为使用指南：[`termux.md`](../termux.md)。2026-08-15 已在
 真实设备按该流程验收通过（见第 2 节记录）。
 
 #### 已知 Termux 问题：zsh-vi-mode 光标样式
@@ -281,7 +292,7 @@ zsh -n home/.zshenv home/.zshrc scripts/shell/load.zsh
   `docs/third-party/kickstart-MIT.md`），本机文件改为叶子软链接；主题定为官方
   `catppuccin-frappe`（无自定义高亮），启用 Nerd Font（kitty 字体行单独提交），
   neo-tree 改 `reveal` 定位当前文件。原配置备份在
-  `~/.config/nvim.backup-20260910-140650/`。使用说明见 [`neovim.md`](./neovim.md)。
+  `~/.config/nvim.backup-20260910-140650/`。使用说明见 [`neovim.md`](../neovim.md)。
 - 锁文件：清除未引用的 `tokyonight.nvim` 残留条目，其余为机器实际锁定版本。
 - 结果：通过。`nvim --headless +qa` 退出 0；StyLua、Bash/Zsh 语法检查、
   `git diff --check`、link/shell/packages/plugins/termux/tmux/vim 测试通过；
@@ -332,3 +343,20 @@ zsh -n home/.zshenv home/.zshrc scripts/shell/load.zsh
   临时 HOME 的 `tests/link.sh` 通过。
 - 后续：遗留问题挂第 3 节 B；Otty 侧设置（如 `auto-theme-dark-mode`、
   theme/theme-dark）属机器本地配置，直接改 HOME 实体文件，不入仓库。
+
+### Neovim AI 补全试验（2026-09-16）
+
+- 日期：2026-09-16
+- 环境：darwin（真实设备，`full` profile），Neovim 0.12.5，minuet-ai 0.10.x。
+- 操作：试验 DeepSeek FIM 补全：minuet-ai.nvim 以 blink.cmp 源接入
+  （`openai_fim_compatible` @ `api.deepseek.com/beta/completions`，
+  `deepseek-v4-flash`，key 走 `~/.zshenv.local` 的 `DEEPSEEK_API_KEY`，不入库）。
+  功能调通后诊断延迟：blink 菜单模式须等整段生成完成才渲染（FIM 后端在 curl
+  退出后一次性回调），叠加通用模型长补全（max_tokens=256）生成时间。调优
+  （n_completions=1、throttle=1000、debounce=400、context_window=4000、
+  blink timeout_ms=3000）后仍约 2s；API 直连实测 0.9s@64token，端点本身不慢，
+  差距来自专用小模型+流式渲染的 Copilot/Cursor 架构。
+- 结果：功能通过、延迟不达标，相关变更（init.lua、neovim.md、
+  nvim-pack-lock.json）已整体 stash，条目名
+  "wip(nvim): DeepSeek FIM completion via minuet (latency unsatisfactory)"。
+- 后续：见第 3 节 F；恢复前先 `git stash list` 确认 ref（另有一个 obsidian stash）。
