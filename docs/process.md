@@ -129,6 +129,10 @@ rm "$HOME/.config/lazygit/config.yml"
 
 - [ ] 稳定运行一段时间后删除 `legacy/backup` 和残留 `.mackup*`。
 - [ ] 决定是否清理仓库历史中的已知 SSH host/IP（隐私暴露，非重构前置）。
+- [ ] Otty 配置已退管（2026-09-16，见第 6 节记录）：Otty 保存配置用原子写
+      （temp+rename），rename 不跟随软链，会把叶子软链顶回实体文件；若未来需要
+      版本化，改用 `platforms/darwin/managed/` 黄金文件 + export/restore 模式
+      （参照 macOS Preferences），不要软链。
 
 ### D. 包管理
 
@@ -307,3 +311,24 @@ zsh -n home/.zshenv home/.zshrc scripts/shell/load.zsh
 - 后续：各机器手动 `brew uninstall autojump` / `apt remove autojump` /
   `pkg uninstall autojump` 并运行 `./scripts/packages <profile>` 安装
   zoxide；可选删除 `~/.local/share/autojump/`。
+
+### Otty 配置退管（2026-09-16）
+
+- 日期：2026-09-16
+- 环境：darwin（真实设备，`full` profile），Otty 终端（io.appmakes.otty）。
+- 背景：2026-09-08 曾将 Otty 主配置与 Catppuccin Latte 主题纳入
+  `platforms/darwin/home/.config/otty/`，本机文件改为叶子软链，当时
+  `config validate/reload` 通过且软链完好。其后 Otty 保存配置（窗口尺寸等状态）
+  时以原子写落盘——写临时文件后 rename 覆盖，rename 不跟随软链——软链被实体
+  文件顶回，仓库副本静默过期：`config.toml` 漂移为 `details-panel-width = 334`、
+  `sidebar-width = 360`（仓库旧值 `499`/`250`），09-14 与 09-15 的
+  `install --dry-run`/`doctor` 两次被"未受管目标"阻挡。
+- 操作：确认原因后退管。HOME 的 `config.toml` 与
+  `themes/catppuccin-latte.ottytheme` 恢复为实体文件（取当时最新值，无数据
+  丢失），删除 `platforms/darwin/home/.config/otty/`；既有 `.bak` 备份保留。
+- 结果：通过。
+- 证据：HOME 两文件为实体文件且含最新值（`details-panel-width = 334`）；
+  退管后 `./install full --dry-run` 与 `scripts/doctor` 不再被 otty 阻挡，
+  临时 HOME 的 `tests/link.sh` 通过。
+- 后续：遗留问题挂第 3 节 B；Otty 侧设置（如 `auto-theme-dark-mode`、
+  theme/theme-dark）属机器本地配置，直接改 HOME 实体文件，不入仓库。
