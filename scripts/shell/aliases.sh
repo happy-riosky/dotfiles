@@ -1,8 +1,20 @@
 command -v yazi >/dev/null 2>&1 && alias y='yazi'
 command -v fd >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1 && command -v pbcopy >/dev/null 2>&1 && \
   alias fp='fd --type f | fzf | pbcopy'
-command -v fd >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1 && command -v bat >/dev/null 2>&1 && \
-  alias fr="fd --type f | fzf --preview 'bat --color=always --style=numbers {}'"
+# fr：fd + fzf 预览；tmux 内 OSC 11 背景探测不可靠，darwin 下 bat 主题
+# 随 macOS 外观切换（浅 OneHalfLight / 深 OneHalfDark）；显式导出
+# BAT_THEME 时不覆盖；非 darwin 原样透传
+command -v fd >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1 && command -v bat >/dev/null 2>&1 && fr() {
+	if [ "$DOTFILES_PLATFORM" = darwin ] && [ -z "${BAT_THEME:-}" ]; then
+		local theme=OneHalfLight
+		if [ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" = "Dark" ]; then
+			theme=OneHalfDark
+		fi
+		fd --type f | fzf --preview "bat --color=always --style=numbers --theme=$theme {}"
+	else
+		fd --type f | fzf --preview 'bat --color=always --style=numbers {}'
+	fi
+}
 # glow markdown 阅读器：tmux 内 OSC 11 背景探测不可靠，darwin 下改读 macOS 外观设置；
 # 显式传 -s/--style 时不覆盖；gl 为短别名；非 darwin 原样透传
 command -v glow >/dev/null 2>&1 && glow() {
