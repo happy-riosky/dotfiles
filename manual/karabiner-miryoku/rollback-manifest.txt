@@ -1,0 +1,20 @@
+# Karabiner 回退基线 (known-good)
+# commit: 279b8f4 (karabiner.json clean at experiment start)
+# 回退: git restore platforms/darwin/home/.config/karabiner/karabiner.json
+# 校验: 规则数应恢复为 14 且与下方清单一致
+# 校验命令: jq -r ".profiles[]|select(.selected)|.complex_modifications.rules[].description" ~/.config/karabiner/karabiner.json
+
+Caps Lock to Escape on single press, Control on press and hold.
+Mouseless: tap Left Command/Option for Meh shortcuts
+Right Command number and symbol layer
+Change right_command+hjkl to arrow keys
+Change right_command+asdfgzxcvb to right_shift+number keys
+Browsers: Left Command+J toggles Developer Tools
+kitty: cmd+[ to ctrl+l, cmd+shift+[/] to ctrl+opt+p/n
+Mouse button 5 to Mission Control
+HHKB Fn number row to F1-F10
+Emacs-inspired control editing shortcuts
+Right Option to left click on single press, Right Option on press and hold.
+Right Control to right click on single press, Right Control on press and hold.
+Emacs key bindings [control+keys] (rev 11)
+Space numpad layer: space+m,.jkluio to keypad 1-9, space+right_command to keypad 0
