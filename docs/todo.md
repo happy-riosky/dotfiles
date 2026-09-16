@@ -5,10 +5,6 @@
 
 ## 1. 活跃待办
 
-### 收尾清理
-
-- [ ] 决定是否清理仓库历史中的已知 SSH host/IP（隐私暴露，非重构前置）。
-
 ### Neovim AI 补全
 
 - [ ] 接入 GitHub Copilot ghost text（已有订阅）：`vim.pack.add { gh 'github/copilot.vim' }`
@@ -59,3 +55,22 @@
   "wip(nvim): DeepSeek FIM completion via minuet (latency unsatisfactory)"。
 - 后续：见第 1 节 Neovim AI 补全；恢复前先 `git stash list` 确认 ref（另有一个
   obsidian stash）。
+
+### 收尾清理完成（2026-09-16）
+
+- 日期：2026-09-16
+- 环境：darwin（真实设备，`full` profile）
+- 操作：完成收尾清理前两项。其一，`legacy/backup`（36M）整体迁至
+  `~/backup/legacy-backup-20260916` 后删除 `legacy/`，并移除 `.gitignore` 与
+  AGENTS.md 的 legacy 条目；`.mackup*` 确认已无残留（`fdb85c9`）。其二，评估
+  公开仓库历史隐私清理：历史 `backup/.ssh/config` 含公网 IP `8.130.76.0`
+  （已下线）与内网 IP `10.219.88.147`；`backup/.gitconfig` 与全部 commit
+  元数据含 QQ 邮箱（135+21 个）。
+- 评估证据：全历史敏感词扫描（password/token/api_key/secret/BEGIN）零凭据
+  命中；`.docker/config.json` 空 auth；`.wget-hsts` 仅公共域名；历史其余为
+  过时 mackup 结构与偏好黄金文件；QQ 邮箱在 GitHub commit 元数据本就公开。
+- 结果：决定不做历史重写——无凭据泄露、唯一公网 IP 已下线，收益小于 force
+  push 与多机重 clone 的成本；commit 时间线本就不受影响，亦无必要。
+- 后续（可选）：GitHub 默认分支仍为旧 `darwin`（mackup 结构，main 的祖先），
+  建议网页切默认分支到 `main` 后删除 `darwin`；stash 补丁双备份在
+  `~/backup/stash/`，恢复方式见 Neovim AI 补全待办。
