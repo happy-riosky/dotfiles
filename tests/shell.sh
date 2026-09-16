@@ -35,12 +35,12 @@ test_load_order() {
   printf 'DOTFILES_LOAD_TRACE="${DOTFILES_LOAD_TRACE}:host"\n' > "$home/.zshenv.host"
   printf 'DOTFILES_LOAD_TRACE="${DOTFILES_LOAD_TRACE}:local"\n' > "$home/.zshenv.local"
   HOME="$home" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=darwin DOTFILES_PROFILE=full \
-    /bin/zsh -c 'source "$DOTFILES_ROOT/scripts/shell/load.zsh"; [[ "$DOTFILES_LOAD_TRACE" == core:darwin:full:host:local ]]' || \
+    /bin/zsh -c 'source "$DOTFILES_ROOT/scripts/shell/load.zsh"; [[ "$DOTFILES_LOAD_TRACE" == core:darwin:full:aliases:host:local ]]' || \
     fail 'zsh load order is wrong'
   printf 'DOTFILES_LOAD_TRACE="${DOTFILES_LOAD_TRACE}:host"\n' > "$home/.bashrc.host"
   printf 'DOTFILES_LOAD_TRACE="${DOTFILES_LOAD_TRACE}:local"\n' > "$home/.bashrc.local"
   HOME="$home" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=linux DOTFILES_PROFILE=server \
-    /bin/bash -c 'source "$DOTFILES_ROOT/scripts/shell/load.bash"; [[ "$DOTFILES_LOAD_TRACE" == core:linux:server:host:local ]]' || \
+    /bin/bash -c 'source "$DOTFILES_ROOT/scripts/shell/load.bash"; [[ "$DOTFILES_LOAD_TRACE" == core:linux:server:aliases:host:local ]]' || \
     fail 'bash load order is wrong'
 }
 

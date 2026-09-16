@@ -13,7 +13,7 @@ platforms/darwin/managed/      # macOS Preferences 黄金文件（真实文件�
 package-lists/                 # brew/apt/termux 包名
 plugin-lists/                  # tmux/vim/zsh 插件 TARGET+REPO（不锁 commit）
 manual/                        # 手动应用的覆盖配置与脚本（不链接，不受 link/unlink/doctor 管理）
-scripts/shell/                 # core + platform/ + profiles/ 加载片段，load.zsh/load.bash
+scripts/shell/                 # core + aliases + platform/ + profiles/ 加载片段，load.zsh/load.bash
 install                        # 入口：./install {full|server|termux} [--dry-run]
 tests/                         # link.sh, shell.sh, vim.sh
 docs/                          # process.md, opencode.md, archive/MIGRATION_PLAN.md
@@ -55,11 +55,15 @@ docs/                          # process.md, opencode.md, archive/MIGRATION_PLAN
 
 ## Shell 加载
 
-`load.zsh`/`load.bash` 按序加载：`core -> platform -> profile -> host -> local`。
+`load.zsh`/`load.bash` 按序加载：`core -> platform -> profile -> aliases -> host -> local`。
 `core.sh` 设置 PATH（`.local/bin`、`~/bin`、nvm）与 EDITOR/VISUAL；然后加载
-`platform/{darwin,linux,termux}.sh`、`profiles/{full,server,termux}.sh`；
-host/local 可选（`~/.zshenv.{host,local}` / `~/.bashrc.{host,local}`）。
+`platform/{darwin,linux,termux}.sh`、`profiles/{full,server,termux}.sh`、
+`aliases.sh`；host/local 可选（`~/.zshenv.{host,local}` / `~/.bashrc.{host,local}`）。
 `DOTFILES_ROOT`/`DOTFILES_PLATFORM`/`DOTFILES_PROFILE` 驱动一切。
+
+`aliases.sh` 是自定义 alias 的唯一入口：依赖可选工具的 alias 必须用
+`command -v` 守卫；不得含主机专属路径；私有 alias 放
+`~/.zshenv.local` / `~/.bashrc.local`（后加载，可覆盖公开定义）。
 
 ## 添加受管配置
 
@@ -81,7 +85,7 @@ host/local 可选（`~/.zshenv.{host,local}` / `~/.bashrc.{host,local}`）。
 ```bash
 ./install <profile> --dry-run && scripts/doctor
 bash -n install scripts/link scripts/unlink scripts/doctor
-zsh -n home/.zshenv home/.zshrc scripts/shell/load.zsh
+zsh -n home/.zshenv home/.zshrc scripts/shell/load.zsh scripts/shell/aliases.sh
 git diff --check && tests/link.sh && tests/shell.sh && tests/packages.sh && tests/plugins.sh && tests/termux.sh
 bash tests/vim.sh # 需要 vim + Lightline 插件
 ```
