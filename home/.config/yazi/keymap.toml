@@ -12,3 +12,32 @@ desc = "Narrow the preview pane"
 on = "<C-Right>"
 run = "plugin resize-preview 1"
 desc = "Widen the preview pane"
+
+[[mgr.prepend_keymap]]
+for = "macos"
+on = [ "c", "p" ]
+run = '''shell --
+f=%h
+case "${f##*.}" in
+  [Pp][Nn][Gg])
+    osascript -e "on run argv" -e "set the clipboard to (read (POSIX file (item 1 of argv)) as «class PNGf»)" -e "end run" "$f"
+    ;;
+  *)
+    d="$(mktemp -d)"
+    t="$d/img.png"
+    if sips -s format png "$f" --out "$t" >/dev/null 2>&1; then
+      osascript -e "on run argv" -e "set the clipboard to (read (POSIX file (item 1 of argv)) as «class PNGf»)" -e "end run" "$t"
+      s=$?
+      rm -rf "$d"
+      exit $s
+    elif grep -qI -m1 . "$f" 2>/dev/null; then
+      cat "$f" | pbcopy
+      rm -rf "$d"
+    else
+      echo "copy-content: unsupported binary file: $f" >&2
+      rm -rf "$d"
+      exit 1
+    fi
+    ;;
+esac'''
+desc = "Copy file content (image as PNG, else text)"
