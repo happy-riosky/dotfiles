@@ -22,3 +22,7 @@ prepend_rules = [
 	{ mime = "inode/empty",    use = ["edit", "zed", "reveal"] },
 	{ url = "*",          use = ["open", "zed", "reveal"] },
 ]
+
+[[plugin.prepend_previewers]]
+url = "*.{md,markdown}"
+run = 'piper -- CLICOLOR_FORCE=1 glow -w=$w -s=$t "$1"'
