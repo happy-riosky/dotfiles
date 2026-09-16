@@ -8,3 +8,17 @@ max_width = 2560
 max_height = 3840
 image_filter = "lanczos3"
 image_quality = 90
+
+[opener]
+zed = [{ run = 'zed %s', desc = "Zed", for = "macos" }]
+
+[open]
+prepend_rules = [
+	{ mime = "folder/*",  use = ["edit", "zed", "open", "reveal"] },
+	{ mime = "text/*",    use = ["edit", "zed", "reveal"] },
+	{ mime = "application/{json,ndjson,javascript,wine-extension-ini}", use = ["edit", "zed", "reveal"] },
+	{ mime = "image/*",   use = ["open", "zed", "reveal"] },
+	{ mime = "{audio,video}/*", use = ["play", "zed", "reveal"] },
+	{ mime = "inode/empty",    use = ["edit", "zed", "reveal"] },
+	{ url = "*",          use = ["open", "zed", "reveal"] },
+]
