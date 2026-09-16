@@ -41,3 +41,8 @@ case "${f##*.}" in
     ;;
 esac'''
 desc = "Copy file content (image as PNG, else text)"
+
+[[mgr.prepend_keymap]]
+on = [ ",", "," ]
+run = "plugin toggle-mtime"
+desc = "Toggle sort by modified time (reverse)"
