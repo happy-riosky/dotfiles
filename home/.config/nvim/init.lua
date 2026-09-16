@@ -209,7 +209,14 @@ do
     },
   }
 
-  vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+  vim.keymap.set('n', '<leader>xq', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
+  -- Quick save/quit (parity with ~/.vimrc)
+  vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = '[W]rite (save)', silent = true })
+  vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = '[Q]uit window', silent = true })
+  vim.keymap.set('n', '<leader>wq', '<cmd>wq<CR>', { desc = '[W]rite and [Q]uit', silent = true })
+  vim.keymap.set('n', '<leader>qa', '<cmd>qa<CR>', { desc = '[Q]uit [A]ll', silent = true })
+  vim.keymap.set('n', '<leader>Q', '<cmd>q!<CR>', { desc = 'Force quit', silent = true })
 
   -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
   -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -428,6 +435,7 @@ do
       { '<leader>t', group = '[T]oggle' },
       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
       { '<leader>g', group = '[G]it diff/history' },
+      { '<leader>x', group = 'Diagnostics' },
       { 'gr', group = 'LSP Actions', mode = { 'n' } },
     },
   }

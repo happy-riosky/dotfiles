@@ -175,6 +175,7 @@ nnoremap <Leader>m :marks<CR>:'
 nmap <Leader>w :w<CR>
 nmap <Leader>q :q<CR>
 nmap <Leader>wq :wq<CR>
+nmap <Leader>qa :qa<CR>
 nmap <Leader>Q :q!<CR>
 
 "  y d p P   --  Quick copy paste into system clipboard
