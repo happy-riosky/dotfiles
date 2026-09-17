@@ -51,10 +51,14 @@ customCommands:
       - type: 'input'
         key: 'CommitMessage'
         title: 'AI-generated commit message (edit before committing)'
-        initialValue: '{{ runCommand "/Users/riosky/.local/bin/ai-git-commit-message" }}'
+        initialValue: '{{ runCommand "~/.local/bin/ai-git-commit-message" }}'
     command: 'git commit --message {{.Form.CommitMessage | quote}}'
     loadingText: 'Committing...'
   - context: 'worktrees'
     description: 'Copy worktree path to clipboard'
-    command: 'printf "%s" "{{.SelectedWorktree.Path}}" | pbcopy'
+    command: >-
+      p="{{.SelectedWorktree.Path}}";
+      if command -v pbcopy >/dev/null 2>&1; then printf "%s" "$p" | pbcopy;
+      elif command -v wl-copy >/dev/null 2>&1; then printf "%s" "$p" | wl-copy;
+      elif command -v xclip >/dev/null 2>&1; then printf "%s" "$p" | xclip -selection clipboard; fi
     output: none
