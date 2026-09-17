@@ -18,6 +18,14 @@
 - [ ] 确认 doctor 在 Termux 上依赖 `/bin/bash` 的问题（2026-08-14 记录，见
       `archive/process.md` 的真实 Termux 验证节）。
 
+### Neovim Diffview 移除
+
+- [ ] lazygit 浮窗（`3b25917`）已覆盖 diff/stage/历史工作流，移除 diffview.nvim：
+      删 `init.lua` 中 diffview 的 `vim.pack.add` 行（plenary 保留，neo-tree 仍
+      依赖）与 `<leader>gd/gs/gf/gh` 映射、catppuccin 的 `diffview = true`
+      集成项；同步更新 `docs/neovim.md`（Managed Files 与 Theme 节）；随后
+      `:lua vim.pack.update()` 确认 `nvim-pack-lock.json` 相应清理。
+
 ## 2. 备忘
 
 - Otty：已退管（2026-09-16）；其保存配置用原子写（temp+rename），rename 不跟随
@@ -74,3 +82,22 @@
 - 后续（可选）：GitHub 默认分支仍为旧 `darwin`（mackup 结构，main 的祖先），
   建议网页切默认分支到 `main` 后删除 `darwin`；stash 补丁双备份在
   `~/backup/stash/`，恢复方式见 Neovim AI 补全待办。
+
+### lazygit × Neovim 联动（2026-09-17）
+
+- 日期：2026-09-17
+- 环境：darwin（真实设备，`full` profile），lazygit 0.64.1，Neovim 0.12.5。
+- 操作：lazygit 共享配置加 `os.editPreset: nvim-remote`（`e` 在父 Neovim 新
+  tab 回开、staging 面板跳行），修复 customCommands 主机路径并给剪贴板命令加
+  pbcopy/wl-copy/xclip 级联守卫；新增 nvim 浮窗插件
+  `lua/custom/plugins/lazygit.lua`（`<leader>gg`，仓库根 cwd，`q`/TermClose
+  关窗，缺二进制仅警告）；新增 `home/.config/lazygit/frappe.yml` 片段，浮窗内
+  经 `LG_CONFIG_FILE` 多文件合并切换 catppuccin frappe 深色（delta 去
+  `--light`），终端裸跑仍 Latte；`tests/shell.sh` 将
+  `home/.config/{lazygit,nvim}` 纳入主机路径扫描。
+- 结果：通过（`6d38d87`、`9593629`、`3b25917`）。
+- 证据：`install full --dry-run` / `scripts/link` / `scripts/doctor` 与
+  link/shell/packages/plugins/termux/vim 六套集成测试全过；`nvim --headless`
+  断言 `:LazyGit`/`:LazyGitConfig` 注册且片段已链接。
+- 后续：浮窗内 `e` 回开链路与 frappe 配色需真实终端交互确认；diffview.nvim
+  移除见第 1 节。
