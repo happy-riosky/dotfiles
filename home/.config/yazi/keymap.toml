@@ -46,3 +46,13 @@ desc = "Copy file content (image as PNG, else text)"
 on = [ ",", "," ]
 run = "plugin toggle-mtime"
 desc = "Toggle sort by modified time (reverse)"
+
+[[mgr.prepend_keymap]]
+on = "<PageUp>"
+run = "seek -5"
+desc = "Seek preview up 5 lines"
+
+[[mgr.prepend_keymap]]
+on = "<PageDown>"
+run = "seek 5"
+desc = "Seek preview down 5 lines"
