@@ -20,6 +20,7 @@ test_public_paths() {
   if grep -REn '/Users/riosky|/home/riosky|/mnt/c|127\.0\.0\.1:7897|/Library/PostgreSQL' \
     "$ROOT/home/.zshenv" "$ROOT/home/.zprofile" "$ROOT/home/.zshrc" \
     "$ROOT/home/.bash_profile" "$ROOT/home/.bashrc" \
+    "$ROOT/home/.config/lazygit" "$ROOT/home/.config/nvim" \
     "$ROOT/scripts/shell"; then
     fail 'public shell files contain host-specific paths'
   fi

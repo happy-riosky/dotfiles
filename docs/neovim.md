@@ -14,7 +14,7 @@ directories.
 
 Optional plugin examples remain disabled; the custom loader
 (`require 'custom.plugins'` in `init.lua`) is enabled and loads every
-`lua/custom/plugins/*.lua` (currently neo-tree). The upstream Git checkout,
+`lua/custom/plugins/*.lua` (currently neo-tree and lazygit). The upstream Git checkout,
 GitHub templates/workflows, generated `doc/tags`, and upstream `.gitignore`
 are not managed. The latter ignores the lockfile, which is useful to retain
 in a personal configuration.
@@ -78,6 +78,31 @@ also closes it from inside the tree. In the tree:
 Dotfiles and gitignored files are shown (`filtered_items`). Folder, file, and
 Git icons come from the Nerd Font: mini.icons (enabled by
 `vim.g.have_nerd_font`) mocks `nvim-web-devicons` for neo-tree and Telescope.
+
+## LazyGit Integration
+
+`lua/custom/plugins/lazygit.lua` runs [lazygit](https://github.com/jesseduffield/lazygit)
+in a floating window when the binary is on PATH; machines without it (for example
+the `server` profile) only get a warning.
+
+- `<leader>gg` or `:LazyGit [args]` toggles the floating window with the current
+  file's repository root as working directory; `q` in lazygit or in normal mode
+  closes it.
+- `:LazyGitConfig` edits the managed lazygit config.
+- The shared lazygit config sets `os.editPreset: nvim-remote`, so pressing `e`
+  on a file inside lazygit opens it in a new tab of this Neovim instance —
+  including line jumps from the staging panel — and closes the floating window.
+  With lazygit running outside Neovim, `e` falls back to a new `nvim` process;
+  `o` still opens files with the system default application.
+- The lazygit config is a single managed file: macOS reads it at its native
+  `~/Library/Application Support/lazygit/config.yml` path, which links to the
+  same `home/.config/lazygit/config.yml` used elsewhere.
+
+Known limitations: lazygit resolves edited paths relative to the repository
+root, so keep Neovim's working directory there when working across repositories;
+and the preset's "edit and wait" path has no remote support upstream, so tools
+that block on the editor (for example commit message editing via `core.editor`)
+spawn a separate process.
 
 ## Maintenance
 
