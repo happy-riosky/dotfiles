@@ -108,6 +108,31 @@ and the preset's "edit and wait" path has no remote support upstream, so tools
 that block on the editor (for example commit message editing via `core.editor`)
 spawn a separate process.
 
+## Motions (flash.nvim)
+
+[flash.nvim](https://github.com/folke/flash.nvim) provides labeled jump
+motions and is configured in `lua/custom/plugins/flash.lua`. It is the
+Neovim counterpart of the Vim configuration's vim-easymotion.
+
+- `s`: type any characters, then press a label character to jump to a match.
+- `<leader>f`: Treesitter node select — labels the syntax nodes around the
+  cursor; pick one to select its range (works with operators like `d`/`y`).
+- `<leader>h` / `<leader>l`: jump to word starts above / below the cursor
+  (easymotion `b` / `w`).
+- `<leader>j` / `<leader>k`: jump to line starts below / above the cursor
+  (easymotion `j` / `k`); labels are placed at column zero.
+- `f`, `t`, `F`, `T` run flash's char mode: repeat a motion with the same
+  key, or with `;` / `,` for next / previous match.
+
+The bare `s` and `<leader>h` keys coexist with existing prefixes: mini.surround
+sequences (`sa`, `sd`, `sr`, …) and gitsigns `<leader>h*` hunk maps resolve
+first, while the bare keys open flash after `timeoutlen`. Labels are
+lowercase-only: `<leader>h/j/k/l` targets get two-letter labels (first
+letter picks the group, second jumps), and `s` narrows by typing more
+pattern characters.
+Buffer formatting moved from `<leader>f` to `<leader>cf` (which-key group
+`[C]ode`) to free `<leader>f` for the Treesitter select.
+
 ## Maintenance
 
 Edit `~/dotfiles/home/.config/nvim/init.lua` (or its linked HOME path).
