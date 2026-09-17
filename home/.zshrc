@@ -50,6 +50,8 @@ alias mk='make'
 alias mka='make all'
 alias mkc='make clean'
 command -v lazygit >/dev/null 2>&1 && alias lg='lazygit'
+# gd 被 oh-my-zsh git 插件覆盖为 git diff，须在 oh-my-zsh 之后重定义
+command -v gh >/dev/null 2>&1 && alias gd='gh dash'
 command -v eza >/dev/null 2>&1 && alias ls='eza'
 command -v eza >/dev/null 2>&1 && alias ll='eza -l'
 command -v eza >/dev/null 2>&1 && alias la='eza -la'
