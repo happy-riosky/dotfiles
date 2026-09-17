@@ -50,7 +50,12 @@ alias mk='make'
 alias mka='make all'
 alias mkc='make clean'
 command -v lazygit >/dev/null 2>&1 && alias lg='lazygit'
-command -v lsd >/dev/null 2>&1 && alias lt='lsd -la --tree --depth=4'
+command -v eza >/dev/null 2>&1 && alias ls='eza'
+command -v eza >/dev/null 2>&1 && alias ll='eza -l'
+command -v eza >/dev/null 2>&1 && alias la='eza -la'
+command -v eza >/dev/null 2>&1 && alias lt='eza -la --tree --level=4'
+# l/lsa 已退役；不 unalias 会被 oh-my-zsh 定义解析成 eza -lah（多表头行）
+unalias l lsa 2>/dev/null || true
 command -v pbcopy >/dev/null 2>&1 && alias pwp='pwd | pbcopy'
 command -v opencode >/dev/null 2>&1 && alias oc='opencode'
 

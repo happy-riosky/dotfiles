@@ -4,13 +4,13 @@ anomalyco/tap/opencode
 bat
 bc
 browsh-org/browsh/browsh
+eza
 fzf
 gh
 git
 glow
 htop
 lazygit
-lsd
 minikube
 mongodb/brew/mongodb-community
 mysql

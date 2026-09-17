@@ -39,4 +39,10 @@ command -v glow >/dev/null 2>&1 && glow() {
 	fi
 }
 command -v glow >/dev/null 2>&1 && alias gl='glow'
+# eza 系列：zsh 侧此处定义会被 oh-my-zsh 覆盖，由 .zshrc 内联块在
+# oh-my-zsh 之后重定义回 eza；此处主要供 bash 生效
+command -v eza >/dev/null 2>&1 && alias ls='eza'
+command -v eza >/dev/null 2>&1 && alias ll='eza -l'
+command -v eza >/dev/null 2>&1 && alias la='eza -la'
+command -v eza >/dev/null 2>&1 && alias lt='eza -la --tree --level=4'
 DOTFILES_LOAD_TRACE="${DOTFILES_LOAD_TRACE}:aliases"
