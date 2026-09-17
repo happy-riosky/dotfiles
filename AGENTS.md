@@ -16,7 +16,7 @@ manual/                        # 手动应用的覆盖配置与脚本（不链�
 scripts/shell/                 # core + aliases + platform/ + profiles/ 加载片段，load.zsh/load.bash
 install                        # 入口：./install {full|server|termux} [--dry-run]
 tests/                         # link.sh, shell.sh, vim.sh
-docs/                          # process.md, opencode.md, archive/MIGRATION_PLAN.md
+docs/                          # process.md, opencode.md, nvim-markdown.md, archive/MIGRATION_PLAN.md
 ```
 
 ## 命令
