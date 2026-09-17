@@ -94,6 +94,10 @@ the `server` profile) only get a warning.
   including line jumps from the staging panel — and closes the floating window.
   With lazygit running outside Neovim, `e` falls back to a new `nvim` process;
   `o` still opens files with the system default application.
+- The floating window runs lazygit with `LG_CONFIG_FILE` pointing at the base
+  config plus the `frappe.yml` fragment, so the TUI switches from the terminal's
+  Latte theme to catppuccin frappe (yellow accent) matching Neovim, and delta
+  renders without `--light`. Standalone lazygit keeps the Latte base config.
 - The lazygit config is a single managed file: macOS reads it at its native
   `~/Library/Application Support/lazygit/config.yml` path, which links to the
   same `home/.config/lazygit/config.yml` used elsewhere.

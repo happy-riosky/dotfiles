@@ -1,0 +1,40 @@
+# Fragment appended via LG_CONFIG_FILE when lazygit runs inside the Neovim
+# floating window (lua/custom/plugins/lazygit.lua). Values follow
+# https://github.com/catppuccin/lazygit themes/frappe/yellow.yml; overrides the
+# Latte base config so the TUI matches Neovim's catppuccin-frappe colorscheme.
+gui:
+  theme:
+    activeBorderColor:
+      - '#e5c890'
+      - bold
+    inactiveBorderColor:
+      - '#a5adce'
+    searchingActiveBorderColor:
+      - '#e5c890'
+    optionsTextColor:
+      - '#8caaee'
+    selectedLineBgColor:
+      - '#414559'
+    inactiveViewSelectedLineBgColor:
+      - '#737994'
+    cherryPickedCommitFgColor:
+      - '#e5c890'
+    cherryPickedCommitBgColor:
+      - '#51576d'
+    markedBaseCommitFgColor:
+      - '#8caaee'
+    markedBaseCommitBgColor:
+      - '#e5c890'
+    unstagedChangesColor:
+      - '#e78284'
+    defaultFgColor:
+      - '#c6d0f5'
+  authorColors:
+    '*': '#babbf1'
+
+git:
+  diffRenderers:
+    - name: 'delta (unified)'
+      command: delta --paging=never --line-numbers
+    - name: 'delta (split)'
+      command: delta --paging=never --line-numbers --side-by-side

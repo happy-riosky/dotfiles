@@ -50,7 +50,14 @@ vim.api.nvim_create_user_command('LazyGit', function(opts)
   if args ~= '' then
     vim.list_extend(cmd, vim.split(args, '%s+'))
   end
-  vim.fn.termopen(cmd, { cwd = vim.fs.root(0, '.git') or vim.uv.cwd() })
+  local job = { cwd = vim.fs.root(0, '.git') or vim.uv.cwd() }
+  local config_dir = vim.env.XDG_CONFIG_HOME or (vim.env.HOME .. '/.config')
+  local base_config = vim.env.LG_CONFIG_FILE or (config_dir .. '/lazygit/config.yml')
+  local dark_theme = config_dir .. '/lazygit/frappe.yml'
+  if vim.uv.fs_stat(base_config) and vim.uv.fs_stat(dark_theme) then
+    job.env = { LG_CONFIG_FILE = base_config .. ',' .. dark_theme }
+  end
+  vim.fn.termopen(cmd, job)
   vim.cmd 'startinsert'
 end, { nargs = '*', desc = 'Toggle lazygit floating window' })
 
