@@ -88,6 +88,27 @@ keybindings:
       builtin: pageUp
     - key: pgdown
       builtin: pageDown
+  issues:
+    - key: m
+      name: more info
+      command: >-
+        gh issue view {{ .IssueNumber }} --repo {{ .RepoName }}
+        --json number,title,issueType,parent,subIssues,subIssuesSummary,blockedBy,blocking
+        --jq '"#\(.number) \(.title)",
+        (if .issueType != null then "type: \(.issueType.name)" else empty end),
+        (if .parent then "↑ parent: #\(.parent.number) \(.parent.title)" else empty end),
+        (select(.subIssuesSummary.total > 0)
+        | "sub-issues \(.subIssuesSummary.completed)/\(.subIssuesSummary.total) (\(.subIssuesSummary.percentCompleted | floor)%)"),
+        (select(.subIssuesSummary.total > 0) | .subIssues.nodes[]
+        | "  \(if .state == "CLOSED" then "✔" else "☐" end) #\(.number) \(.title)"),
+        (select(.blockedBy.totalCount > 0) | .blockedBy.nodes[]
+        | "⛔ blocked by #\(.number) \(.title)"),
+        (select(.blocking.totalCount > 0) | .blocking.nodes[]
+        | "🔨 blocks #\(.number) \(.title)"),
+        (if (.parent == null) and (.subIssuesSummary.total == 0)
+        and (.blockedBy.totalCount == 0) and (.blocking.totalCount == 0)
+        then "(no parent / sub-issues / dependencies)" else empty end)'
+        | LESS= less > /dev/tty
 repoPaths: {}
 theme:
   ui:
