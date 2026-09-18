@@ -115,7 +115,7 @@ theme:
     sectionsShowCount: true
     table:
       showSeparator: true
-      compact: false
+      compact: true
   # Catppuccin Latte Lavender — upstream https://github.com/catppuccin/gh-dash (themes/latte/catppuccin-latte-lavender.yml)
   colors:
     text:
