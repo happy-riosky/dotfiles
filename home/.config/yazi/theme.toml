@@ -1,6 +1,7 @@
 # Yazi 主题：Catppuccin lavender（dark=Frappé / light=Latte，跟随终端深浅色自动切换）
-# flavor 内容来自上游官方文件，本文件仅做 [indicator].padding 覆盖（恢复 hover 行直角，
-# 方法见 https://github.com/sxyazi/yazi/pull/3419）。upstream pin 见 flavors/*/README.md
+# flavor 内容来自上游官方文件，本文件仅做本地覆盖：
+# [indicator].padding（恢复 hover 行直角，方法见 https://github.com/sxyazi/yazi/pull/3419）
+# 与 [status].sep_left/sep_right（状态栏分隔符改为填满方角 █）。upstream pin 见 flavors/*/README.md
 
 [flavor]
 dark  = "catppuccin-frappe-lavender"
@@ -8,3 +9,7 @@ light = "catppuccin-latte-lavender"
 
 [indicator]
 padding = { open = "█", close = "█" }
+
+[status]
+sep_left  = { open = "█", close = "█" }
+sep_right = { open = "█", close = "█" }
