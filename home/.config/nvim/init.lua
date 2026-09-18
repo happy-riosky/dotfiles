@@ -463,6 +463,13 @@ do
   }
   vim.cmd.colorscheme 'catppuccin-frappe'
 
+  -- Let the terminal (kitty/Ghostty) render the cursor with its own default
+  -- inverse color instead of catppuccin's dark-on-rosewater Cursor highlight.
+  -- Must run after :colorscheme, which resets highlights.
+  vim.api.nvim_set_hl(0, 'Cursor', {})
+  vim.api.nvim_set_hl(0, 'lCursor', {})
+  vim.api.nvim_set_hl(0, 'CursorIM', {})
+
   -- Highlight todo, notes, etc in comments
   vim.pack.add { gh 'folke/todo-comments.nvim' }
   require('todo-comments').setup { signs = false }
