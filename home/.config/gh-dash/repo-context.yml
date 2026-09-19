@@ -1,0 +1,11 @@
+# Overlay for launching inside a GitHub repo (gd wrapper):
+# merges on top of the global config and hides the repo column,
+# since smartFilteringAtLaunch scopes all sections to that repo.
+defaults:
+  layout:
+    prs:
+      repo:
+        hidden: true
+    issues:
+      repo:
+        hidden: true

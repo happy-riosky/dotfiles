@@ -39,7 +39,7 @@ command -v glow >/dev/null 2>&1 && glow() {
 	fi
 }
 command -v glow >/dev/null 2>&1 && alias gl='glow'
-command -v gh >/dev/null 2>&1 && alias gd='gh dash'
+# gd：由受管脚本 ~/.local/bin/gd 提供（repo 上下文感知的 gh dash 启动器）
 # eza 系列：zsh 侧此处定义会被 oh-my-zsh 覆盖，由 .zshrc 内联块在
 # oh-my-zsh 之后重定义回 eza；此处主要供 bash 生效
 command -v eza >/dev/null 2>&1 && alias ls='eza'

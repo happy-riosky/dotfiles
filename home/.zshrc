@@ -50,8 +50,9 @@ alias mk='make'
 alias mka='make all'
 alias mkc='make clean'
 command -v lazygit >/dev/null 2>&1 && alias lg='lazygit'
-# gd 被 oh-my-zsh git 插件覆盖为 git diff，须在 oh-my-zsh 之后重定义
-command -v gh >/dev/null 2>&1 && alias gd='gh dash'
+# gd 被 oh-my-zsh git 插件覆盖为 git diff；改由 ~/.local/bin/gd 提供
+# （repo 上下文感知的 gh dash 启动器），unalias 让 PATH 解析到脚本
+command -v gh >/dev/null 2>&1 && unalias gd 2>/dev/null || true
 command -v eza >/dev/null 2>&1 && alias ls='eza'
 command -v eza >/dev/null 2>&1 && alias ll='eza -l'
 command -v eza >/dev/null 2>&1 && alias la='eza -la'

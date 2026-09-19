@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# gd — context-aware gh-dash launcher.
+# Inside a repo with a GitHub remote, hide the repo column via an overlay
+# config (smartFilteringAtLaunch already scopes every section to that repo).
+set -euo pipefail
+
+override="${XDG_CONFIG_HOME:-$HOME/.config}/gh-dash/repo-context.yml"
+
+# Explicit user config wins: pass through untouched.
+for a in "$@"; do
+  case "$a" in
+    -c|--config|--config=*) exec gh dash "$@" ;;
+  esac
+done
+if [ -n "${GH_DASH_CONFIG:-}" ]; then
+  exec gh dash "$@"
+fi
+
+root=""
+if command -v git >/dev/null 2>&1; then
+  root=$(git rev-parse --show-toplevel 2>/dev/null || true)
+fi
+
+# A repo-local .gh-dash.y[a]ml takes native precedence over the overlay.
+if [ -n "$root" ] && { [ -f "$root/.gh-dash.yml" ] || [ -f "$root/.gh-dash.yaml" ]; }; then
+  exec gh dash "$@"
+fi
+
+use_overlay() {
+  if [ -f "$override" ]; then
+    exec gh dash --config "$override" "$@"
+  fi
+}
+
+# Only treat GitHub repos as repo context; otherwise smart filtering stays
+# off and the repo column is still needed. Mirror gh-dash's remote order:
+# upstream -> github -> origin -> first remote.
+if [ -n "$root" ]; then
+  for r in upstream github origin; do
+    if url=$(git remote get-url "$r" 2>/dev/null); then
+      case "$url" in
+        *github.com*) use_overlay ;;
+      esac
+    fi
+  done
+  first=$(git remote 2>/dev/null | head -n 1 || true)
+  if [ -n "$first" ]; then
+    url=$(git remote get-url "$first" 2>/dev/null || true)
+    case "$url" in
+      *github.com*) use_overlay ;;
+    esac
+  fi
+fi
+
+exec gh dash "$@"
