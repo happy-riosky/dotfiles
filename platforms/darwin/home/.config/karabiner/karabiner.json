@@ -3952,16 +3952,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -3994,16 +3988,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4040,16 +4028,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4091,16 +4073,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4126,16 +4102,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4161,16 +4131,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4196,16 +4160,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4231,16 +4189,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4266,16 +4218,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4301,16 +4247,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4336,16 +4276,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4371,16 +4305,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4406,16 +4334,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4441,16 +4363,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4476,16 +4392,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4511,16 +4421,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4546,16 +4450,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4581,16 +4479,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4616,16 +4508,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4656,16 +4542,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4691,16 +4571,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4726,16 +4600,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4761,16 +4629,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4801,16 +4663,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4836,16 +4692,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4871,16 +4721,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4906,16 +4750,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4941,16 +4779,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -4976,16 +4808,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5011,16 +4837,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5046,16 +4866,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5081,16 +4895,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5116,16 +4924,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5320,16 +5122,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5352,16 +5148,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5384,16 +5174,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5416,16 +5200,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5448,16 +5226,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5480,16 +5252,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5512,16 +5278,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5544,16 +5304,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5576,16 +5330,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5608,16 +5356,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5646,16 +5388,10 @@
                                 "description": "Pass Meh+F through for Mouseless before Control+F mappings",
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5689,16 +5425,10 @@
                                 "description": "Pass Meh+M through for Mouseless before Control+M becomes Enter",
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5731,16 +5461,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5768,16 +5492,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5804,16 +5522,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5840,16 +5552,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5887,16 +5593,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -5929,16 +5629,10 @@
                             {
                                 "conditions": [
                                     {
-                                        "type": "device_unless",
+                                        "type": "device_if",
                                         "identifiers": [
                                             {
-                                                "vendor_id": 21972,
-                                                "product_id": 1121,
-                                                "is_keyboard": true
-                                            },
-                                            {
-                                                "vendor_id": 65261,
-                                                "is_keyboard": true
+                                                "is_built_in_keyboard": true
                                             }
                                         ]
                                     }
@@ -7071,19 +6765,6 @@
                         "vendor_id": 1278
                     },
                     "treat_as_built_in_keyboard": true
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 1121,
-                        "vendor_id": 21972
-                    }
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "vendor_id": 65261
-                    }
                 }
             ],
             "name": "Default profile",
