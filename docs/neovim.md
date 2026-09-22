@@ -79,6 +79,20 @@ Dotfiles and gitignored files are shown (`filtered_items`). Folder, file, and
 Git icons come from the Nerd Font: mini.icons (enabled by
 `vim.g.have_nerd_font`) mocks `nvim-web-devicons` for neo-tree and Telescope.
 
+## Directory Editing (oil.nvim)
+
+[oil.nvim](https://github.com/stevearc/oil.nvim) edits a directory as if it
+were a buffer and is configured in `lua/custom/plugins/oil.lua`. It complements
+neo-tree: use neo-tree (`<leader>e`) for tree navigation and oil for bulk file
+operations.
+
+- `-` opens the current file's directory (`:Oil`).
+- Rename/move/create/delete entries by editing lines (including across
+  directories with paths), then write (`:w`) to apply all changes at once.
+- Hidden files are shown (`view_options.show_hidden`); `g.` toggles them and
+  `<C-p>` previews the file under the cursor (oil defaults). See `:h oil` and
+  `g?` inside an oil buffer for the full keymap.
+
 ## LazyGit Integration
 
 `lua/custom/plugins/lazygit.lua` runs [lazygit](https://github.com/jesseduffield/lazygit)
