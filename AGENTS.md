@@ -56,9 +56,13 @@ docs/                          # process.md, opencode.md, nvim-markdown.md, arch
 ## Shell 加载
 
 `load.zsh`/`load.bash` 按序加载：`core -> platform -> profile -> aliases -> host -> local`。
-`core.sh` 设置 PATH（`.local/bin`、`~/bin`、nvm）与 EDITOR/VISUAL；然后加载
+`core.sh` 设置 PATH（`.local/bin`、`~/bin`、nvm）；然后加载
 `platform/{darwin,linux,termux}.sh`、`profiles/{full,server,termux}.sh`、
-`aliases.sh`；host/local 可选（`~/.zshenv.{host,local}` / `~/.bashrc.{host,local}`）。
+`aliases.sh`；aliases 之后调用 `dotfiles_default_editor`（定义于 `core.sh`）：
+此时 Homebrew 等平台 PATH 已组装完成，GUI login shell 里 `command -v nvim`
+才可见——EDITOR/VISUAL 默认值必须在 PATH 就绪后判定，且已设的 EDITOR
+（含 tmux 注入）会被尊重，故 PATH 组装不得回退到它之前。host/local 可选
+（`~/.zshenv.{host,local}` / `~/.bashrc.{host,local}`），仍可覆盖。
 `DOTFILES_ROOT`/`DOTFILES_PLATFORM`/`DOTFILES_PROFILE` 驱动一切。
 
 `aliases.sh` 是自定义 alias 的唯一入口：依赖可选工具的 alias 必须用

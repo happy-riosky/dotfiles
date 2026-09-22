@@ -4,8 +4,6 @@
 	helper = cache
 [color]
 	ui = true
-[core]
-	editor = vim
 [url "https://github.com/"]
 	insteadOf = git://github.com/
 [i18n]

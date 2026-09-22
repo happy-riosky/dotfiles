@@ -28,6 +28,7 @@ source "$DOTFILES_SHELL_HOME/core.sh"
 source "$DOTFILES_SHELL_HOME/platform/$DOTFILES_PLATFORM.sh"
 source "$DOTFILES_SHELL_HOME/profiles/$DOTFILES_PROFILE.sh"
 source "$DOTFILES_SHELL_HOME/aliases.sh"
+dotfiles_default_editor
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 [[ -r "$DOTFILES_LOCAL_HOME/.zshenv.host" ]] && source "$DOTFILES_LOCAL_HOME/.zshenv.host"
 [[ -r "$DOTFILES_LOCAL_HOME/.zshenv.local" ]] && source "$DOTFILES_LOCAL_HOME/.zshenv.local"

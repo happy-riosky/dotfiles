@@ -1,4 +1,5 @@
 command -v yazi >/dev/null 2>&1 && alias y='yazi'
+command -v nvim >/dev/null 2>&1 && alias v='nvim'
 command -v fd >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1 && command -v pbcopy >/dev/null 2>&1 && \
   alias fp='fd --type f | fzf | pbcopy'
 # fr：fd + fzf 预览；tmux 内 OSC 11 背景探测不可靠，darwin 下 bat 主题
