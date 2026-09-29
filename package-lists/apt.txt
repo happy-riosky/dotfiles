@@ -6,9 +6,16 @@ ca-certificates
 ccache
 clang
 curl
+eza
 fzf
 git
+git-delta
+glow
 htop
+jq
+lazygit
+neovim
+nodejs
 openssh-client
 pipx
 ripgrep

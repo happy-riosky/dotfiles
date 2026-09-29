@@ -5,11 +5,14 @@ bat
 bc
 browsh-org/browsh/browsh
 eza
+fd
 fzf
 gh
 git
+git-delta
 glow
 htop
+jq
 lazygit
 minikube
 mongodb/brew/mongodb-community
