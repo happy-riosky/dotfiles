@@ -26,6 +26,27 @@
       集成项；同步更新 `docs/neovim.md`（Managed Files 与 Theme 节）；随后
       `:lua vim.pack.update()` 确认 `nvim-pack-lock.json` 相应清理。
 
+### Server 工具链审计（2026-09-29）
+
+- [ ] gh-dash 扩展无供应机制：`gd` 启动器与 `home/.config/gh-dash/` 配置已入库，
+      但扩展本机未装（`gd` 当前不可用）。候选：`plugin-lists/gh.txt` +
+      `scripts/plugins --app gh`（走 `gh extension install`）vs docs/wsl.md
+      例外工具表记手动安装；gh 二进制（不在 Ubuntu 官方源，本机
+      `~/.local/bin/gh` 手动安装）一并入例外表。
+- [ ] bat/fd-find 适配：Debian/Ubuntu 命令名为 `batcat`/`fdfind`，`fr`/`fp`
+      alias 与 yazi `md-preview.sh` 依赖 bat。候选：apt 加包 + aliases
+      fallback 适配 vs 保持可选缺失。
+- [ ] Stow 后端隐患：apt.txt 装 stow 后 `scripts/link` 自动选 stow 后端，
+      与 direct 后端创建的绝对路径链接冲突（本机 `./install server
+      --dry-run` 即 abort，"existing target is not owned by stow"），
+      `tests/link.sh` 的绝对路径断言同样假设 direct。候选：apt.txt 移除
+      stow / server 强制 direct / 整体迁移 stow；过渡期本机用
+      `DOTFILES_LINK_BACKEND=direct` 覆盖。
+- [ ] ollama 文档化：`ai-git-commit-message` 的可选后端
+      （`OLLAMA_COMMIT_MODEL`，需本机 ollama 服务）。
+- [ ] brew 侧已补 `fd`/`git-delta`/`jq`（18131f9），待 macOS 实机
+      `brew install` 验证。
+
 ## 2. 备忘
 
 - Otty：已退管（2026-09-16）；其保存配置用原子写（temp+rename），rename 不跟随
@@ -100,4 +121,32 @@
   link/shell/packages/plugins/termux/vim 六套集成测试全过；`nvim --headless`
   断言 `:LazyGit`/`:LazyGitConfig` 注册且片段已链接。
 - 后续：浮窗内 `e` 回开链路与 frappe 配色需真实终端交互确认；diffview.nvim
-  移除见第 1 节。
+      移除见第 1 节。
+
+### 提交历史整理与 WSL 支持（2026-09-29）
+
+- 日期：2026-09-29
+- 环境：wsl（Ubuntu resolute，`server` profile，真实仓库）。
+- 操作：拆分误入的 tmp 提交 `6bf6452` 为规范提交——karabiner 禁 miryoku
+      （GUI 重排噪音大、语义变更仅 6 条规则 `enabled:false`）、ollama 提交
+      脚本 + lazygit 终端流、opencode glm-5.3（后 amend 并入工作区的
+      opencode.json/tui.json）；一笔 `feat(wsl)` 落地 WSL 平台支持（12 个
+      平台文件 + manual/windows-terminal 黄金副本）；`chore(packages)` 补
+      审计缺口（apt += eza/lazygit/neovim/git-delta/glow/jq/nodejs；
+      brew += fd/git-delta/jq）。Neovim 相关改动**搁置工作区未提交**：
+      init.lua、nvim-pack-lock.json、toggleterm.lua、neovim.md、
+      nvim-markdown.md、nvim-discovery.md 共 6 项；lock 中 minuet 条目为
+      stash 实验残留（init.lua 无引用），定稿时移除或 `vim.pack.update()`
+      清理。机器侧补建 `~/.config/git/config.local`（git 身份，私有不入库）。
+- 结果：通过（一项环境相关的例外见下）。
+- 证据：拆分后工作区与 `6bf6452` 逐字节一致（tracked diff 为空 +
+      untracked 比对）；`bash -n`/`zsh -n`、`git diff --check`、
+      `tests/{shell,packages,plugins,termux,vim}.sh` 全过；`tests/link.sh`
+      默认后端在本机失败——stow 2.4.1 在场自动选 stow 后端、生成相对链接，
+      与断言的 direct 绝对链接不符（既有问题，非本次提交引入，
+      `DOTFILES_LINK_BACKEND=direct tests/link.sh` 通过，已记第 1 节待办）；
+      `DOTFILES_LINK_BACKEND=direct ./install server --dry-run` exit 0、
+      `scripts/doctor` 全绿（wsl:server 实测）。
+- 后续：历史已重写（tmp 拆分），其他机器 `git fetch && git reset --hard
+      origin/main` 对齐（先确认无本地改动）；gh-dash / bat-fd / stow 待办见
+      第 1 节审计；brew 新增三包待 macOS 实机验证。
