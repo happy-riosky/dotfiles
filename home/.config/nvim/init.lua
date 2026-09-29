@@ -367,6 +367,9 @@ do
       topdelete = { text = '‾' }, ---@diagnostic disable-line: missing-fields
       changedelete = { text = '~' }, ---@diagnostic disable-line: missing-fields
     },
+    current_line_blame = true,
+    current_line_blame_opts = { virt_text_pos = 'eol', delay = 250 },
+    current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
     -- gitsigns.nvim's recommended keymaps:
     on_attach = function(bufnr)
       -- Navigation
@@ -772,6 +775,26 @@ do
 
     stylua = {}, -- Used to format Lua code
 
+    vue_ls = {},
+    vtsls = {
+      filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+      settings = {
+        vtsls = {
+          tsserver = {
+            globalPlugins = {
+              {
+                name = '@vue/typescript-plugin',
+                location = vim.fn.stdpath 'data' .. '/mason/packages/vue-language-server/node_modules/@vue/language-server',
+                languages = { 'vue' },
+                configNamespace = 'typescript',
+                enableForWorkspaceTypeScriptVersions = true,
+              },
+            },
+          },
+        },
+      },
+    },
+
     -- Special Lua Config, as recommended by neovim help docs
     lua_ls = {
       on_init = function(client)
@@ -974,7 +997,7 @@ do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   -- Ensure basic parsers are installed
-  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+  local parsers = { 'bash', 'c', 'css', 'diff', 'html', 'javascript', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'tsx', 'typescript', 'vim', 'vimdoc', 'vue' }
   require('nvim-treesitter').install(parsers)
 
   ---@param buf integer

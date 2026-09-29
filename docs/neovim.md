@@ -14,7 +14,9 @@ directories.
 
 Optional plugin examples remain disabled; the custom loader
 (`require 'custom.plugins'` in `init.lua`) is enabled and loads every
-`lua/custom/plugins/*.lua` (currently neo-tree and lazygit). The upstream Git checkout,
+`lua/custom/plugins/*.lua` (aerial, flash, lazygit, neo-tree, oil,
+render-markdown, and toggleterm; `<leader>tt` toggles a floating terminal via
+toggleterm.nvim, separate from the `<leader>gg` lazygit float). The upstream Git checkout,
 GitHub templates/workflows, generated `doc/tags`, and upstream `.gitignore`
 are not managed. The latter ignores the lockfile, which is useful to retain
 in a personal configuration.
