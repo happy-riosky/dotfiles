@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+model="${OLLAMA_COMMIT_MODEL:-qwen2.5-coder:3b}"
+max_diff_chars=60000
+
+for dependency in curl jq; do
+  if ! command -v "$dependency" >/dev/null 2>&1; then
+    printf 'Required command not found: %s\n' "$dependency" >&2
+    exit 1
+  fi
+done
+
+if git diff --cached --quiet; then
+  printf 'No staged changes. Stage changes before generating a commit message.\n' >&2
+  exit 1
+fi
+
+diff=$(git diff --cached --no-ext-diff --no-color --unified=3)
+if ((${#diff} > max_diff_chars)); then
+  diff="${diff:0:max_diff_chars}
+
+[Diff truncated to ${max_diff_chars} characters]"
+fi
+
+prompt=$(cat <<EOF
+Write one concise Conventional Commit subject for the staged Git diff below.
+
+Rules:
+- Output exactly one line and nothing else.
+- Use: type(optional-scope): imperative summary
+- Choose an accurate type such as feat, fix, refactor, docs, test, build, ci, chore, perf, or style.
+- Keep the complete line at 72 characters or fewer when practical.
+- Do not use Markdown, quotes, a trailing period, or explanations.
+
+STAGED DIFF:
+$diff
+EOF
+)
+
+payload=$(jq -n \
+  --arg model "$model" \
+  --arg prompt "$prompt" \
+  '{
+    model: $model,
+    messages: [{role: "user", content: $prompt}],
+    stream: false,
+    options: {temperature: 0.2, num_predict: 120}
+  }')
+
+if [[ -t 2 ]]; then
+  spinner_frames='-\|/'
+  spinner_idx=0
+  response_file=$(mktemp "${TMPDIR:-/tmp}/ai-git-commit-message.XXXXXX") || exit 1
+  trap 'rm -f "$response_file"' EXIT
+
+  curl --silent --show-error --max-time 60 \
+    http://127.0.0.1:11434/api/chat \
+    --header 'Content-Type: application/json' \
+    --data-binary "$payload" >"$response_file" &
+  curl_pid=$!
+
+  while kill -0 "$curl_pid" 2>/dev/null; do
+    printf '\r%s Generating commit message (%s)...' "${spinner_frames:spinner_idx:1}" "$model" >&2
+    spinner_idx=$(( (spinner_idx + 1) % ${#spinner_frames} ))
+    sleep 0.1
+  done
+
+  if ! wait "$curl_pid"; then
+    printf '\n' >&2
+    exit 1
+  fi
+
+  printf '\r\033[K' >&2
+  api_response=$(cat "$response_file")
+else
+  api_response=$(curl --silent --show-error --max-time 60 \
+    http://127.0.0.1:11434/api/chat \
+    --header 'Content-Type: application/json' \
+    --data-binary "$payload")
+fi
+
+api_error=$(jq -r '.error // empty' <<<"$api_response")
+if [[ -n "$api_error" ]]; then
+  printf 'Ollama error: %s\n' "$api_error" >&2
+  exit 1
+fi
+
+response=$(jq -r '.message.content // empty' <<<"$api_response")
+
+message=$(printf '%s\n' "$response" |
+  tr '\r\n' ' ' |
+  sed -E 's/^[[:space:]]+//; s/[[:space:]]+$//; s/[[:space:]]+/ /g')
+
+if [[ -z "$message" ]]; then
+  printf 'Ollama returned an empty commit message.\n' >&2
+  exit 1
+fi
+
+printf '%s\n' "$message"

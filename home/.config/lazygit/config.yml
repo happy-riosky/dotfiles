@@ -52,13 +52,8 @@ keybinding:
 customCommands:
   - context: 'files'
     description: 'Generate commit message with Ollama'
-    prompts:
-      - type: 'input'
-        key: 'CommitMessage'
-        title: 'AI-generated commit message (edit before committing)'
-        initialValue: '{{ runCommand "~/.local/bin/ai-git-commit-message" }}'
-    command: 'git commit --message {{.Form.CommitMessage | quote}}'
-    loadingText: 'Committing...'
+    command: "msg=$(~/.local/bin/ai-git-commit-message) && git commit --edit --message \"$msg\n\n# :wq 提交 · 清空后 :wq 或 :cq 放弃\""
+    output: 'terminal'
   - context: 'worktrees'
     description: 'Copy worktree path to clipboard'
     command: >-
