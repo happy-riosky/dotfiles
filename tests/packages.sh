@@ -97,9 +97,15 @@ test_profile_validation() {
     "$ROOT/scripts/packages" server --dry-run >/dev/null 2>&1; then
     fail 'packages accepted an unsupported Linux distribution'
   fi
-  if HOME="$home" DOTFILES_ROOT="$fixture" DOTFILES_PLATFORM=wsl \
+  HOME="$home" DOTFILES_ROOT="$fixture" DOTFILES_PLATFORM=wsl DOTFILES_OS_ID=ubuntu \
+    "$ROOT/scripts/packages" server --dry-run >/dev/null
+  if HOME="$home" DOTFILES_ROOT="$fixture" DOTFILES_PLATFORM=wsl DOTFILES_OS_ID=ubuntu \
+    "$ROOT/scripts/packages" full --dry-run >/dev/null 2>&1; then
+    fail 'packages accepted full profile on WSL'
+  fi
+  if HOME="$home" DOTFILES_ROOT="$fixture" DOTFILES_PLATFORM=wsl DOTFILES_OS_ID=arch \
     "$ROOT/scripts/packages" server --dry-run >/dev/null 2>&1; then
-    fail 'packages accepted WSL'
+    fail 'packages accepted WSL on an unsupported Linux distribution'
   fi
 }
 

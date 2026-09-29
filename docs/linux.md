@@ -4,7 +4,8 @@
 `DOTFILES_PLATFORM` 或 `DOTFILES_PROFILE`，也不要预先删除已有配置。安装器发现冲突时
 会主动停止，不会覆盖未受管文件。
 
-本仓库的 Linux profile 名为 `server`。不支持其他 Linux 发行版，也不支持 WSL。
+本仓库的 Linux profile 名为 `server`。不支持其他 Linux 发行版；WSL
+（Debian/Ubuntu 发行版）复用同一 `server` profile，检测为 `wsl` 平台。
 
 配置分为三个独立入口，不能用其中一个代替另一个：
 
@@ -28,8 +29,8 @@ df -h /
 
 - `uname -s` 输出 `Linux`。
 - `ID` 是 `debian` 或 `ubuntu`。
-- `grep -i microsoft /proc/version` 没有输出；若包含 `Microsoft`，当前环境是 WSL，
-  不受支持。
+- `grep -i microsoft /proc/version` 若包含 `Microsoft`，当前环境是 WSL：受支持，
+  识别为 `wsl` 平台并复用 `server` profile，同样要求 `ID` 为 `debian`/`ubuntu`。
 
 `server` 清单会安装 `clang`、`build-essential` 等体积较大的工具。Multipass 根磁盘
 建议至少 10–12 GiB；5 GiB 磁盘可能在下载或解包时耗尽。开始安装前应确认根分区还有
@@ -93,7 +94,7 @@ root 用户的输出没有 `/usr/bin/sudo`。确认：
 - 普通用户的安装计划以 `/usr/bin/sudo /usr/bin/apt-get install -y` 开头；无需再
   手动逐个执行 `sudo apt install`。
 - 没有真正刷新索引、下载或安装软件包。
-- 没有出现“不支持 Linux 发行版”或 WSL 错误。
+- 没有出现“不支持 Linux 发行版”或“WSL 仅支持 server profile”错误。
 
 ## 4. 正式安装包
 
@@ -417,10 +418,11 @@ Bash/Zsh + tmux/Vim/SSH + doctor：PASS/FAIL
 当前系统的 `/etc/os-release` 中 `ID` 不是 `debian` 或 `ubuntu`。本仓库不会把其他
 发行版静默当作 Debian 处理；请停止安装，不要手动伪造 `DOTFILES_OS_ID`。
 
-### 报 WSL is not supported
+### 报 WSL supports the server profile only
 
-当前环境由 `/proc/version` 识别为 WSL。WSL 不属于受支持的 `linux:server` 组合，
-不要手动设置 `DOTFILES_PLATFORM=linux` 绕过检查。
+当前环境由 `/proc/version` 识别为 WSL，但使用的 profile 不是 `server`，或
+`/etc/os-release` 中 `ID` 不是 `debian`/`ubuntu`。WSL 仅支持复用 `server`
+基础设施；不要手动设置 `DOTFILES_PLATFORM=linux` 绕过检查。
 
 ### packages 找不到 sudo
 

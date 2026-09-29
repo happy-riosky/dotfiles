@@ -15,7 +15,7 @@ fi
 ROOT="$(dotfiles_root)"
 PLATFORM="$(dotfiles_platform)"
 case "$PLATFORM" in
-  darwin|linux|termux) ;;
+  darwin|linux|wsl|termux) ;;
   *) printf 'link: unsupported platform: %s\n' "$PLATFORM" >&2; exit 1 ;;
 esac
 

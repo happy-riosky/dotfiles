@@ -74,7 +74,7 @@ case "$PLATFORM:$PROFILE" in
     run_command "$BREW" install "${FORMULAE[@]}"
     run_command "$BREW" install --cask "${CASKS[@]}"
     ;;
-  linux:server)
+  linux:server|wsl:server)
     load_packages "$ROOT/package-lists/apt.txt"
     APT_GET="${DOTFILES_APT_GET:-/usr/bin/apt-get}"
     (( DRY_RUN == 1 )) || require_executable "$APT_GET"

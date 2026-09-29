@@ -43,6 +43,12 @@ test_load_order() {
   HOME="$home" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=linux DOTFILES_PROFILE=server \
     /bin/bash -c 'source "$DOTFILES_ROOT/scripts/shell/load.bash"; [[ "$DOTFILES_LOAD_TRACE" == core:linux:server:aliases:host:local ]]' || \
     fail 'bash load order is wrong'
+  HOME="$home" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=wsl DOTFILES_PROFILE=server \
+    /bin/zsh -c 'source "$DOTFILES_ROOT/scripts/shell/load.zsh"; [[ "$DOTFILES_LOAD_TRACE" == core:wsl:server:aliases:host:local ]]' || \
+    fail 'zsh wsl load order is wrong'
+  HOME="$home" DOTFILES_ROOT="$ROOT" DOTFILES_PLATFORM=wsl DOTFILES_PROFILE=server \
+    /bin/bash -c 'source "$DOTFILES_ROOT/scripts/shell/load.bash"; [[ "$DOTFILES_LOAD_TRACE" == core:wsl:server:aliases:host:local ]]' || \
+    fail 'bash wsl load order is wrong'
 }
 
 test_noninteractive_silence() {

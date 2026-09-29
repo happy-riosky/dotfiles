@@ -10,6 +10,8 @@ if [[ -z "$DOTFILES_PLATFORM" ]]; then
     DOTFILES_PLATFORM=termux
   elif [[ "$(uname -s)" == Darwin ]]; then
     DOTFILES_PLATFORM=darwin
+  elif [[ -r /proc/version ]] && grep -qi microsoft /proc/version; then
+    DOTFILES_PLATFORM=wsl
   else
     DOTFILES_PLATFORM=linux
   fi
@@ -18,7 +20,7 @@ DOTFILES_PROFILE="${DOTFILES_PROFILE:-}"
 if [[ -z "$DOTFILES_PROFILE" ]]; then
   case "$DOTFILES_PLATFORM" in
     darwin) DOTFILES_PROFILE=full ;;
-    linux) DOTFILES_PROFILE=server ;;
+    linux|wsl) DOTFILES_PROFILE=server ;;
     termux) DOTFILES_PROFILE=termux ;;
     *) return 1 ;;
   esac

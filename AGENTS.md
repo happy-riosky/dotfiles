@@ -1,8 +1,8 @@
 # AGENTS.md
 
 个人跨平台 dotfiles 仓库，用显式 HOME 软链接管理配置。仅支持 macOS（`full`）、
-Debian/Ubuntu（`server`）、Termux（`termux`）——其他组合（含 WSL）必须明确
-报错，绝不静默回退到其他 profile。
+Debian/Ubuntu（`server`）、WSL Debian/Ubuntu（复用 `server`）、Termux
+（`termux`）——其他组合必须明确报错，绝不静默回退到其他 profile。
 
 ## 布局
 
@@ -16,7 +16,7 @@ manual/                        # 手动应用的覆盖配置与脚本（不链�
 scripts/shell/                 # core + aliases + platform/ + profiles/ 加载片段，load.zsh/load.bash
 install                        # 入口：./install {full|server|termux} [--dry-run]
 tests/                         # link.sh, shell.sh, vim.sh
-docs/                          # process.md, opencode.md, nvim-markdown.md, archive/MIGRATION_PLAN.md
+docs/                          # 平台指南 linux.md/macos.md/termux.md/wsl.md；opencode.md、nvim-*.md、todo.md、archive/MIGRATION_PLAN.md
 ```
 
 ## 命令
@@ -32,7 +32,8 @@ docs/                          # process.md, opencode.md, nvim-markdown.md, arch
 | `scripts/termux-zvm-fix [--dry-run]` | Termux：应用 zsh-vi-mode 光标兼容补丁 |
 | `scripts/{prefs,hotkeys}-{restore,export}.sh [--yes]` | macOS：恢复/导出偏好与快捷键 |
 
-仅支持组合：`darwin:full`、`linux:server`（Debian/Ubuntu）、`termux:termux`。
+仅支持组合：`darwin:full`、`linux:server`（Debian/Ubuntu）、
+`wsl:server`（Debian/Ubuntu，复用 server 基础设施）、`termux:termux`。
 
 ## 不变量（不可破坏；由 link/doctor/tests 强制）
 

@@ -44,7 +44,7 @@ dotfiles_os_id() {
 
 validate_platform_profile() {
   local platform="$1" profile="$2" caller="$3" os_id
-  if [[ "$platform" == linux ]]; then
+  if [[ "$platform" == linux || "$platform" == wsl ]]; then
     os_id="$(dotfiles_os_id)"
     case "$os_id" in
       debian|ubuntu) ;;
@@ -52,8 +52,8 @@ validate_platform_profile() {
     esac
   fi
   case "$platform:$profile" in
-    darwin:full|linux:server|termux:termux) ;;
-    wsl:*) printf '%s: WSL is not supported in the first release\n' "$caller" >&2; return 1 ;;
+    darwin:full|linux:server|wsl:server|termux:termux) ;;
+    wsl:*) printf '%s: WSL supports the server profile only\n' "$caller" >&2; return 1 ;;
     *) printf '%s: profile %s is not supported on %s\n' "$caller" "$profile" "$platform" >&2; return 1 ;;
   esac
 }

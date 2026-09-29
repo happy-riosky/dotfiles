@@ -1,0 +1,46 @@
+{
+    "$help": "https://aka.ms/terminal-documentation",
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+    "actions": [],
+    "copyFormatting": "none",
+    "copyOnSelect": false,
+    "keybindings":
+    [
+        {
+            "id": "Terminal.CopyToClipboard",
+            "keys": "ctrl+c"
+        },
+        {
+            "id": "Terminal.PasteFromClipboard",
+            "keys": "ctrl+v"
+        },
+        {
+            "id": "Terminal.DuplicatePaneAuto",
+            "keys": "alt+shift+d"
+        },
+        {
+            "command": { "action": "splitPane", "split": "right", "commandline": "wsl.exe ~" },
+            "keys": "alt+d"
+        },
+        {
+            "id": "Terminal.MoveFocusNextInOrder",
+            "keys": "alt+]"
+        },
+        {
+            "id": "Terminal.MoveFocusPreviousInOrder",
+            "keys": "alt+["
+        }
+    ],
+    "profiles":
+    {
+        "defaults": {},
+        "list":
+        [
+            {
+                "commandline": "wsl.exe ~",
+                "hidden": false,
+                "name": "WSL ~"
+            }
+        ]
+    }
+}
