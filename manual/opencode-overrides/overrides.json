@@ -1,7 +1,7 @@
 {
-  "model": "pytrio/gpt-6-astra",
-  "small_model": "pytrio/deepseek-v4-flash",
+  "model": "zhipuai-coding-plan/glm-5.3",
+  "small_model": "deepseek/deepseek-v4-flash",
   "agents": {
-    "*": "pytrio/gpt-6-astra"
+    "*": "zhipuai-coding-plan/glm-5.3"
   }
 }

@@ -25,7 +25,12 @@
       "enabled": true
     }
   },
-  "model": "pytrio/gpt-6-astra",
+  "model": "zhipuai-coding-plan/glm-5.3",
+  "agent": {
+    "plan": {
+      "model": "zhipuai-coding-plan/glm-5.3"
+    }
+  },
   "provider": {
     "pytrio": {
       "name": "pytrio",

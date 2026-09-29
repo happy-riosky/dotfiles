@@ -4,6 +4,7 @@
   "vim_modal_input": true,
   "vim_system_clipboard_register": true,
   "keybinds": {
+    "input_newline": "shift+enter",
     "session_pin_toggle": "none",
     "session_rename": "none",
     "session_delete": "none",
