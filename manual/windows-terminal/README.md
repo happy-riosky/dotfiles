@@ -22,6 +22,7 @@ managed by `link`/`unlink`/`doctor`.
 | `alt+[` / `alt+]` | `MoveFocusPreviousInOrder` / `MoveFocusNextInOrder` | Cycle split panes in creation order, wrapping at both ends (verified in 1.24 source; requires the `id`-style binding format) |
 | `alt+d` | `splitPane` right + `commandline: wsl.exe ~` | Inline and self-contained: always a WSL pane on the right, default distro, starting at `~` — independent of the `WSL ~` profile |
 | `alt+shift+d` | `DuplicatePaneAuto` | Duplicate pane, auto split direction |
+| `shift+enter` | `sendInput` `\u001b[13;2u` | CSI-u (kitty-style) Shift+Enter for TUIs inside tmux (opencode `input_newline`); pairs with `extended-keys on` + `terminal-features ",xterm-256color:extkeys"` in `home/.tmux.conf` |
 
 The `WSL ~` profile is the dropdown counterpart: opening it as a new tab
 lands in Linux `~` (unlike dynamic WSL profiles, which default to
