@@ -158,6 +158,12 @@ Neovim plugins are managed by `vim.pack`, not `scripts/plugins`.
 - Fetch plugin updates: `:lua vim.pack.update()`; `:write` applies updates and `:quit` cancels.
 - Review changes to `nvim-pack-lock.json` alongside configuration changes.
 - Check prerequisites: `:checkhealth kickstart`.
+- Remove a plugin: delete its `vim.pack.add` line (stops loading only) **and** run
+  `:lua vim.pack.del({ 'name' })`, which deletes both the disk clone under
+  `~/.local/share/nvim/site/pack/core/opt/` and the lockfile entry. Reverting
+  `nvim-pack-lock.json` via git is not enough: while the clone remains on disk,
+  startup lock-repair re-adds the entry automatically (stale `minuet-ai.nvim`,
+  2026-09-30). Install state is per machine; run `vim.pack.del` on each one.
 
 On a fresh setup, startup can download plugins, Mason tools, and Treesitter
 parsers. Existing plugin checkouts, Mason installations, parsers, state, and

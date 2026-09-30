@@ -12,6 +12,8 @@
       （`<C-y>` 接受）无按键冲突。
 - [ ] 可选：从 stash 恢复 minuet/DeepSeek FIM 作手动后备（`<A-y>` 触发；恢复时需把
       minuet 移出 blink `default` sources，避免与 Copilot 双自动请求、双成本）。
+      注：本机磁盘克隆残留已清（2026-09-30，见操作记录）；恢复 stash 后 vim.pack
+      会按 lock 条目自动重装。
 
 ### Termux
 
@@ -24,7 +26,8 @@
       删 `init.lua` 中 diffview 的 `vim.pack.add` 行（plenary 保留，neo-tree 仍
       依赖）与 `<leader>gd/gs/gf/gh` 映射、catppuccin 的 `diffview = true`
       集成项；同步更新 `docs/neovim.md`（Managed Files 与 Theme 节）；随后
-      `:lua vim.pack.update()` 确认 `nvim-pack-lock.json` 相应清理。
+      `:lua vim.pack.del({ 'diffview.nvim' })` 卸载磁盘克隆并清理
+      `nvim-pack-lock.json`（`vim.pack.update()` 只更新已装插件，不会移除条目）。
 
 ### Server 工具链审计（2026-09-29）
 
@@ -150,3 +153,20 @@
 - 后续：历史已重写（tmp 拆分），其他机器 `git fetch && git reset --hard
       origin/main` 对齐（先确认无本地改动）；gh-dash / bat-fd / stow 待办见
       第 1 节审计；brew 新增三包待 macOS 实机验证。
+
+### minuet 残留清理（2026-09-30）
+
+- 日期：2026-09-30
+- 环境：wsl（Ubuntu，`server` profile，真实仓库），Neovim 0.12.5。
+- 操作：排查 `nvim-pack-lock.json` 中自动回归的 `minuet-ai.nvim` 条目。成因：
+  9-16 的 stash 实验只回退 git 跟踪文件，`~/.local/share/nvim/site/pack/core/opt/`
+  下的克隆未删，而 vim.pack 启动时的 lock-repair 机制按磁盘克隆的 HEAD/origin
+  自动补写缺失条目（runtime `lua/vim/pack.lua` 的 `lock_sync`/`lock_repair`），
+  故每次回退 lock 都会被写回。执行 `:lua vim.pack.del({ 'minuet-ai.nvim' })`
+  同时删除克隆与条目；`docs/neovim.md` Maintenance 节补充卸载规则，本文件
+  Diffview 待办的 `vim.pack.update()` 错误指引同步修正为 `vim.pack.del`。
+- 结果：通过。lock 与 HEAD 逐字节一致，无需提交；`git diff --check` 干净。
+- 证据：nvim 输出 "vim.pack: Removed plugin 'minuet-ai.nvim'"；`git status`
+  中 lock 不再出现；插件目录已不存在。
+- 后续：无（卸载规则已入 docs/neovim.md；其他机器如遇同款残留，各自执行
+  `vim.pack.del` 即可）。
