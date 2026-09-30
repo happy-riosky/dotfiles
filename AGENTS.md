@@ -91,7 +91,7 @@ docs/                          # 平台指南 linux.md/macos.md/termux.md/wsl.md
 ./install <profile> --dry-run && scripts/doctor
 bash -n install scripts/link scripts/unlink scripts/doctor
 zsh -n home/.zshenv home/.zshrc scripts/shell/load.zsh scripts/shell/aliases.sh
-git diff --check && tests/link.sh && tests/shell.sh && tests/packages.sh && tests/plugins.sh && tests/termux.sh
+git diff --check && tests/link.sh && tests/shell.sh && tests/packages.sh && tests/plugins.sh && tests/termux.sh && bash tests/tmux.sh
 bash tests/vim.sh # 需要 vim + Lightline 插件
 ```
 

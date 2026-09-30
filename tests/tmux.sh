@@ -9,10 +9,11 @@ fail() { printf 'FAIL: %s\n' "$*" >&2; exit 1; }
 # strftime on Linux/Termux before tmux can expand the command. The unexpanded
 # plugin path then leaks into the status bar as plain text (seen on Termux:
 # "16%(/data/data/com.termux/files/home/.tmux/plugin...").
+# Escape a literal '%' as '%%' instead; strip escaped pairs before matching.
 test_no_percent_before_hash_expansion() {
   local conf
   while IFS= read -r conf; do
-    if grep -nE '%#\{|%#\(' "$conf"; then
+    if sed 's/%%/@@/g' "$conf" | grep -nE '%#\{|%#\('; then
       fail "literal '%' before a '#' expansion in $conf (strftime hazard)"
     fi
   done < <(find "$ROOT/home/.tmux.conf" "$ROOT/home/.tmux" \
