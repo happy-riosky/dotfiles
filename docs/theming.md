@@ -11,7 +11,7 @@
 | `home/.config/lazygit/{config,frappe,latte-theme}.yml`、`home/.tmux/colors/simple_batt*.tmux.conf` | 受管（lazygit 基础+overlay / tmux 布局与回退配色） |
 | `home/.config/opencode/tui-plugins/tinty-theme.js`、`home/.config/opencode/themes/catppuccin-yellow.json` | 受管（实时跟随插件 / 无 tinty 回退主题） |
 | `~/.config/opencode/themes/tinty-*.json` | tinty-theme 插件生成（每 scheme 一个），**不入库** |
-| `scripts/tinty-yazi-flavor{,.template,.tmtheme.template,.glow.template,.lazygit.template}` | 受管（yazi flavor / glow 样式 / lazygit overlay 生成器与模板） |
+| `scripts/tinty/{generate,yazi-flavor.template,yazi-tmtheme.template,glow.template,lazygit.template}` | 受管（运行时主题产物生成器与模板：yazi flavor / glow 样式 / lazygit overlay） |
 | `~/.config/yazi/flavors/tinty-{dark,light}.yazi/`、`~/.config/tinted-theming/tinty-glow.json`、`~/.config/lazygit/tinty.yml` | 生成器输出，**不入库** |
 | `platforms/darwin/home/.config/git/config` | 受管（delta pager + 主题 include，仅 macOS） |
 | `home/.config/kitty/kitty.conf` 末尾 `include current-theme.conf` | 受管配置引用运行时文件 |
@@ -59,7 +59,7 @@ tinty apply base16-catppuccin-frappe
 - **lazygit**：基础 `config.yml` 主题中立（diffRenderers/pager 不带
   `--light`/`--dark`，delta 明暗完全跟随 tinty）；`lg`（aliases.sh 函数）
   启动前刷新运行时 overlay `~/.config/lazygit/tinty.yml`（由
-  `scripts/tinty-yazi-flavor` 按当前 scheme 渲染，`_tinty_scheme` 标记注释
+  `scripts/tinty/generate` 按当前 scheme 渲染，`_tinty_scheme` 标记注释
   须与 `current_scheme` 一致才使用；槽位语义沿用 catppuccin lazygit
   yellow 主题——base0A 黄强调边框，catppuccin 系 scheme 下与原硬编码
   overlay 值一致）；标记不符（切换 scheme 后生成失败/残留）时按
@@ -70,7 +70,7 @@ tinty apply base16-catppuccin-frappe
   `CONFIG_DIR` 统一到 `~/.config/lazygit`（App Support 下不再有重复副本）。
 - **yazi**：`[flavor] dark/light` 指向运行时 flavor `tinty-dark/tinty-light`
   （两份同内容，明暗探测结果无关化）；`y`（aliases.sh 函数）启动前调用
-  `scripts/tinty-yazi-flavor` 按当前 scheme 渲染
+  `scripts/tinty/generate` 按当前 scheme 渲染
   `~/.config/yazi/flavors/tinty-{dark,light}.yazi/{flavor.toml,tmtheme.xml}`
   （模板为 lavender flavor 参数化 + 简版 16 色 tmtheme，预览高亮跟随；
   模板中 base16 槽位外另有语义强调槽 `c_emph`——生成器按 scheme 明暗解析，
@@ -82,7 +82,7 @@ tinty apply base16-catppuccin-frappe
   无 tinty 时生成器以仓库 catppuccin-frappe-lavender flavor 兜底，glow/bat
   回退内建样式（yazi 仅在 macOS 安装，无服务器场景）。`theme.toml` 仅保留
   无色覆盖（indicator padding/status 分隔符），有色覆盖在模板内用 base 槽位。
-- **glow**：`gl`/`glow`（aliases.sh 函数）启动前调用 `scripts/tinty-yazi-flavor`
+- **glow**：`gl`/`glow`（aliases.sh 函数）启动前调用 `scripts/tinty/generate`
   刷新 `~/.config/tinted-theming/tinty-glow.json`（glamour 样式 JSON，hex
   真彩；样式刻意「少即是多」：无彩色背景块，避免深浅错配时刺眼）。仅当文件
   内 `_tinty_scheme` 标记与 `current_scheme` 一致才使用（`-s` 显式传绝对
@@ -134,5 +134,5 @@ tinty config --data-dir-path  # 运行时目录；ls 查看生成的主题文件
   按 variant 选 overlay，裸 `lazygit` 用内建主题。
 - glow 没跟随 → 确认 `~/.config/tinted-theming/tinty-glow.json` 存在、其中
   `_tinty_scheme` 与 `current_scheme` 一致（不一致属回退保护，重跑
-  `scripts/tinty-yazi-flavor` 看报错）；显式传了 `-s` 的调用不受包装影响；
+  `scripts/tinty/generate` 看报错）；显式传了 `-s` 的调用不受包装影响；
   `gl` 的新逻辑需新 shell 加载；yazi 内预览需重开 `y`。

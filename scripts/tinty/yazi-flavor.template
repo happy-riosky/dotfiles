@@ -1,9 +1,9 @@
-# tinty-yazi-flavor 模板：由 catppuccin-frappe-lavender flavor.toml 参数化而来。
+# yazi flavor 模板：由 catppuccin-frappe-lavender flavor.toml 参数化而来。
 # 槽位映射按 frappe base16 palette 反推；非 base16 的定制色归入最近语义槽：
 #   #232634(crust)→base00  #737994(overlay0)/#838ba7(overlay1)→base04
 #   #949cbb/#a5adce/#b5bfe2→base05  #ffffff→base07  #ea999c(maroon)→base08
 #   #99d1db(sapphire)/#85c1dc(sky)→base0C  #f4b8e4(pink)→base0F
-# 生成器：scripts/tinty-yazi-flavor；输出为运行时产物，不入库。
+# 生成器：scripts/tinty/generate；输出为运行时产物，不入库。
 
 [app]
 overall = { bg = "{{base00}}" }

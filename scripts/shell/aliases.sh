@@ -2,9 +2,9 @@
 # theme 热重载，见 docs/theming.md）；theme.toml 的 [flavor] dark/light 同指
 # tinty，明暗探测失效化。刷新失败仅告警，裸启动（沿用上次生成或内建主题）
 command -v yazi >/dev/null 2>&1 && y() {
-	if [ -n "${DOTFILES_ROOT:-}" ] && [ -f "$DOTFILES_ROOT/scripts/tinty-yazi-flavor" ]; then
-		bash "$DOTFILES_ROOT/scripts/tinty-yazi-flavor" >/dev/null 2>&1 || \
-			printf 'y: tinty-yazi-flavor 刷新失败，沿用上次生成的主题\n' >&2
+	if [ -n "${DOTFILES_ROOT:-}" ] && [ -f "$DOTFILES_ROOT/scripts/tinty/generate" ]; then
+		bash "$DOTFILES_ROOT/scripts/tinty/generate" >/dev/null 2>&1 || \
+			printf 'y: tinty/generate 刷新失败，沿用上次生成的主题\n' >&2
 	fi
 	command yazi "$@"
 }
@@ -36,8 +36,8 @@ command -v fd >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1 && command -v ba
 command -v glow >/dev/null 2>&1 && glow() {
 	local style_file="${XDG_CONFIG_HOME:-$HOME/.config}/tinted-theming/tinty-glow.json"
 	local scheme_file="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty/current_scheme"
-	if [ -n "${DOTFILES_ROOT:-}" ] && [ -f "$DOTFILES_ROOT/scripts/tinty-yazi-flavor" ]; then
-		bash "$DOTFILES_ROOT/scripts/tinty-yazi-flavor" >/dev/null 2>&1 || true
+	if [ -n "${DOTFILES_ROOT:-}" ] && [ -f "$DOTFILES_ROOT/scripts/tinty/generate" ]; then
+		bash "$DOTFILES_ROOT/scripts/tinty/generate" >/dev/null 2>&1 || true
 	fi
 	local arg explicit=
 	for arg in "$@"; do
@@ -76,8 +76,8 @@ command -v eza >/dev/null 2>&1 && alias lt='eza -la --tree --level=4'
 command -v lazygit >/dev/null 2>&1 && lg() {
 	local dir="${XDG_CONFIG_HOME:-$HOME/.config}/lazygit"
 	local base="$dir/config.yml" overlay=""
-	if [ -n "${DOTFILES_ROOT:-}" ] && [ -f "$DOTFILES_ROOT/scripts/tinty-yazi-flavor" ]; then
-		bash "$DOTFILES_ROOT/scripts/tinty-yazi-flavor" >/dev/null 2>&1 || true
+	if [ -n "${DOTFILES_ROOT:-}" ] && [ -f "$DOTFILES_ROOT/scripts/tinty/generate" ]; then
+		bash "$DOTFILES_ROOT/scripts/tinty/generate" >/dev/null 2>&1 || true
 	fi
 	local scheme_file="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty/current_scheme"
 	if [ -r "$dir/tinty.yml" ] && [ -r "$scheme_file" ] && \

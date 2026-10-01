@@ -109,9 +109,10 @@ DOTFILES_PLATFORM=<p> [DOTFILES_PROFILE=<pr>]`；覆盖项：
 - Tinty 主题：`home/.config/tinted-theming/tinty/config.toml` 与 darwin 的
   `platforms/darwin/home/.config/git/config` 受管；`~/.local/share/tinted-theming/tinty/`
   与 `~/.config/kitty/current-theme.conf` 为运行时产物，绝不入库。
-  yazi flavor 由 `scripts/tinty-yazi-flavor` 生成到
-  `~/.config/yazi/flavors/tinty-{dark,light}.yazi/`（运行时产物）。
-  细节见 `docs/theming.md`。
+  yazi flavor / glow 样式 / lazygit overlay 由 `scripts/tinty/generate` 生成到
+  `~/.config/yazi/flavors/tinty-{dark,light}.yazi/`、
+  `~/.config/tinted-theming/tinty-glow.json` 与 `~/.config/lazygit/tinty.yml`
+  （运行时产物）。细节见 `docs/theming.md`。
 - OMO/OpenCode：`home/.omo/omo.jsonc` 与 `home/.config/opencode/` 由本仓库
   leaf-link 管理；`~/.omo/{codegraph,lsp-daemon}/`、`node_modules/`、
   `lsp-install-decisions.json` 与各 `*.bak*` 为本机运行时/备份，绝不入库。

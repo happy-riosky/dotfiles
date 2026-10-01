@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # 生成跟随 tinty 的运行时主题产物（读取当前 scheme 的 base16/base24 调色板）：
-#   1. yazi flavor：tinty-yazi-flavor.template + .tmtheme.template →
+#   1. yazi flavor：yazi-flavor.template + yazi-tmtheme.template →
 #      ~/.config/yazi/flavors/tinty-{dark,light}.yazi/
-#   2. glow (glamour) 样式：tinty-yazi-flavor.glow.template →
+#   2. glow (glamour) 样式：glow.template →
 #      ~/.config/tinted-theming/tinty-glow.json（顶层 _tinty_scheme 标记
 #      供调用方校验新鲜度：标记 != current_scheme 时调用方须回退内建样式，
 #      绝不渲染过期深浅样式）
-#   3. lazygit overlay：tinty-yazi-flavor.lazygit.template →
+#   3. lazygit overlay：lazygit.template →
 #      ~/.config/lazygit/tinty.yml（含 _tinty_scheme 标记注释，校验语义
 #      同上；槽位语义沿用 catppuccin lazygit yellow 主题）
 # 均为运行时产物，不入库。由 aliases.sh 的 y()/glow()/lg() 在启动前调用
@@ -48,12 +48,12 @@ if [ -z "$palette_yaml" ]; then
   # tinty 不可用：保留既有生成结果；首次则回退仓库 lavender flavor
   first_dir="${flavor_dirs%% *}"
   if [ ! -f "$first_dir/flavor.toml" ]; then
-    src_dir="$SCRIPT_DIR/../home/.config/yazi/flavors/catppuccin-frappe-lavender.yazi"
+    src_dir="$SCRIPT_DIR/../../home/.config/yazi/flavors/catppuccin-frappe-lavender.yazi"
     for flavor_dir in $flavor_dirs; do
       mkdir -p "$flavor_dir"
       cp "$src_dir/flavor.toml" "$src_dir/tmtheme.xml" "$flavor_dir/"
     done
-    printf 'tinty-yazi-flavor: tinty 不可用，已回退 catppuccin-frappe-lavender\n' >&2
+    printf 'tinty/generate: tinty 不可用，已回退 catppuccin-frappe-lavender\n' >&2
   fi
   exit 0
 fi
@@ -75,7 +75,7 @@ EOF
 for slot in $slots; do
   var="base_${slot#base}"
   if [ -z "${!var:-}" ]; then
-    printf 'tinty-yazi-flavor: %s 缺少 %s，跳过生成\n' "$scheme_id" "$slot" >&2
+    printf 'tinty/generate: %s 缺少 %s，跳过生成\n' "$scheme_id" "$slot" >&2
     exit 1
   fi
 done
@@ -110,11 +110,11 @@ render() {
 
 for flavor_dir in $flavor_dirs; do
   mkdir -p "$flavor_dir"
-  render "$flavor_dir/flavor.toml" "$SCRIPT_DIR/tinty-yazi-flavor.template"
-  render "$flavor_dir/tmtheme.xml" "$SCRIPT_DIR/tinty-yazi-flavor.tmtheme.template"
+  render "$flavor_dir/flavor.toml" "$SCRIPT_DIR/yazi-flavor.template"
+  render "$flavor_dir/tmtheme.xml" "$SCRIPT_DIR/yazi-tmtheme.template"
 done
 mkdir -p "$(dirname "$glow_style")"
-render "$glow_style" "$SCRIPT_DIR/tinty-yazi-flavor.glow.template"
+render "$glow_style" "$SCRIPT_DIR/glow.template"
 mkdir -p "$(dirname "$lazygit_overlay")"
-render "$lazygit_overlay" "$SCRIPT_DIR/tinty-yazi-flavor.lazygit.template"
-printf 'tinty-yazi-flavor: %s -> %s + %s + %s\n' "$scheme_id" "$flavor_dirs" "$glow_style" "$lazygit_overlay" >&2
+render "$lazygit_overlay" "$SCRIPT_DIR/lazygit.template"
+printf 'tinty/generate: %s -> %s + %s + %s\n' "$scheme_id" "$flavor_dirs" "$glow_style" "$lazygit_overlay" >&2

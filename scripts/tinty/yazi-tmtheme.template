@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!-- tinty-yazi-flavor 预览高亮模板：简版 16 色 TextMate 主题，
-     由 scripts/tinty-yazi-flavor 按当前 tinty scheme 渲染。 -->
+<!-- yazi 预览高亮模板：简版 16 色 TextMate 主题，
+     由 scripts/tinty/generate 按当前 tinty scheme 渲染。 -->
 <plist version="1.0">
 <dict>
   <key>name</key>
