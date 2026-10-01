@@ -11,8 +11,8 @@
 | `home/.config/lazygit/{config,frappe,latte-theme}.yml`、`home/.tmux/colors/simple_batt*.tmux.conf` | 受管（lazygit 基础+overlay / tmux 布局与回退配色） |
 | `home/.config/opencode/tui-plugins/tinty-theme.js`、`home/.config/opencode/themes/catppuccin-yellow.json` | 受管（实时跟随插件 / 无 tinty 回退主题） |
 | `~/.config/opencode/themes/tinty-*.json` | tinty-theme 插件生成（每 scheme 一个），**不入库** |
-| `scripts/tinty-yazi-flavor{,.template,.tmtheme.template}` | 受管（yazi flavor 生成器与模板） |
-| `~/.config/yazi/flavors/tinty-{dark,light}.yazi/` | 生成器输出，**不入库** |
+| `scripts/tinty-yazi-flavor{,.template,.tmtheme.template,.glow.template}` | 受管（yazi flavor / glow 样式生成器与模板） |
+| `~/.config/yazi/flavors/tinty-{dark,light}.yazi/`、`~/.config/tinted-theming/tinty-glow.json` | 生成器输出，**不入库** |
 | `platforms/darwin/home/.config/git/config` | 受管（delta pager + 主题 include，仅 macOS） |
 | `home/.config/kitty/kitty.conf` 末尾 `include current-theme.conf` | 受管配置引用运行时文件 |
 | `~/.config/kitty/current-theme.conf` | tinty hook 生成，**不入库** |
@@ -67,10 +67,21 @@ tinty apply base16-catppuccin-frappe
   `scripts/tinty-yazi-flavor` 按当前 scheme 渲染
   `~/.config/yazi/flavors/tinty-{dark,light}.yazi/{flavor.toml,tmtheme.xml}`
   （模板为 lavender flavor 参数化 + 简版 16 色 tmtheme，预览高亮跟随）。
-  yazi **无 theme 热重载**，切 scheme 后重新打开即生效。无 tinty 时生成器
-  以仓库 catppuccin-frappe-lavender flavor 兜底（yazi 仅在 macOS 安装，
-  无服务器场景）。`theme.toml` 仅保留无色覆盖（indicator padding/status
-  分隔符），有色覆盖在模板内用 base 槽位。
+  yazi **无 theme 热重载**，切 scheme 后重新打开即生效。markdown 预览
+  （`md-preview.sh`，经 piper 调 bat+glow）同样跟随 tinty：glow 用生成的
+  `tinty-glow.json`（见下，含新鲜度校验），bat 用内建 `base16-256`。
+  无 tinty 时生成器以仓库 catppuccin-frappe-lavender flavor 兜底，glow/bat
+  回退内建样式（yazi 仅在 macOS 安装，无服务器场景）。`theme.toml` 仅保留
+  无色覆盖（indicator padding/status 分隔符），有色覆盖在模板内用 base 槽位。
+- **glow**：`gl`/`glow`（aliases.sh 函数）启动前调用 `scripts/tinty-yazi-flavor`
+  刷新 `~/.config/tinted-theming/tinty-glow.json`（glamour 样式 JSON，hex
+  真彩；样式刻意「少即是多」：无彩色背景块，避免深浅错配时刺眼）。仅当文件
+  内 `_tinty_scheme` 标记与 `current_scheme` 一致才使用（`-s` 显式传绝对
+  路径——glow 的 `-s` 只认内建样式名或 JSON 文件**绝对路径**，不支持 `~`
+  展开与命名样式查找——并设 `GLAMOUR_STYLE` 覆盖 TUI 模式）；标记不匹配
+  （切换 scheme 后生成失败/残留过期文件）回退内建样式，**绝不渲染过期深浅**。
+  显式传 `-s` 时不覆盖；无生成物时 darwin 按 macOS 外观选内建 dark/light、
+  其余平台透传（yazi 预览走同一回退链）。
 - **opencode**：`tui-plugins/tinty-theme.js`（TUI 插件，在 `tui.json` 的
   `plugin` 数组声明——TUI 插件必须列在 tui.json，无目录自动发现）跟随
   tinty 实时换肤：读取 `current_scheme` 与 scheme YAML，把 base16/base24
@@ -112,3 +123,7 @@ tinty config --data-dir-path  # 运行时目录；ls 查看生成的主题文件
   `tinty init`）。
 - lazygit 主题不对 → `tinty current variant` 确认明暗；`lg`/`:LazyGit`
   按 variant 选 overlay，裸 `lazygit` 用内建主题。
+- glow 没跟随 → 确认 `~/.config/tinted-theming/tinty-glow.json` 存在、其中
+  `_tinty_scheme` 与 `current_scheme` 一致（不一致属回退保护，重跑
+  `scripts/tinty-yazi-flavor` 看报错）；显式传了 `-s` 的调用不受包装影响；
+  `gl` 的新逻辑需新 shell 加载；yazi 内预览需重开 `y`。

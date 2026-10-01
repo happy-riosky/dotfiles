@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
-# 生成跟随 tinty 的 yazi flavor：读取当前 scheme 的 base16/base24 调色板，
-# 渲染 tinty-yazi-flavor.template 与 .tmtheme.template 到
-# ~/.config/yazi/flavors/tinty.yazi/（运行时产物，不入库）。
-# 由 aliases.sh 的 y() 在启动 yazi 前调用（yazi 无 theme 热重载）。
-# 无 tinty 且目标缺失时，回退拷贝仓库的 catppuccin-frappe-lavender flavor。
+# 生成跟随 tinty 的运行时主题产物（读取当前 scheme 的 base16/base24 调色板）：
+#   1. yazi flavor：tinty-yazi-flavor.template + .tmtheme.template →
+#      ~/.config/yazi/flavors/tinty-{dark,light}.yazi/
+#   2. glow (glamour) 样式：tinty-yazi-flavor.glow.template →
+#      ~/.config/tinted-theming/tinty-glow.json（顶层 _tinty_scheme 标记
+#      供调用方校验新鲜度：标记 != current_scheme 时调用方须回退内建样式，
+#      绝不渲染过期深浅样式）
+# 均为运行时产物，不入库。由 aliases.sh 的 y()/glow() 在启动前调用
+# （yazi 无 theme 热重载；glow 每次调用刷新即可）。
+# 无 tinty：yazi flavor 目标缺失时回退拷贝仓库 catppuccin-frappe-lavender
+# flavor；glow 样式保留既有生成结果（陈旧与否由调用方标记校验兜底）。
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -12,6 +18,7 @@ data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty"
 # dark/light 各一份同内容目录：复刻原始 dark/light 双 flavor 结构，
 # 同时让终端明暗探测结果无关紧要
 flavor_dirs="${XDG_CONFIG_HOME:-$HOME/.config}/yazi/flavors/tinty-dark.yazi ${XDG_CONFIG_HOME:-$HOME/.config}/yazi/flavors/tinty-light.yazi"
+glow_style="${XDG_CONFIG_HOME:-$HOME/.config}/tinted-theming/tinty-glow.json"
 
 scheme_id=""
 if [ -r "$data_dir/current_scheme" ]; then
@@ -76,6 +83,7 @@ render() {
     var="base_$suffix"
     args+=(-e "s|{{base${upper}}}|${!var}|g" -e "s|{{${slot}}}|${!var}|g")
   done
+  args+=(-e "s|{{scheme_id}}|$scheme_id|g")
   sed "${args[@]}" "$tmpl" > "$out"
 }
 
@@ -84,4 +92,6 @@ for flavor_dir in $flavor_dirs; do
   render "$flavor_dir/flavor.toml" "$SCRIPT_DIR/tinty-yazi-flavor.template"
   render "$flavor_dir/tmtheme.xml" "$SCRIPT_DIR/tinty-yazi-flavor.tmtheme.template"
 done
-printf 'tinty-yazi-flavor: %s -> %s\n' "$scheme_id" "$flavor_dirs" >&2
+mkdir -p "$(dirname "$glow_style")"
+render "$glow_style" "$SCRIPT_DIR/tinty-yazi-flavor.glow.template"
+printf 'tinty-yazi-flavor: %s -> %s + %s\n' "$scheme_id" "$flavor_dirs" "$glow_style" >&2
