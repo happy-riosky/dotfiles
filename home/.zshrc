@@ -39,7 +39,19 @@ if command -v tinty >/dev/null 2>&1; then
     fi
     command rm -f "$marker"
   }
-  dotfiles_tinty init >/dev/null 2>&1
+  # 启动只 source 磁盘上已生成的 *.sh（磁盘即真相），不再 tinty init 全量
+  # 重应用：每个交互 shell 各自 init 会与用户的 cycle/apply 竞态，迟到的
+  # init 把它读到的旧 scheme 覆写回全局（实测造成 frappe↔latte 连环闪变）。
+  # *.sh 全缺失（首次安装 / tinty sync 后）才 init 一次引导。
+  tinty_data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty"
+  if ! command ls "$tinty_data_dir"/*.sh >/dev/null 2>&1; then
+    dotfiles_tinty init >/dev/null 2>&1
+  else
+    for script in "$tinty_data_dir"/*.sh; do
+      [[ -r "$script" ]] && . "$script"
+    done
+  fi
+  unset tinty_data_dir script
   alias tinty=dotfiles_tinty
 fi
 # <<< tinty (tinted-theming) theme manager <<<

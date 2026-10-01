@@ -54,15 +54,23 @@ tinty apply base16-catppuccin-frappe
   `listen_on unix:kitty`（相对路径按临时目录解析并自动追加 kitty PID；
   这两项 **reload 不生效，改动后需冷启动 kitty**）。socket 不可用（如在
   Ghostty 里切主题）时 hook 回退 SIGUSR1 半量重载，kitty 内下一次 shell
-  启动的 `tinty init` 会再全量修补。
+  启动的 `tinty init` 会再全量修补。macOS 原生标题栏**不在 set-colors 的
+  色彩词汇表内**，靠 kitty.conf 里 `include` 之后的
+  `macos_titlebar_color background` 关键字跟随背景色（须在 include 之后，
+  否则被主题文件中的显式 hex 覆盖）。
 - **zsh**：`.zshrc` 的 `dotfiles_tinty` 包装函数在 `tinty apply/init` 后 source
   数据目录里新生成的 `*.sh`（tinted-shell 16 色 + tinted-fzf 配色），因为 tinty
-  的 hook 在子进程中无法改动当前 shell 环境；`alias tinty=dotfiles_tinty`。
+  的 hook 在子进程无法改动当前 shell 环境；`alias tinty=dotfiles_tinty`。
   副作用：tinty 的 zsh 补全不可用（需要时用 `command tinty` 调真二进制）。
+  **shell 启动只 source 已生成的 `*.sh`，不跑 `tinty init`**——磁盘产物即
+  真相；每个 shell 各自 init 会与用户的 `cycle/apply` 竞态（迟到的 init 把旧
+  scheme 覆写回全局，实测造成连环闪变）。`*.sh` 全缺失时才 init 一次引导。
 - **tmux**：`simple_batt.tmux.conf` 只管布局/格式（电池/时间/窗口标签）；
-  配色由 `.tmux.conf` 的同步 `if-shell` 二选一——tinty 生成的主题文件存在
-  则用 scheme 配色，否则回退 `simple_batt_fallback.tmux.conf`（手工配色，
-  server/Termux/首次 apply 前）。apply 时 hook 对运行中的 server 热加载。
+  配色先无条件 source `simple_batt_fallback.tmux.conf` 打底（消灭 tmux 内建
+  绿色状态栏的启动一闪，也覆盖 server/Termux/首次 apply 前），tinty 生成的
+  主题文件存在则覆盖（tinted-tmux 模板不设置 status-right-style，覆盖后
+  `.tmux.conf` 显式清空以继承 status-style 配色）。apply 时 hook 对运行中
+  的 server 热加载。
 - **lazygit**：基础 `config.yml` 主题中立（diffRenderers/pager 不带
   `--light`/`--dark`，delta 明暗完全跟随 tinty）；`lg`（aliases.sh 函数）
   启动前刷新运行时 overlay `~/.config/lazygit/tinty.yml`（由
@@ -131,6 +139,9 @@ tinty config --data-dir-path  # 运行时目录；ls 查看生成的主题文件
 ```
 
 - 改了 `config.toml` 不生效 → 先 `tinty sync`。
+- 主题连环闪变/被切回旧 scheme → 曾是「每个 shell 启动跑 `tinty init` 与
+  `cycle/apply` 竞态」所致，已改为启动只 source 磁盘产物；若再现，检查是否
+  有其他东西在并发跑 `tinty init/apply`。
 - kitty 没变色 → 确认 `~/.config/kitty/current-theme.conf` 存在；冷启动
   kitty（改 kitty.conf 后 reload 只覆盖部分行为，`listen_on` 等需冷启动）。
 - kitty 切主题后光标/tab bar 仍停在旧 scheme → set-colors 未走通：确认 kitty
