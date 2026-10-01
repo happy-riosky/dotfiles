@@ -17,11 +17,11 @@ find_position = { fg = "{{base0F}}", bg = "reset", italic = true }
 marker_copied   = { fg = "{{base0B}}", bg = "{{base0B}}" }
 marker_cut      = { fg = "{{base08}}", bg = "{{base08}}" }
 marker_marked   = { fg = "{{base0C}}", bg = "{{base0C}}" }
-marker_selected = { fg = "{{base07}}", bg = "{{base07}}" }
+marker_selected = { fg = "{{c_emph}}", bg = "{{c_emph}}" }
 
 count_copied   = { fg = "{{base00}}", bg = "{{base0B}}" }
 count_cut      = { fg = "{{base00}}", bg = "{{base08}}" }
-count_selected = { fg = "{{base00}}", bg = "{{base07}}" }
+count_selected = { fg = "{{base00}}", bg = "{{c_emph}}" }
 
 border_symbol = "│"
 border_style  = { fg = "{{base04}}" }
@@ -33,8 +33,8 @@ active   = { fg = "{{base00}}", bg = "{{base05}}", bold = true }
 inactive = { fg = "{{base05}}", bg = "{{base03}}" }
 
 [mode]
-normal_main = { fg = "{{base00}}", bg = "{{base07}}", bold = true }
-normal_alt  = { fg = "{{base07}}", bg = "{{base02}}"}
+normal_main = { fg = "{{base00}}", bg = "{{c_emph}}", bold = true }
+normal_alt  = { fg = "{{c_emph}}", bg = "{{base02}}"}
 
 select_main = { fg = "{{base00}}", bg = "{{base0B}}", bold = true }
 select_alt  = { fg = "{{base0B}}", bg = "{{base02}}"}
@@ -44,14 +44,14 @@ unset_alt   = { fg = "{{base0F}}", bg = "{{base02}}"}
 
 [indicator]
 parent = { fg = "{{base00}}", bg = "{{base05}}" }
-current = { fg = "{{base00}}", bg = "{{base07}}" }
+current = { fg = "{{base00}}", bg = "{{c_emph}}" }
 preview = { fg = "{{base00}}", bg = "{{base05}}" }
 
 [status]
 sep_left  = { open = "", close = "" }
 sep_right = { open = "", close = "" }
 
-progress_label  = { fg = "{{base07}}", bold = true }
+progress_label  = { fg = "{{c_emph}}", bold = true }
 progress_normal = { fg = "{{base0B}}", bg = "{{base03}}" }
 progress_error  = { fg = "{{base0A}}", bg = "{{base08}}" }
 
@@ -62,34 +62,34 @@ perm_exec  = { fg = "{{base0B}}" }
 perm_sep   = { fg = "{{base04}}" }
 
 [input]
-border   = { fg = "{{base07}}" }
+border   = { fg = "{{c_emph}}" }
 title    = {}
 value    = {}
 selected = { reversed = true }
 
 [pick]
-border   = { fg = "{{base07}}" }
+border   = { fg = "{{c_emph}}" }
 active   = { fg = "{{base0F}}" }
 inactive = {}
 
 [confirm]
-border     = { fg = "{{base07}}" }
-title      = { fg = "{{base07}}" }
+border     = { fg = "{{c_emph}}" }
+title      = { fg = "{{c_emph}}" }
 body       = {}
 list       = {}
 btn_yes    = { reversed = true }
 btn_no     = {}
 
 [cmp]
-border = { fg = "{{base07}}" }
+border = { fg = "{{c_emph}}" }
 
 [tasks]
-border  = { fg = "{{base07}}" }
+border  = { fg = "{{c_emph}}" }
 title   = {}
 hovered = { fg = "{{base0F}}", bold = true }
 
 [which]
-border          = { fg = "{{base07}}" }
+border          = { fg = "{{c_emph}}" }
 mask            = {}
 cand            = { fg = "{{base0C}}" }
 rest            = { fg = "{{base05}}" }
@@ -98,7 +98,7 @@ separator       = "  "
 separator_style = { fg = "{{base04}}" }
 
 [help]
-border  = { fg = "{{base07}}" }
+border  = { fg = "{{c_emph}}" }
 chord   = { fg = "{{base0C}}" }
 action  = { fg = "{{base05}}" }
 hovered = { bg = "{{base04}}", bold = true }
@@ -132,31 +132,31 @@ rules = [
 	{ url = "*/", is = "dummy", bg = "{{base08}}" },
 
 	# Fallback
-	{ url = "*/", fg = "{{base07}}" },
+	{ url = "*/", fg = "{{c_emph}}" },
 ]
 
 [spot]
-border = { fg = "{{base07}}" }
-title  = { fg = "{{base07}}" }
-tbl_cell = { fg = "{{base07}}", reversed = true }
+border = { fg = "{{c_emph}}" }
+title  = { fg = "{{c_emph}}" }
+tbl_cell = { fg = "{{c_emph}}", reversed = true }
 tbl_col = { bold = true }
 
 [icon]
 dirs = [
-	{ name = ".config", text = "", fg = "{{base07}}" },
-	{ name = ".git", text = "", fg = "{{base07}}" },
-	{ name = ".github", text = "", fg = "{{base07}}" },
-	{ name = ".npm", text = "", fg = "{{base07}}" },
-	{ name = "Desktop", text = "", fg = "{{base07}}" },
-	{ name = "Development", text = "", fg = "{{base07}}" },
-	{ name = "Documents", text = "", fg = "{{base07}}" },
-	{ name = "Downloads", text = "", fg = "{{base07}}" },
-	{ name = "Library", text = "", fg = "{{base07}}" },
-	{ name = "Movies", text = "", fg = "{{base07}}" },
-	{ name = "Music", text = "", fg = "{{base07}}" },
-	{ name = "Pictures", text = "", fg = "{{base07}}" },
-	{ name = "Public", text = "", fg = "{{base07}}" },
-	{ name = "Videos", text = "", fg = "{{base07}}" },
+	{ name = ".config", text = "", fg = "{{c_emph}}" },
+	{ name = ".git", text = "", fg = "{{c_emph}}" },
+	{ name = ".github", text = "", fg = "{{c_emph}}" },
+	{ name = ".npm", text = "", fg = "{{c_emph}}" },
+	{ name = "Desktop", text = "", fg = "{{c_emph}}" },
+	{ name = "Development", text = "", fg = "{{c_emph}}" },
+	{ name = "Documents", text = "", fg = "{{c_emph}}" },
+	{ name = "Downloads", text = "", fg = "{{c_emph}}" },
+	{ name = "Library", text = "", fg = "{{c_emph}}" },
+	{ name = "Movies", text = "", fg = "{{c_emph}}" },
+	{ name = "Music", text = "", fg = "{{c_emph}}" },
+	{ name = "Pictures", text = "", fg = "{{c_emph}}" },
+	{ name = "Public", text = "", fg = "{{c_emph}}" },
+	{ name = "Videos", text = "", fg = "{{c_emph}}" },
 ]
 conds = [
 	# Special files
@@ -170,7 +170,7 @@ conds = [
 	{ if = "dummy", text = "", fg = "{{base08}}" },
 
 	# Fallback
-	{ if = "dir", text = "", fg = "{{base07}}" },
+	{ if = "dir", text = "", fg = "{{c_emph}}" },
 	{ if = "exec", text = "", fg = "{{base0B}}" },
 	{ if = "!dir", text = "", fg = "{{base05}}" },
 ]

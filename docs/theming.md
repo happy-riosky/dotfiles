@@ -66,7 +66,10 @@ tinty apply base16-catppuccin-frappe
   （两份同内容，明暗探测结果无关化）；`y`（aliases.sh 函数）启动前调用
   `scripts/tinty-yazi-flavor` 按当前 scheme 渲染
   `~/.config/yazi/flavors/tinty-{dark,light}.yazi/{flavor.toml,tmtheme.xml}`
-  （模板为 lavender flavor 参数化 + 简版 16 色 tmtheme，预览高亮跟随）。
+  （模板为 lavender flavor 参数化 + 简版 16 色 tmtheme，预览高亮跟随；
+  模板中 base16 槽位外另有语义强调槽 `c_emph`——生成器按 scheme 明暗解析，
+  浅色取 base05、深色取 base07，避免 kissa-latte 这类 base07=bright white
+  的浅色 scheme 出现白字白底）。
   yazi **无 theme 热重载**，切 scheme 后重新打开即生效。markdown 预览
   （`md-preview.sh`，经 piper 调 bat+glow）同样跟随 tinty：glow 用生成的
   `tinty-glow.json`（见下，含新鲜度校验），bat 用内建 `base16-256`。
