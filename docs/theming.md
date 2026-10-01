@@ -44,10 +44,17 @@ tinty apply base16-catppuccin-frappe
 
 ## 各应用如何接线
 
-- **kitty**：`kitty` item 把主题复制到 `~/.config/kitty/current-theme.conf` 并在
-  apply 时 `pkill -USR1 -x kitty` 热重载；`kitty.conf` 末尾
-  `include current-theme.conf`（相对 include 按软链接所在目录解析；文件缺失时
-  kitty 仅告警并忽略）。
+- **kitty**：`kitty` item 把主题复制到 `~/.config/kitty/current-theme.conf`
+  （`kitty.conf` 末尾 `include current-theme.conf`）。刷色优先
+  `kitten @ set-colors --all --configured`——kitty 的 config reload
+  （SIGUSR1/Ctrl+Shift+F5）只热应用默认 fg/bg/ANSI 调色板，**不重应用
+  cursor/cursor_text_color/tab bar 等 UI 色，新开 tab 也沿用启动时旧值**
+  （0.48 实测；症状即"切主题背景变、光标冻在旧 scheme"），set-colors 才能
+  全量生效。为此 kitty.conf 开了 `allow_remote_control socket-only` +
+  `listen_on unix:kitty`（相对路径按临时目录解析并自动追加 kitty PID；
+  这两项 **reload 不生效，改动后需冷启动 kitty**）。socket 不可用（如在
+  Ghostty 里切主题）时 hook 回退 SIGUSR1 半量重载，kitty 内下一次 shell
+  启动的 `tinty init` 会再全量修补。
 - **zsh**：`.zshrc` 的 `dotfiles_tinty` 包装函数在 `tinty apply/init` 后 source
   数据目录里新生成的 `*.sh`（tinted-shell 16 色 + tinted-fzf 配色），因为 tinty
   的 hook 在子进程中无法改动当前 shell 环境；`alias tinty=dotfiles_tinty`。
@@ -124,8 +131,14 @@ tinty config --data-dir-path  # 运行时目录；ls 查看生成的主题文件
 ```
 
 - 改了 `config.toml` 不生效 → 先 `tinty sync`。
-- kitty 没变色 → 确认 `~/.config/kitty/current-theme.conf` 存在，重开 kitty
-  或 `Ctrl+Shift+F5` 重载配置。
+- kitty 没变色 → 确认 `~/.config/kitty/current-theme.conf` 存在；冷启动
+  kitty（改 kitty.conf 后 reload 只覆盖部分行为，`listen_on` 等需冷启动）。
+- kitty 切主题后光标/tab bar 仍停在旧 scheme → set-colors 未走通：确认 kitty
+  是在 `listen_on` 配置生效后冷启动的（`echo $KITTY_LISTEN_ON` 应有值）；
+  在 kitty 内跑 `tinty init` 修补，或手动
+  `kitten @ set-colors --all --configured ~/.config/kitty/current-theme.conf`
+  验证；在 kitty 之外（如 Ghostty）切主题只回退 SIGUSR1 半量重载，回到
+  kitty 开个新 shell 即全量追平。
 - tmux 没变色 → hook 只在 tmux server 存在时热加载；新 server 由 `.tmux.conf`
   启动加载；手动 `tmux source-file <数据目录>/tinted-tmux-*.tmuxtheme`。
 - 主题在 zsh 没生效 → 当前会话须通过包装函数执行（新开 shell 或
