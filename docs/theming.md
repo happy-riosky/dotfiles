@@ -53,8 +53,8 @@ tinty apply base16-catppuccin-frappe
   全量生效。为此 kitty.conf 开了 `allow_remote_control socket-only` +
   `listen_on unix:kitty`（相对路径按临时目录解析并自动追加 kitty PID；
   这两项 **reload 不生效，改动后需冷启动 kitty**）。socket 不可用（如在
-  Ghostty 里切主题）时 hook 回退 SIGUSR1 半量重载，kitty 内下一次 shell
-  启动的 `tinty init` 会再全量修补。macOS 原生标题栏**不在 set-colors 的
+  Ghostty 里切主题）时 hook 回退 SIGUSR1 半量重载，回到 kitty 里跑一次
+  `theme`/`tinty apply`（或等下次 kitty 冷启动）即全量追平。macOS 原生标题栏**不在 set-colors 的
   色彩词汇表内**，靠 kitty.conf 里 `include` 之后的
   `macos_titlebar_color background` 关键字跟随背景色（须在 include 之后，
   否则被主题文件中的显式 hex 覆盖）。
@@ -149,7 +149,8 @@ tinty config --data-dir-path  # 运行时目录；ls 查看生成的主题文件
   在 kitty 内跑 `tinty init` 修补，或手动
   `kitten @ set-colors --all --configured ~/.config/kitty/current-theme.conf`
   验证；在 kitty 之外（如 Ghostty）切主题只回退 SIGUSR1 半量重载，回到
-  kitty 开个新 shell 即全量追平。
+  kitty 里跑一次 `theme`/`tinty apply` 或冷启动 kitty 即全量追平（shell
+  启动已无自动 init，见 zsh 条目）。
 - tmux 没变色 → hook 只在 tmux server 存在时热加载；新 server 由 `.tmux.conf`
   启动加载；手动 `tmux source-file <数据目录>/tinted-tmux-*.tmuxtheme`。
 - 主题在 zsh 没生效 → 当前会话须通过包装函数执行（新开 shell 或
