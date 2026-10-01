@@ -1,0 +1,54 @@
+# tinty（tinted-theming）主题管理；用法与接线详见 docs/theming.md
+# 运行时数据在 ~/.local/share/tinted-theming/tinty/（不入库）
+# 改动本文件后需 tinty sync 再 tinty apply
+
+default-scheme = "base16-catppuccin-frappe"
+default-cycle-ring = "default"
+
+# `tinty cycle` 在深/浅之间轮换
+[[rings]]
+name = "default"
+schemes = ["base16-catppuccin-frappe", "base16-catppuccin-latte"]
+
+# shell 16 色 ANSI 调色板；zsh 侧由 .zshrc 的 dotfiles_tinty 包装函数
+# 在 apply/init 后 source 生成的 *.sh（hook 本身只影响子进程）
+[[items]]
+name = "tinted-shell"
+path = "https://github.com/tinted-theming/tinted-shell"
+themes-dir = "scripts"
+hook = '. "$TINTY_THEME_FILE_PATH"'
+
+# fzf 配色（生成的 .sh 同样由 .zshrc 包装函数 source）
+[[items]]
+name = "tinted-fzf"
+path = "https://github.com/tinted-theming/tinted-fzf"
+themes-dir = "sh"
+
+# kitty 终端：复制为不受管的 current-theme.conf（kitty.conf 末尾 include），
+# 仅 apply 时向 kitty 发 SIGUSR1 热重载
+[[items]]
+name = "kitty"
+path = "https://github.com/tinted-theming/tinted-terminal"
+themes-dir = "themes/kitty"
+supported-systems = ["base16", "base24"]
+hook = 'mkdir -p "$HOME/.config/kitty" && cp -f "$TINTY_THEME_FILE_PATH" "$HOME/.config/kitty/current-theme.conf" && { [ "$TINTY_THEME_OPERATION" = "apply" ] && pgrep -x kitty >/dev/null 2>&1 && pkill -USR1 -x kitty; } || true'
+
+# tmux 状态栏：apply 时热加载；tmux.conf 启动时 source 生成文件（-q 容忍缺失）
+[[items]]
+name = "tinted-tmux"
+path = "https://github.com/tinted-theming/tinted-tmux"
+themes-dir = "colors"
+hook = '(tmux run 2>/dev/null && tmux source-file "$TINTY_THEME_FILE_PATH") || true'
+
+# nvim/vim 配色：init.lua 直接 source 生成文件并在 FocusGained 时跟随切换
+[[items]]
+name = "base16-vim"
+path = "https://github.com/tinted-theming/base16-vim"
+themes-dir = "colors"
+
+# git-delta 主题：由 darwin 平台的 ~/.config/git/config [include] 引用
+[[items]]
+name = "tinted-delta"
+path = "https://github.com/tinted-theming/tinted-delta"
+themes-dir = "configs"
+supported-systems = ["base16", "base24"]

@@ -21,6 +21,29 @@ fi
 
 [[ -r "$HOME/.p10k.zsh" ]] && source "$HOME/.p10k.zsh"
 
+# >>> tinty (tinted-theming) theme manager >>>
+# tinty 的 hook 在子进程执行，无法改动当前 shell 的环境变量；
+# 用函数包装 apply/init，跑完真 tinty 后 source 数据目录里新生成的
+# *.sh（tinted-shell 的 16 色 ANSI 调色板 + tinted-fzf 配色由此生效）。
+# 副作用：alias 覆盖 tinty 后 zsh 补全不可用，需要时用 command tinty。
+if command -v tinty >/dev/null 2>&1; then
+  dotfiles_tinty() {
+    local marker script tinty_data_dir
+    marker="$(mktemp)"
+    command tinty "$@"
+    if [[ "$1" == "apply" || "$1" == "init" ]]; then
+      tinty_data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty"
+      while IFS= read -r script; do
+        [[ -r "$script" ]] && . "$script"
+      done < <(find "$tinty_data_dir" -maxdepth 1 \( -type f -o -type l \) -name '*.sh' -newer "$marker" 2>/dev/null)
+    fi
+    command rm -f "$marker"
+  }
+  dotfiles_tinty init >/dev/null 2>&1
+  alias tinty=dotfiles_tinty
+fi
+# <<< tinty (tinted-theming) theme manager <<<
+
 export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
 command -v nvm >/dev/null 2>&1 && nvm use default --silent >/dev/null 2>&1 || true
@@ -49,7 +72,8 @@ alias m='man'
 alias mk='make'
 alias mka='make all'
 alias mkc='make clean'
-command -v lazygit >/dev/null 2>&1 && alias lg='lazygit'
+# lg 由 aliases.sh 的 lg() 函数提供（跟随 tinty 主题）；此处不设 alias，
+# 否则 zsh alias 展开优先于函数，会绕过主题包装
 # gd 被 oh-my-zsh git 插件覆盖为 git diff；改由 ~/.local/bin/gd 提供
 # （repo 上下文感知的 gh dash 启动器），unalias 让 PATH 解析到脚本
 command -v gh >/dev/null 2>&1 && unalias gd 2>/dev/null || true

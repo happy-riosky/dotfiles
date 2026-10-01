@@ -1,5 +1,9 @@
 {
   "$schema": "https://opencode.ai/tui.json",
+  "theme": "catppuccin-yellow",
+  "plugin": [
+    "./tui-plugins/tinty-theme.js"
+  ],
   "vim": true,
   "vim_modal_input": true,
   "vim_system_clipboard_register": true,
@@ -12,6 +16,7 @@
       "session_pin_toggle": "P",
       "session_rename": "R",
       "session_delete": "D",
+      "theme_switch_mode": "T",
       "session_quick_switch_1": "1",
       "session_quick_switch_2": "2",
       "session_quick_switch_3": "3",

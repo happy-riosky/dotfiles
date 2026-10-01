@@ -1,0 +1,261 @@
+{
+  "$schema": "https://opencode.ai/theme.json",
+  "defs": {
+    "mocAccent": "#f9e2af",
+    "mocRosewater": "#f5e0dc",
+    "mocFlamingo": "#f2cdcd",
+    "mocPink": "#f5c2e7",
+    "mocMauve": "#cba6f7",
+    "mocRed": "#f38ba8",
+    "mocMaroon": "#eba0ac",
+    "mocPeach": "#fab387",
+    "mocYellow": "#f9e2af",
+    "mocGreen": "#a6e3a1",
+    "mocTeal": "#94e2d5",
+    "mocSky": "#89dceb",
+    "mocSapphire": "#74c7ec",
+    "mocBlue": "#89b4fa",
+    "mocLavender": "#b4befe",
+    "mocText": "#cdd6f4",
+    "mocSubtext1": "#bac2de",
+    "mocSubtext0": "#a6adc8",
+    "mocOverlay2": "#9399b2",
+    "mocOverlay1": "#7f849c",
+    "mocOverlay0": "#6c7086",
+    "mocSurface2": "#585b70",
+    "mocSurface1": "#45475a",
+    "mocSurface0": "#313244",
+    "mocBase": "#1e1e2e",
+    "mocMantle": "#181825",
+    "mocCrust": "#11111b",
+    "latAccent": "#df8e1d",
+    "latRosewater": "#dc8a78",
+    "latFlamingo": "#dd7878",
+    "latPink": "#ea76cb",
+    "latMauve": "#8839ef",
+    "latRed": "#d20f39",
+    "latMaroon": "#e64553",
+    "latPeach": "#fe640b",
+    "latYellow": "#df8e1d",
+    "latGreen": "#40a02b",
+    "latTeal": "#179299",
+    "latSky": "#04a5e5",
+    "latSapphire": "#209fb5",
+    "latBlue": "#1e66f5",
+    "latLavender": "#7287fd",
+    "latText": "#4c4f69",
+    "latSubtext1": "#5c5f77",
+    "latSubtext0": "#6c6f85",
+    "latOverlay2": "#7c7f93",
+    "latOverlay1": "#8c8fa1",
+    "latOverlay0": "#9ca0b0",
+    "latSurface2": "#acb0be",
+    "latSurface1": "#bcc0cc",
+    "latSurface0": "#ccd0da",
+    "latBase": "#eff1f5",
+    "latMantle": "#e6e9ef",
+    "latCrust": "#dce0e8"
+  },
+  "theme": {
+    "primary": {
+      "dark": "mocAccent",
+      "light": "latAccent"
+    },
+    "secondary": {
+      "dark": "mocAccent",
+      "light": "latAccent"
+    },
+    "accent": {
+      "dark": "mocPink",
+      "light": "latBlue"
+    },
+    "error": {
+      "dark": "mocRed",
+      "light": "latRed"
+    },
+    "warning": {
+      "dark": "mocYellow",
+      "light": "latYellow"
+    },
+    "success": {
+      "dark": "mocGreen",
+      "light": "latGreen"
+    },
+    "info": {
+      "dark": "mocTeal",
+      "light": "latTeal"
+    },
+    "text": {
+      "dark": "mocText",
+      "light": "latText"
+    },
+    "textMuted": {
+      "dark": "mocSubtext1",
+      "light": "latSubtext0"
+    },
+    "background": {
+      "dark": "mocBase",
+      "light": "latBase"
+    },
+    "backgroundPanel": {
+      "dark": "mocMantle",
+      "light": "latMantle"
+    },
+    "backgroundElement": {
+      "dark": "mocCrust",
+      "light": "latCrust"
+    },
+    "border": {
+      "dark": "mocSurface0",
+      "light": "latSurface0"
+    },
+    "borderActive": {
+      "dark": "mocSurface1",
+      "light": "latSurface1"
+    },
+    "borderSubtle": {
+      "dark": "mocSurface2",
+      "light": "latSurface2"
+    },
+    "diffAdded": {
+      "dark": "mocGreen",
+      "light": "latGreen"
+    },
+    "diffRemoved": {
+      "dark": "mocRed",
+      "light": "latRed"
+    },
+    "diffContext": {
+      "dark": "mocOverlay2",
+      "light": "latOverlay2"
+    },
+    "diffHunkHeader": {
+      "dark": "mocPeach",
+      "light": "latPeach"
+    },
+    "diffHighlightAdded": {
+      "dark": "mocGreen",
+      "light": "latGreen"
+    },
+    "diffHighlightRemoved": {
+      "dark": "mocRed",
+      "light": "latRed"
+    },
+    "diffAddedBg": {
+      "dark": "#a6e3a180",
+      "light": "#40a02b80"
+    },
+    "diffRemovedBg": {
+      "dark": "#f38ba880",
+      "light": "#d20f3980"
+    },
+    "diffContextBg": {
+      "dark": "mocMantle",
+      "light": "latMantle"
+    },
+    "diffLineNumber": {
+      "dark": "mocSurface1",
+      "light": "latSurface1"
+    },
+    "diffAddedLineNumberBg": {
+      "dark": "#a6e3a140",
+      "light": "#40a02b40"
+    },
+    "diffRemovedLineNumberBg": {
+      "dark": "#f38ba840",
+      "light": "#d20f3940"
+    },
+    "markdownText": {
+      "dark": "mocText",
+      "light": "latText"
+    },
+    "markdownHeading": {
+      "dark": "mocAccent",
+      "light": "latAccent"
+    },
+    "markdownLink": {
+      "dark": "mocBlue",
+      "light": "latBlue"
+    },
+    "markdownLinkText": {
+      "dark": "mocSky",
+      "light": "latSky"
+    },
+    "markdownCode": {
+      "dark": "mocGreen",
+      "light": "latGreen"
+    },
+    "markdownBlockQuote": {
+      "dark": "mocYellow",
+      "light": "latYellow"
+    },
+    "markdownEmph": {
+      "dark": "mocYellow",
+      "light": "latYellow"
+    },
+    "markdownStrong": {
+      "dark": "mocPeach",
+      "light": "latPeach"
+    },
+    "markdownHorizontalRule": {
+      "dark": "mocSubtext0",
+      "light": "latSubtext0"
+    },
+    "markdownListItem": {
+      "dark": "mocBlue",
+      "light": "latBlue"
+    },
+    "markdownListEnumeration": {
+      "dark": "mocSky",
+      "light": "latSky"
+    },
+    "markdownImage": {
+      "dark": "mocBlue",
+      "light": "latBlue"
+    },
+    "markdownImageText": {
+      "dark": "mocSky",
+      "light": "latSky"
+    },
+    "markdownCodeBlock": {
+      "dark": "mocText",
+      "light": "latText"
+    },
+    "syntaxComment": {
+      "dark": "mocOverlay2",
+      "light": "latOverlay2"
+    },
+    "syntaxKeyword": {
+      "dark": "mocAccent",
+      "light": "latAccent"
+    },
+    "syntaxFunction": {
+      "dark": "mocBlue",
+      "light": "latBlue"
+    },
+    "syntaxVariable": {
+      "dark": "mocRed",
+      "light": "latRed"
+    },
+    "syntaxString": {
+      "dark": "mocGreen",
+      "light": "latGreen"
+    },
+    "syntaxNumber": {
+      "dark": "mocPeach",
+      "light": "latPeach"
+    },
+    "syntaxType": {
+      "dark": "mocYellow",
+      "light": "latYellow"
+    },
+    "syntaxOperator": {
+      "dark": "mocSky",
+      "light": "latSky"
+    },
+    "syntaxPunctuation": {
+      "dark": "mocText",
+      "light": "latText"
+    }
+  }
+}

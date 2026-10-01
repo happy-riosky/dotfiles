@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# 生成跟随 tinty 的 yazi flavor：读取当前 scheme 的 base16/base24 调色板，
+# 渲染 tinty-yazi-flavor.template 与 .tmtheme.template 到
+# ~/.config/yazi/flavors/tinty.yazi/（运行时产物，不入库）。
+# 由 aliases.sh 的 y() 在启动 yazi 前调用（yazi 无 theme 热重载）。
+# 无 tinty 且目标缺失时，回退拷贝仓库的 catppuccin-frappe-lavender flavor。
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty"
+# dark/light 各一份同内容目录：复刻原始 dark/light 双 flavor 结构，
+# 同时让终端明暗探测结果无关紧要
+flavor_dirs="${XDG_CONFIG_HOME:-$HOME/.config}/yazi/flavors/tinty-dark.yazi ${XDG_CONFIG_HOME:-$HOME/.config}/yazi/flavors/tinty-light.yazi"
+
+scheme_id=""
+if [ -r "$data_dir/current_scheme" ]; then
+  scheme_id="$(tr -d '[:space:]' < "$data_dir/current_scheme")"
+  case "$scheme_id" in
+    base16-*|base24-*|tinted8-*) ;;
+    *) scheme_id="" ;;
+  esac
+fi
+
+palette_yaml=""
+if [ -n "$scheme_id" ]; then
+  system="${scheme_id%%-*}"
+  slug="${scheme_id#*-}"
+  yaml="$data_dir/repos/schemes/$system/$slug.yaml"
+  if [ -r "$yaml" ]; then
+    palette_yaml="$yaml"
+  fi
+fi
+
+if [ -z "$palette_yaml" ]; then
+  # tinty 不可用：保留既有生成结果；首次则回退仓库 lavender flavor
+  first_dir="${flavor_dirs%% *}"
+  if [ ! -f "$first_dir/flavor.toml" ]; then
+    src_dir="$SCRIPT_DIR/../home/.config/yazi/flavors/catppuccin-frappe-lavender.yazi"
+    for flavor_dir in $flavor_dirs; do
+      mkdir -p "$flavor_dir"
+      cp "$src_dir/flavor.toml" "$src_dir/tmtheme.xml" "$flavor_dir/"
+    done
+    printf 'tinty-yazi-flavor: tinty 不可用，已回退 catppuccin-frappe-lavender\n' >&2
+  fi
+  exit 0
+fi
+
+# 提取 base00..base0F（palette: 块内 "baseXX: "#hex""，容忍引号/尾注释）
+pairs="$(grep -E '^[[:space:]]*base[0-9A-Fa-f]{2}[[:space:]]*:' "$palette_yaml" \
+  | sed -E 's/^[[:space:]]*base([0-9A-Fa-f]{2})[[:space:]]*:.*#([0-9A-Fa-f]{6}).*/\1 \2/')"
+
+slots="base00 base01 base02 base03 base04 base05 base06 base07 \
+base08 base09 base0a base0b base0c base0d base0e base0f"
+while read -r key hex; do
+  [ -n "$key" ] || continue
+  key="$(printf '%s' "$key" | tr 'A-F' 'a-f')"
+  printf -v "base_$key" '%s' "#$hex"
+done <<EOF
+$pairs
+EOF
+
+for slot in $slots; do
+  var="base_${slot#base}"
+  if [ -z "${!var:-}" ]; then
+    printf 'tinty-yazi-flavor: %s 缺少 %s，跳过生成\n' "$scheme_id" "$slot" >&2
+    exit 1
+  fi
+done
+
+render() {
+  local out="$1" tmpl="$2" args=() slot suffix upper var
+  for slot in $slots; do
+    suffix="${slot#base}"
+    upper="$(printf '%s' "$suffix" | tr 'a-f' 'A-F')"
+    var="base_$suffix"
+    args+=(-e "s|{{base${upper}}}|${!var}|g" -e "s|{{${slot}}}|${!var}|g")
+  done
+  sed "${args[@]}" "$tmpl" > "$out"
+}
+
+for flavor_dir in $flavor_dirs; do
+  mkdir -p "$flavor_dir"
+  render "$flavor_dir/flavor.toml" "$SCRIPT_DIR/tinty-yazi-flavor.template"
+  render "$flavor_dir/tmtheme.xml" "$SCRIPT_DIR/tinty-yazi-flavor.tmtheme.template"
+done
+printf 'tinty-yazi-flavor: %s -> %s\n' "$scheme_id" "$flavor_dirs" >&2

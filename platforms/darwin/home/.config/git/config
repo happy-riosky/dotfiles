@@ -1,0 +1,11 @@
+# macOS 专属 git 配置（git 原生读取本路径，与共享 ~/.gitconfig 叠加）。
+# delta 作为 pager/difftool；主题跟随 tinty（tinted-delta item 生成，
+# tinty 未跑过时 include 目标缺失，git 静默忽略）。见 docs/theming.md
+[core]
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+[include]
+	path = ~/.local/share/tinted-theming/tinty/tinted-delta-configs-file.gitconfig
