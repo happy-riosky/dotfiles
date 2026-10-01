@@ -11,8 +11,8 @@
 | `home/.config/lazygit/{config,frappe,latte-theme}.yml`、`home/.tmux/colors/simple_batt*.tmux.conf` | 受管（lazygit 基础+overlay / tmux 布局与回退配色） |
 | `home/.config/opencode/tui-plugins/tinty-theme.js`、`home/.config/opencode/themes/catppuccin-yellow.json` | 受管（实时跟随插件 / 无 tinty 回退主题） |
 | `~/.config/opencode/themes/tinty-*.json` | tinty-theme 插件生成（每 scheme 一个），**不入库** |
-| `scripts/tinty-yazi-flavor{,.template,.tmtheme.template,.glow.template}` | 受管（yazi flavor / glow 样式生成器与模板） |
-| `~/.config/yazi/flavors/tinty-{dark,light}.yazi/`、`~/.config/tinted-theming/tinty-glow.json` | 生成器输出，**不入库** |
+| `scripts/tinty-yazi-flavor{,.template,.tmtheme.template,.glow.template,.lazygit.template}` | 受管（yazi flavor / glow 样式 / lazygit overlay 生成器与模板） |
+| `~/.config/yazi/flavors/tinty-{dark,light}.yazi/`、`~/.config/tinted-theming/tinty-glow.json`、`~/.config/lazygit/tinty.yml` | 生成器输出，**不入库** |
 | `platforms/darwin/home/.config/git/config` | 受管（delta pager + 主题 include，仅 macOS） |
 | `home/.config/kitty/kitty.conf` 末尾 `include current-theme.conf` | 受管配置引用运行时文件 |
 | `~/.config/kitty/current-theme.conf` | tinty hook 生成，**不入库** |
@@ -58,10 +58,16 @@ tinty apply base16-catppuccin-frappe
   server/Termux/首次 apply 前）。apply 时 hook 对运行中的 server 热加载。
 - **lazygit**：基础 `config.yml` 主题中立（diffRenderers/pager 不带
   `--light`/`--dark`，delta 明暗完全跟随 tinty）；`lg`（aliases.sh 函数）
-  与 nvim `:LazyGit` 按 `tinty current variant` 经 `LG_CONFIG_FILE` 叠加
-  `frappe.yml`（dark）/ `latte-theme.yml`（light）UI overlay。无 tinty 时
-  裸 lazygit 用内建主题；macOS 由 `platform/darwin.sh` 导出 `CONFIG_DIR`
-  统一到 `~/.config/lazygit`（App Support 下不再有重复副本）。
+  启动前刷新运行时 overlay `~/.config/lazygit/tinty.yml`（由
+  `scripts/tinty-yazi-flavor` 按当前 scheme 渲染，`_tinty_scheme` 标记注释
+  须与 `current_scheme` 一致才使用；槽位语义沿用 catppuccin lazygit
+  yellow 主题——base0A 黄强调边框，catppuccin 系 scheme 下与原硬编码
+  overlay 值一致）；标记不符（切换 scheme 后生成失败/残留）时按
+  `tinty current variant` 回退 `frappe.yml`（dark）/ `latte-theme.yml`
+  （light）受管 overlay，经 `LG_CONFIG_FILE` 叠加。nvim `:LazyGit` 同一
+  优先级与回退链（不主动刷新，靠 lg/其他入口刷新 + 标记校验兜底）。
+  无 tinty 时裸 lazygit 用内建主题；macOS 由 `platform/darwin.sh` 导出
+  `CONFIG_DIR` 统一到 `~/.config/lazygit`（App Support 下不再有重复副本）。
 - **yazi**：`[flavor] dark/light` 指向运行时 flavor `tinty-dark/tinty-light`
   （两份同内容，明暗探测结果无关化）；`y`（aliases.sh 函数）启动前调用
   `scripts/tinty-yazi-flavor` 按当前 scheme 渲染

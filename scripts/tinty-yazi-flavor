@@ -6,10 +6,14 @@
 #      ~/.config/tinted-theming/tinty-glow.json（顶层 _tinty_scheme 标记
 #      供调用方校验新鲜度：标记 != current_scheme 时调用方须回退内建样式，
 #      绝不渲染过期深浅样式）
-# 均为运行时产物，不入库。由 aliases.sh 的 y()/glow() 在启动前调用
-# （yazi 无 theme 热重载；glow 每次调用刷新即可）。
+#   3. lazygit overlay：tinty-yazi-flavor.lazygit.template →
+#      ~/.config/lazygit/tinty.yml（含 _tinty_scheme 标记注释，校验语义
+#      同上；槽位语义沿用 catppuccin lazygit yellow 主题）
+# 均为运行时产物，不入库。由 aliases.sh 的 y()/glow()/lg() 在启动前调用
+# （yazi 无 theme 热重载；glow/lazygit 每次调用刷新即可）。
 # 无 tinty：yazi flavor 目标缺失时回退拷贝仓库 catppuccin-frappe-lavender
-# flavor；glow 样式保留既有生成结果（陈旧与否由调用方标记校验兜底）。
+# flavor；glow 样式与 lazygit overlay 保留既有生成结果（陈旧与否由调用方
+# 标记校验兜底）。
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -19,6 +23,7 @@ data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty"
 # 同时让终端明暗探测结果无关紧要
 flavor_dirs="${XDG_CONFIG_HOME:-$HOME/.config}/yazi/flavors/tinty-dark.yazi ${XDG_CONFIG_HOME:-$HOME/.config}/yazi/flavors/tinty-light.yazi"
 glow_style="${XDG_CONFIG_HOME:-$HOME/.config}/tinted-theming/tinty-glow.json"
+lazygit_overlay="${XDG_CONFIG_HOME:-$HOME/.config}/lazygit/tinty.yml"
 
 scheme_id=""
 if [ -r "$data_dir/current_scheme" ]; then
@@ -110,4 +115,6 @@ for flavor_dir in $flavor_dirs; do
 done
 mkdir -p "$(dirname "$glow_style")"
 render "$glow_style" "$SCRIPT_DIR/tinty-yazi-flavor.glow.template"
-printf 'tinty-yazi-flavor: %s -> %s + %s\n' "$scheme_id" "$flavor_dirs" "$glow_style" >&2
+mkdir -p "$(dirname "$lazygit_overlay")"
+render "$lazygit_overlay" "$SCRIPT_DIR/tinty-yazi-flavor.lazygit.template"
+printf 'tinty-yazi-flavor: %s -> %s + %s + %s\n' "$scheme_id" "$flavor_dirs" "$glow_style" "$lazygit_overlay" >&2

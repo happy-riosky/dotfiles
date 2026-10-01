@@ -68,14 +68,22 @@ command -v eza >/dev/null 2>&1 && alias ls='eza'
 command -v eza >/dev/null 2>&1 && alias ll='eza -l'
 command -v eza >/dev/null 2>&1 && alias la='eza -la'
 command -v eza >/dev/null 2>&1 && alias lt='eza -la --tree --level=4'
-# lazygit：UI 主题跟随 tinty——按当前 scheme variant 选 overlay
-# （dark→frappe.yml / light→latte-theme.yml）经 LG_CONFIG_FILE 叠加到
-# config.yml；无 tinty 或缺 overlay 文件时裸启动（lazygit 内建主题）。
-# delta 的明暗由 tinty 的 git config 决定，无需在此传 --dark/--light。
+# lazygit：UI 主题跟随 tinty——启动前刷新运行时产物，优先叠加生成的
+# ~/.config/lazygit/tinty.yml（当前 scheme 渲染，_tinty_scheme 标记须与
+# current_scheme 一致，防切换后陈旧深浅错配）；标记不符/生成失败/无 tinty
+# 时按 variant 回退 frappe.yml(dark)/latte-theme.yml(light) overlay；两者皆
+# 不可用时裸启动（内建主题）。delta 明暗由 tinty 的 git config 决定。
 command -v lazygit >/dev/null 2>&1 && lg() {
 	local dir="${XDG_CONFIG_HOME:-$HOME/.config}/lazygit"
 	local base="$dir/config.yml" overlay=""
-	if command -v tinty >/dev/null 2>&1; then
+	if [ -n "${DOTFILES_ROOT:-}" ] && [ -f "$DOTFILES_ROOT/scripts/tinty-yazi-flavor" ]; then
+		bash "$DOTFILES_ROOT/scripts/tinty-yazi-flavor" >/dev/null 2>&1 || true
+	fi
+	local scheme_file="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty/current_scheme"
+	if [ -r "$dir/tinty.yml" ] && [ -r "$scheme_file" ] && \
+		grep -q "# _tinty_scheme: $(tr -d '[:space:]' < "$scheme_file")" "$dir/tinty.yml"; then
+		overlay="$dir/tinty.yml"
+	elif command -v tinty >/dev/null 2>&1; then
 		case "$(command tinty current variant 2>/dev/null)" in
 			dark) overlay="$dir/frappe.yml" ;;
 			light) overlay="$dir/latte-theme.yml" ;;

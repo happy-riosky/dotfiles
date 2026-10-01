@@ -1,0 +1,36 @@
+# tinty lazygit overlay（运行时产物，由 scripts/tinty-yazi-flavor 按当前
+# scheme 渲染；lg() / nvim :LazyGit 优先叠加此文件，scheme 标记与
+# current_scheme 不符或缺失时回退 frappe.yml / latte-theme.yml）。
+# 槽位语义沿用 catppuccin lazygit yellow 主题：base0A 黄为强调（activeBorder
+# 等），base0D 蓝为次强调，base04/base05 弱化与正文——catppuccin 系 scheme
+# 下渲染值与原硬编码 overlay 一致（frappe/latte 的 base0A 即其 yellow）。
+# _tinty_scheme: {{scheme_id}}
+gui:
+  theme:
+    activeBorderColor:
+      - '{{base0A}}'
+      - bold
+    searchingActiveBorderColor:
+      - '{{base0A}}'
+    inactiveBorderColor:
+      - '{{base04}}'
+    optionsTextColor:
+      - '{{base0D}}'
+    selectedLineBgColor:
+      - '{{base02}}'
+    inactiveViewSelectedLineBgColor:
+      - '{{base03}}'
+    cherryPickedCommitFgColor:
+      - '{{base0A}}'
+    cherryPickedCommitBgColor:
+      - '{{base03}}'
+    markedBaseCommitFgColor:
+      - '{{base0D}}'
+    markedBaseCommitBgColor:
+      - '{{base0A}}'
+    unstagedChangesColor:
+      - '{{base08}}'
+    defaultFgColor:
+      - '{{base05}}'
+  authorColors:
+    '*': '{{base0E}}'
