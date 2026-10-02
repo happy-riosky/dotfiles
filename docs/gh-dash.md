@@ -31,6 +31,51 @@ sub-issues 13/18 (72%)
 ⛔ blocked by #98813 Epic: Upgrade to React 19
 ```
 
+## tinty 主题跟随
+
+UI 颜色由 tinty 驱动（总纲见 docs/theming.md），经 `gd` 启动器接线：
+
+- 受管 `config.yml` 不定义 `theme.colors`——裸 `gh dash` / 标记校验失败时
+  回退 gh-dash 内建自适应默认色。
+- `gd` 启动前刷新 `scripts/tinty/generate` 产物 `~/.config/gh-dash/
+  tinty.yml`（纯 `theme.colors` 片段，`# _tinty_scheme:` 标记校验同
+  lazygit/glow），以 `--config` 叠加在全局 config 之上。
+- **repo 内组合**：gh-dash 的 `--config`/`GH_DASH_CONFIG`/repo
+  `.gh-dash.yml` 同为**单文件** override（靠深合并叠在全局配置上），无法
+  像 lazygit 的 `LG_CONFIG_FILE` 逗号叠多层；`include:` 语法虽支持递归与
+  `~` 展开，但**目标缺失会硬报错**（v4.25.2 `internal/config/parser.go`
+  的 `file.Provider` 未设 Optional）——受管 config 不能无条件 include
+  运行时文件（无 tinty 机器会炸）。故 generate 直接产出拼接版
+  `~/.config/gh-dash/tinty-context.yml`（repo-context.yml + 主题片段，
+  顶层键 `defaults`/`theme` 不相交，文本拼接即合法单文档 YAML）。
+- 槽位映射对齐上游 catppuccin/gh-dash（frappe/latte lavender 逐值核对，
+  `inverted`/`faint` 取最近槽位 base01/base04）；`secondary` 与
+  `border.primary` 用语义强调槽 c_emph（深色=base07，catppuccin 系恰为
+  lavender；浅色=base05，规避 base07=bright white 的 scheme 白字白底）。
+
+### 正文（markdown）渲染的明暗探测坑
+
+PR/issue 正文用 glamour 渲染，dark→内建 CustomDarkStyleConfig（浅字）、
+light→glamour LightStyleConfig（深字），**由运行时 OSC 11 背景探测决定，
+与 theme.colors 无关**（v4.25.2 `internal/tui/markdown/markdownRenderer.go`：
+compat 路径 + bubbletea `tea.BackgroundColorMsg` 路径，无任何配置可覆写）。
+
+- **tmux 内探测被缓存的 client 背景代答**：tmux 以 attach 时学到的终端
+  背景回答 pane 的 OSC 11 查询，`tinty apply` 改 kitty 实际背景不会刷新
+  它。实测（tmux 3.5a）：attach 于 latte 时期 → 切黑底 scheme 后 pane 查
+  询仍被代答 `#eff1f5`（latte base）→ gh-dash `--debug` 的 debug.log 显示
+  `HasDarkBackground: false` → 暗色终端下正文渲染成暗字。
+- **修复**：tmux 对 pane 级 **OSC 11 SET** 即设即答（实测设 `#123456`
+  后查询即答 `rgb:1212/3434/5656`，OSC 111 复位回缓存值）。`gd` 在 tmux
+  内且 tinty overlay 新鲜时，启动 gh dash 前向本 pane 发
+  OSC 11 SET = 当前 scheme 的 base00（overlay 里 `# _tinty_base00:` 标记
+  行，IsDark 的 HSL 判定与 scheme variant 语义一致），退出后 OSC 111
+  复位。**仅 tmux 内发**——裸 kitty/Ghostty 收到 OSC 11 SET 会真改窗口
+  背景色。经 gd 复验 debug.log 两条路径均 `HasDarkBackground: true`。
+- 普适结论：tmux 内一切依赖 OSC 11 探测明暗的 charm/termenv 工具都会被
+  该缓存欺骗（tmux 内 OSC 11 不可靠的老经验即此根因）；需要可靠明暗时
+  参照 gd 的 pane 级 SET 手法。
+
 ## 踩坑记录
 
 ### 1. 键位冲突要查默认键位源码，不是内置命令清单

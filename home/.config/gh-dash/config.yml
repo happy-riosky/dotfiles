@@ -122,28 +122,16 @@ keybindings:
         then "(no parent / sub-issues / dependencies)" else empty end)'
         | LESS= less > /dev/tty
 repoPaths: {}
+# 主题颜色由 tinty 驱动：gd 启动器 --config 叠加 scripts/tinty/generate
+# 渲染的 ~/.config/gh-dash/tinty.yml（GitHub repo 内为拼接了 repo-context
+# 的 tinty-context.yml），_tinty_scheme 标记校验同 lazygit/glow。此处不
+# 定义 colors——裸 gh dash / 标记校验失败时回退 gh-dash 内建自适应默认色。
 theme:
   ui:
     sectionsShowCount: true
     table:
       showSeparator: true
       compact: true
-  # Catppuccin Latte Lavender — upstream https://github.com/catppuccin/gh-dash (themes/latte/catppuccin-latte-lavender.yml)
-  colors:
-    text:
-      primary: "#4c4f69"
-      secondary: "#7287fd"
-      inverted: "#dce0e8"
-      faint: "#5c5f77"
-      warning: "#df8e1d"
-      success: "#40a02b"
-      error: "#d20f39"
-    background:
-      selected: "#ccd0da"
-    border:
-      primary: "#7287fd"
-      secondary: "#bcc0cc"
-      faint: "#ccd0da"
 pager:
   diff: ""
 confirmQuit: false

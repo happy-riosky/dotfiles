@@ -9,11 +9,18 @@
 #   3. lazygit overlay：lazygit.template →
 #      ~/.config/lazygit/tinty.yml（含 _tinty_scheme 标记注释，校验语义
 #      同上；槽位语义沿用 catppuccin lazygit yellow 主题）
-# 均为运行时产物，不入库。由 aliases.sh 的 y()/glow()/lg() 在启动前调用
-# （yazi 无 theme 热重载；glow/lazygit 每次调用刷新即可）。
+#   4. gh-dash overlay：gh-dash.template →
+#      ~/.config/gh-dash/tinty.yml（纯 theme.colors 片段，标记校验同上）
+#      及 ~/.config/gh-dash/tinty-context.yml（repo-context.yml 与主题
+#      片段文本拼接——两者顶层键 defaults/theme 不相交，拼接即合法单文档
+#      YAML；gh-dash 的 --config 是单槽位 override，无法像 lazygit
+#      LG_CONFIG_FILE 叠加多层）
+# 均为运行时产物，不入库。由 aliases.sh 的 y()/glow()/lg() 与 gd 启动器
+# 在启动前调用（yazi 无 theme 热重载；glow/lazygit/gh-dash 每次调用
+# 刷新即可）。
 # 无 tinty：yazi flavor 目标缺失时回退拷贝仓库 catppuccin-frappe-lavender
-# flavor；glow 样式与 lazygit overlay 保留既有生成结果（陈旧与否由调用方
-# 标记校验兜底）。
+# flavor；glow 样式与 lazygit/gh-dash overlay 保留既有生成结果（陈旧与否
+# 由调用方标记校验兜底）。
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -24,6 +31,9 @@ data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty"
 flavor_dirs="${XDG_CONFIG_HOME:-$HOME/.config}/yazi/flavors/tinty-dark.yazi ${XDG_CONFIG_HOME:-$HOME/.config}/yazi/flavors/tinty-light.yazi"
 glow_style="${XDG_CONFIG_HOME:-$HOME/.config}/tinted-theming/tinty-glow.json"
 lazygit_overlay="${XDG_CONFIG_HOME:-$HOME/.config}/lazygit/tinty.yml"
+ghdash_dir="${XDG_CONFIG_HOME:-$HOME/.config}/gh-dash"
+ghdash_theme="$ghdash_dir/tinty.yml"
+ghdash_context="$ghdash_dir/tinty-context.yml"
 
 scheme_id=""
 if [ -r "$data_dir/current_scheme" ]; then
@@ -117,4 +127,16 @@ mkdir -p "$(dirname "$glow_style")"
 render "$glow_style" "$SCRIPT_DIR/glow.template"
 mkdir -p "$(dirname "$lazygit_overlay")"
 render "$lazygit_overlay" "$SCRIPT_DIR/lazygit.template"
-printf 'tinty/generate: %s -> %s + %s + %s\n' "$scheme_id" "$flavor_dirs" "$glow_style" "$lazygit_overlay" >&2
+mkdir -p "$ghdash_dir"
+render "$ghdash_theme" "$SCRIPT_DIR/gh-dash.template"
+# repo 上下文组合版：拼接源优先 live repo-context.yml（尊重本地未受管
+# 自定义），回退仓库受管副本；两者皆缺则跳过（gd 回退 repo-context.yml
+# 原路径）。printf 分隔行兜底无尾换行的拼接源。
+ghdash_ctx_src="$ghdash_dir/repo-context.yml"
+if [ ! -r "$ghdash_ctx_src" ]; then
+  ghdash_ctx_src="$SCRIPT_DIR/../../home/.config/gh-dash/repo-context.yml"
+fi
+if [ -r "$ghdash_ctx_src" ]; then
+  { cat "$ghdash_ctx_src"; printf '\n'; cat "$ghdash_theme"; } > "$ghdash_context"
+fi
+printf 'tinty/generate: %s -> %s + %s + %s + %s\n' "$scheme_id" "$flavor_dirs" "$glow_style" "$lazygit_overlay" "$ghdash_theme" >&2

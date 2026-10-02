@@ -9,10 +9,11 @@
 |---|---|
 | `home/.config/tinted-theming/tinty/config.toml` | 受管 leaf link（本仓库） |
 | `home/.config/lazygit/{config,frappe,latte-theme}.yml`、`home/.tmux/colors/simple_batt*.tmux.conf` | 受管（lazygit 基础+overlay / tmux 布局与回退配色） |
+| `home/.config/gh-dash/config.yml`、`home/.local/bin/gd` | 受管（gh-dash 主题中立基础配置 / tinty 感知启动器） |
 | `home/.config/opencode/tui-plugins/tinty-theme.js`、`home/.config/opencode/themes/catppuccin-yellow.json` | 受管（实时跟随插件 / 无 tinty 回退主题） |
 | `~/.config/opencode/themes/tinty-*.json` | tinty-theme 插件生成（每 scheme 一个），**不入库** |
-| `scripts/tinty/{generate,yazi-flavor.template,yazi-tmtheme.template,glow.template,lazygit.template}` | 受管（运行时主题产物生成器与模板：yazi flavor / glow 样式 / lazygit overlay） |
-| `~/.config/yazi/flavors/tinty-{dark,light}.yazi/`、`~/.config/tinted-theming/tinty-glow.json`、`~/.config/lazygit/tinty.yml` | 生成器输出，**不入库** |
+| `scripts/tinty/{generate,yazi-flavor.template,yazi-tmtheme.template,glow.template,lazygit.template,gh-dash.template}` | 受管（运行时主题产物生成器与模板：yazi flavor / glow 样式 / lazygit overlay / gh-dash overlay） |
+| `~/.config/yazi/flavors/tinty-{dark,light}.yazi/`、`~/.config/tinted-theming/tinty-glow.json`、`~/.config/lazygit/tinty.yml`、`~/.config/gh-dash/tinty{,-context}.yml` | 生成器输出，**不入库** |
 | `platforms/darwin/home/.config/git/config` | 受管（delta pager + 主题 include，仅 macOS） |
 | `home/.config/kitty/kitty.conf` 末尾 `include current-theme.conf` | 受管配置引用运行时文件 |
 | `~/.config/kitty/current-theme.conf` | tinty hook 生成，**不入库** |
@@ -83,6 +84,24 @@ tinty apply base16-catppuccin-frappe
   优先级与回退链（不主动刷新，靠 lg/其他入口刷新 + 标记校验兜底）。
   无 tinty 时裸 lazygit 用内建主题；macOS 由 `platform/darwin.sh` 导出
   `CONFIG_DIR` 统一到 `~/.config/lazygit`（App Support 下不再有重复副本）。
+- **gh-dash**：基础 `config.yml` 主题中立（不定义 colors，裸 `gh dash` /
+  标记校验失败时回退 gh-dash 内建自适应默认色）；`gd`（受管启动器
+  `home/.local/bin/gd`）启动前刷新 `~/.config/gh-dash/tinty.yml`
+  （`scripts/tinty/generate` 按当前 scheme 渲染的纯 `theme.colors` 片段，
+  `_tinty_scheme` 标记须与 `current_scheme` 一致），GitHub repo 内改用
+  `tinty-context.yml`——repo-context 列隐藏 overlay 与主题片段的文本拼接
+  （顶层键 `defaults`/`theme` 不相交，拼接即合法 YAML；gh-dash 的
+  `--config` 是单槽位 override，且 `include:` 目标缺失会硬报错，v4.25.2
+  源码核实，故不走 include）。标记不符/无 tinty 时维持 gd 原行为（repo
+  内 repo-context.yml / 裸启动）。槽位语义对齐上游 catppuccin/gh-dash
+  （frappe/latte lavender 逐值核对），secondary/border.primary 用语义强调
+  槽 c_emph（catppuccin 系 scheme 下恰为其 lavender；浅色退 base05，同
+  yazi 决策）。显式 `--config`/`GH_DASH_CONFIG`/repo `.gh-dash.yml` 原生
+  优先，gd 一律透传不干预。PR/issue 正文的 glamour 明暗样式另由 OSC 11
+  探测决定（与 theme.colors 无关），tmux 内探测被缓存的 client 背景代答
+  （apply 不刷新）——gd 在 tmux 内启动前向本 pane 发 OSC 11 SET =
+  scheme base00、退出后 OSC 111 复位予以修正；机制与实测详见
+  `docs/gh-dash.md`。
 - **yazi**：`[flavor] dark/light` 指向运行时 flavor `tinty-dark/tinty-light`
   （两份同内容，明暗探测结果无关化）；`y`（aliases.sh 函数）启动前调用
   `scripts/tinty/generate` 按当前 scheme 渲染
@@ -157,6 +176,13 @@ tinty config --data-dir-path  # 运行时目录；ls 查看生成的主题文件
   `tinty init`）。
 - lazygit 主题不对 → `tinty current variant` 确认明暗；`lg`/`:LazyGit`
   按 variant 选 overlay，裸 `lazygit` 用内建主题。
+- gh dash 没跟随 → 确认经 `gd` 启动（裸 `gh dash` 用内建自适应默认色）；
+  `~/.config/gh-dash/tinty.yml` 存在且 `_tinty_scheme` 与 `current_scheme`
+  一致（不一致属回退保护，重跑 `scripts/tinty/generate` 看报错）；repo
+  内没吃到主题看 `tinty-context.yml` 是否生成。
+- gh dash 正文暗字/浅字错深浅 → `gh dash --debug` 后看 debug.log 的
+  `HasDarkBackground`（tmux 内须经 gd 启动才有 pane 级 OSC 11 修正，
+  见 `docs/gh-dash.md`）。
 - glow 没跟随 → 确认 `~/.config/tinted-theming/tinty-glow.json` 存在、其中
   `_tinty_scheme` 与 `current_scheme` 一致（不一致属回退保护，重跑
   `scripts/tinty/generate` 看报错）；显式传了 `-s` 的调用不受包装影响；
