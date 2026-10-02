@@ -17,7 +17,7 @@ macOS Preferences plists are **real files**, never symlinks. Goldens live under
 | AeroSpace | leaf link | `platforms/darwin/home/.config/aerospace/` | `install` |
 | Hammerspoon | leaf link | `platforms/darwin/home/.hammerspoon/init.lua` | `install` |
 | Mouseless | leaf link | `platforms/darwin/home/Library/Application Support/Mouseless/configs/config.yaml` | `install` |
-| lazygit (macOS path) | leaf link | `platforms/darwin/home/Library/Application Support/lazygit/config.yml` | `install` |
+| Git delta + tinty theme | leaf link | `platforms/darwin/home/.config/git/config` | `install` |
 | System hotkeys | real plist | `platforms/darwin/managed/hotkeys/` | `scripts/hotkeys-*.sh` |
 | Rectangle | real plist | `platforms/darwin/managed/hotkeys/` | `scripts/hotkeys-*.sh` |
 | App Preferences | real plists | `platforms/darwin/managed/preferences/` | `scripts/prefs-*.sh` |
@@ -215,6 +215,16 @@ git diff -- "platforms/darwin/home/Library/Application Support/Mouseless/configs
 
 These repository checks do not verify which configuration the running app has
 loaded. Missing or invalid YAML can make Mouseless fall back to its defaults.
+
+## Theming with tinty
+
+tinty applies one base16/base24 scheme across kitty, zsh (incl. fzf), tmux,
+Neovim, lazygit, opencode, and git-delta with a single command. The scheme
+inventory lives in `home/.config/tinted-theming/tinty/config.toml` (all
+platforms); the macOS-specific delta pager setup is linked from
+`platforms/darwin/home/.config/git/config`. Generated theme files are runtime
+artifacts and are never committed. See [theming.md](theming.md) for setup and
+daily usage.
 
 ## Docker Desktop
 

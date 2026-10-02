@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- yazi 预览高亮模板：简版 16 色 TextMate 主题，
+     由 scripts/tinty/generate 按当前 tinty scheme 渲染。 -->
+<plist version="1.0">
+<dict>
+  <key>name</key>
+  <string>tinty</string>
+  <key>colorSpaceName</key>
+  <string>sRGB</string>
+  <key>settings</key>
+  <array>
+    <dict>
+      <key>settings</key>
+      <dict>
+        <key>background</key>
+        <string>{{base00}}</string>
+        <key>foreground</key>
+        <string>{{base05}}</string>
+        <key>caret</key>
+        <string>{{base0D}}</string>
+        <key>lineHighlight</key>
+        <string>{{base01}}</string>
+        <key>selection</key>
+        <string>{{base02}}</string>
+        <key>selectionBorder</key>
+        <string>{{base04}}</string>
+        <key>inactiveSelection</key>
+        <string>{{base03}}</string>
+        <key>findHighlight</key>
+        <string>{{base0A}}</string>
+        <key>findHighlightForeground</key>
+        <string>{{base00}}</string>
+        <key>misspelling</key>
+        <string>{{base08}}</string>
+        <key>accent</key>
+        <string>{{base0E}}</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Comment</string>
+      <key>scope</key>
+      <string>comment, punctuation.definition.comment</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>{{base03}}</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>String</string>
+      <key>scope</key>
+      <string>string, string.regexp</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>{{base0B}}</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Number</string>
+      <key>scope</key>
+      <string>constant.numeric</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>{{base09}}</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Keyword</string>
+      <key>scope</key>
+      <string>keyword, storage.type, storage.modifier, variable.language</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>{{base0E}}</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Function</string>
+      <key>scope</key>
+      <string>entity.name.function, support.function, meta.function-call</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>{{base0D}}</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Variable</string>
+      <key>scope</key>
+      <string>variable, variable.other</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>{{base08}}</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Type</string>
+      <key>scope</key>
+      <string>entity.name.type, entity.name.class, entity.name.struct, support.class, support.type</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>{{base0A}}</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Constant</string>
+      <key>scope</key>
+      <string>constant, constant.language, constant.character.escape</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>{{base0C}}</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Tag</string>
+      <key>scope</key>
+      <string>entity.name.tag, meta.tag</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>{{base08}}</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Attribute</string>
+      <key>scope</key>
+      <string>entity.other.attribute-name, meta.attribute</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>{{base0F}}</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Operator</string>
+      <key>scope</key>
+      <string>keyword.operator</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>{{base0C}}</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Punctuation</string>
+      <key>scope</key>
+      <string>punctuation.separator, punctuation.terminator, meta.brace</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>{{base05}}</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Heading</string>
+      <key>scope</key>
+      <string>markup.heading, entity.name.section</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>{{base0E}}</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Link</string>
+      <key>scope</key>
+      <string>string.other.link, markup.underline.link</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>{{base0D}}</string>
+      </dict>
+    </dict>
+  </array>
+</dict>
+</plist>

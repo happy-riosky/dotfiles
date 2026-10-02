@@ -53,9 +53,44 @@ vim.api.nvim_create_user_command('LazyGit', function(opts)
   local job = { cwd = vim.fs.root(0, '.git') or vim.uv.cwd() }
   local config_dir = vim.env.XDG_CONFIG_HOME or (vim.env.HOME .. '/.config')
   local base_config = vim.env.LG_CONFIG_FILE or (config_dir .. '/lazygit/config.yml')
-  local dark_theme = config_dir .. '/lazygit/frappe.yml'
-  if vim.uv.fs_stat(base_config) and vim.uv.fs_stat(dark_theme) then
-    job.env = { LG_CONFIG_FILE = base_config .. ',' .. dark_theme }
+  -- 主题 overlay 优先用运行时生成的 tinty.yml（scripts/tinty-yazi-flavor
+  -- 按当前 scheme 渲染；标记须与 current_scheme 一致，防切换后陈旧深浅
+  -- 错配——标记不符/文件缺失时回退 tinty variant overlay（dark→frappe /
+  -- light→latte），无 tinty 时默认 frappe，对齐 Neovim 的 catppuccin-frappe
+  -- 回退。delta 明暗由 tinty 的 git config 决定，overlay 只管 lazygit UI。
+  local overlay = config_dir .. '/lazygit/frappe.yml'
+  local data_dir = vim.env.XDG_DATA_HOME or (vim.env.HOME .. '/.local/share')
+  local scheme_file = data_dir .. '/tinted-theming/tinty/current_scheme'
+  local scheme
+  do
+    local f = io.open(scheme_file, 'r')
+    if f then
+      scheme = vim.trim(f:read '*a' or '')
+      f:close()
+    end
+  end
+  local generated = config_dir .. '/lazygit/tinty.yml'
+  local use_generated = false
+  if scheme and scheme ~= '' then
+    local f = io.open(generated, 'r')
+    if f then
+      local content = f:read '*a' or ''
+      f:close()
+      if content:find('# _tinty_scheme: ' .. scheme, 1, true) then
+        use_generated = true
+      end
+    end
+  end
+  if use_generated then
+    overlay = generated
+  elseif vim.fn.executable 'tinty' == 1 then
+    local variant = vim.trim(vim.fn.system { 'tinty', 'current', 'variant' })
+    if vim.v.shell_error == 0 and variant == 'light' then
+      overlay = config_dir .. '/lazygit/latte-theme.yml'
+    end
+  end
+  if vim.uv.fs_stat(base_config) and vim.uv.fs_stat(overlay) then
+    job.env = { LG_CONFIG_FILE = base_config .. ',' .. overlay }
   end
   vim.fn.termopen(cmd, job)
   vim.cmd 'startinsert'

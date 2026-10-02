@@ -21,7 +21,9 @@ ECC 配置会覆盖项目中的同名配置字段、agent 和 command。
 | --- | --- | --- |
 | `~/.config/opencode/opencode.json` | Provider、模型定义、权限等个人默认值 | dotfiles |
 | `~/.config/opencode/tui.json` | TUI 设置 | dotfiles |
-| `~/.config/opencode/themes/*.json` | 自定义主题 | dotfiles |
+| `~/.config/opencode/themes/*.json` | 自定义主题；`catppuccin-yellow` 为合并深/浅主题（dark=mocha/light=latte），由 `tui.json` 指定作为无 tinty 时的回退（见 `docs/theming.md`），mocha/latte 单色版保留 | dotfiles |
+| `~/.config/opencode/tui-plugins/` | TUI 插件：tinty-theme 在 `tui.json` 的 `plugin` 数组声明加载（TUI 插件必须列在 tui.json，无目录自动发现）；epilogue-truecolor 等经 TUI `shift+i` 安装，注册状态在 `~/.local/state/opencode/plugin-meta.json` | dotfiles |
+| `~/.config/opencode/themes/tinty-*.json` | tinty-theme 插件按当前 scheme 生成的运行时主题（每 scheme 一个），不入库 | 本机 |
 | `~/.config/opencode/agents/`、`commands/` | 链到 `~/.agents/personal-harness`（另一体系） | personal-harness |
 | `~/.config/opencode/plugins/`、`package*.json`、`node_modules/`、`lsp-install-decisions.json`、各 `*.bak*` | 本机插件与运行时产物，不入库 | 本机 |
 | `~/.omo/omo.jsonc` | OMO（oh-my-openagent）agent/category 模型路由 | dotfiles |
@@ -86,7 +88,9 @@ OpenCode 深合并各配置源；冲突时后加载者覆盖前者。按本机�
 
 - Provider、`baseURL`、模型定义和全局权限改
   `~/.config/opencode/opencode.json`。
-- TUI 设置改 `~/.config/opencode/tui.json`。
+- TUI 设置改 `~/.config/opencode/tui.json`。TUI 主题用合并主题
+  `catppuccin-yellow`（跟随 tinty 的深/浅，见 `docs/theming.md`）；
+  单色调整直接改 `themes/catppuccin-yellow.json` 的对应 variant。
 - 项目专属设置优先放项目 `opencode.json` 或 `.opencode/`。避免与 ECC 定义同名的
   叶子字段、agent 或 command；确需覆盖时，检查 `~/.opencode`。
 - 不手工长期维护 `~/.opencode/opencode.json` 的模型字段；使用下节的 `ocor`。
