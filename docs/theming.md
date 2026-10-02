@@ -63,6 +63,13 @@ tinty apply base16-catppuccin-frappe
   数据目录里新生成的 `*.sh`（tinted-shell 16 色 + tinted-fzf 配色），因为 tinty
   的 hook 在子进程无法改动当前 shell 环境；`alias tinty=dotfiles_tinty`。
   副作用：tinty 的 zsh 补全不可用（需要时用 `command tinty` 调真二进制）。
+  nvim `:terminal`（toggleterm）里 `$TMUX` 是外层 tmux 泄漏的假阳性，
+  tinted-shell 的 `Ptmux` 包装会被 nvim 内置终端当文本渲染成首个提示符
+  前的乱码；`.zshrc` 以 `$NVIM` 判定后经 `dotfiles_tinty_source` 用不可写
+  TTY 静默 source（`BASE16_THEME` 等导出不受影响），`dotfiles_tinty` 的
+  非交互子命令同时屏蔽 stdin 防 hook 子进程写屏（裸 `tinty` TUI 与
+  tinted-tmux hook 的 tmux CLI 不受影响；`tests/shell.sh` 的
+  `test_tinty_nvim_guard` 守护此行为）。
   **shell 启动只 source 已生成的 `*.sh`，不跑 `tinty init`**——磁盘产物即
   真相；每个 shell 各自 init 会与用户的 `cycle/apply` 竞态（迟到的 init 把旧
   scheme 覆写回全局，实测造成连环闪变）。`*.sh` 全缺失时才 init 一次引导。

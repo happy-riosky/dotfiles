@@ -27,14 +27,33 @@ fi
 # *.sh（tinted-shell 的 16 色 ANSI 调色板 + tinted-fzf 配色由此生效）。
 # 副作用：alias 覆盖 tinty 后 zsh 补全不可用，需要时用 command tinty。
 if command -v tinty >/dev/null 2>&1; then
+  # nvim :terminal（toggleterm 等）里 $TMUX 是外层 tmux 泄漏的假阳性：
+  # tinted-shell 会据此用 DCS Ptmux 包装 OSC 4/10/11/12，nvim 内置终端
+  # 不识别该包装，载荷被当纯文本渲染成首个提示符前的乱码。nvim 子进程
+  # 恒有 $NVIM（TERM_PROGRAM 此时仍是 tmux，不可作判据）；据此用不可写
+  # TTY 让 put_template* 变 no-op——nvim 终端调色板本就只由
+  # g:terminal_color_* 决定，BASE16_THEME 等导出不受影响。
+  dotfiles_tinty_source() {
+    if [[ -n "${NVIM:-}" ]]; then
+      local TTY=/nonexistent-tty-nvim-guard
+    fi
+    [[ -r "$1" ]] && . "$1"
+  }
   dotfiles_tinty() {
     local marker script tinty_data_dir
     marker="$(mktemp)"
-    command tinty "$@"
+    # nvim 终端里非交互子命令屏蔽 stdin：hook 子进程 tty 失败即不写
+    # OSC，免得 tinted-shell 再打一行 Ptmux 乱码；TMUX 保留（tinted-tmux
+    # hook 的 tmux CLI 依赖）。裸 tinty（TUI）不拦截。
+    if [[ -n "${NVIM:-}" && -n "${1:-}" ]]; then
+      command tinty "$@" </dev/null
+    else
+      command tinty "$@"
+    fi
     if [[ "$1" == "apply" || "$1" == "init" ]]; then
       tinty_data_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty"
       while IFS= read -r script; do
-        [[ -r "$script" ]] && . "$script"
+        dotfiles_tinty_source "$script"
       done < <(find "$tinty_data_dir" -maxdepth 1 \( -type f -o -type l \) -name '*.sh' -newer "$marker" 2>/dev/null)
     fi
     command rm -f "$marker"
@@ -48,7 +67,7 @@ if command -v tinty >/dev/null 2>&1; then
     dotfiles_tinty init >/dev/null 2>&1
   else
     for script in "$tinty_data_dir"/*.sh; do
-      [[ -r "$script" ]] && . "$script"
+      dotfiles_tinty_source "$script"
     done
   fi
   unset tinty_data_dir script
