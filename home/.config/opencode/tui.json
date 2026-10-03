@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/tui.json",
-  "theme": "catppuccin-yellow",
+  "theme": "catppuccin-frappe-yellow",
   "plugin": [
     "./tui-plugins/tinty-theme.js"
   ],

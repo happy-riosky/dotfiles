@@ -10,7 +10,7 @@
 | `home/.config/tinted-theming/tinty/config.toml` | 受管 leaf link（本仓库） |
 | `home/.config/lazygit/{config,frappe,latte-theme}.yml`、`home/.tmux/colors/simple_batt*.tmux.conf` | 受管（lazygit 基础+overlay / tmux 布局与回退配色） |
 | `home/.config/gh-dash/config.yml`、`home/.local/bin/gd` | 受管（gh-dash 主题中立基础配置 / tinty 感知启动器） |
-| `home/.config/opencode/tui-plugins/tinty-theme.js`、`home/.config/opencode/themes/catppuccin-yellow.json` | 受管（实时跟随插件 / 无 tinty 回退主题） |
+| `home/.config/opencode/tui-plugins/tinty-theme.js`、`home/.config/opencode/themes/catppuccin-frappe-yellow.json` | 受管（实时跟随插件 / 无 tinty 回退主题） |
 | `~/.config/opencode/themes/tinty-*.json` | tinty-theme 插件生成（每 scheme 一个），**不入库** |
 | `scripts/tinty/{generate,yazi-flavor.template,yazi-tmtheme.template,glow.template,lazygit.template,gh-dash.template}` | 受管（运行时主题产物生成器与模板：yazi flavor / glow 样式 / lazygit overlay / gh-dash overlay） |
 | `~/.config/yazi/flavors/tinty-{dark,light}.yazi/`、`~/.config/tinted-theming/tinty-glow.json`、`~/.config/lazygit/tinty.yml`、`~/.config/gh-dash/tinty{,-context}.yml` | 生成器输出，**不入库** |
@@ -141,7 +141,7 @@ tinty apply base16-catppuccin-frappe
   不可变故幂等覆写；dark/light 同值，模式探测不再起作用，tmux 内也
   正确）并 `theme.set`；每 3s 轮询，`tinty apply`/`cycle` 后正在运行的
   会话即时切换、无需重启。无 tinty 时插件静默不动作，回落到
-  `tui.json` 指定的 `catppuccin-yellow`（frappe 单色：dark/light 双槽同值，
+  `tui.json` 指定的 `catppuccin-frappe-yellow`（frappe 单色：dark/light 双槽同值，
   黄 accent `#f9e2af` 保留，`T` 翻转明暗无视觉效果，`<leader>t` 切换
   主题）。生成的 `~/.config/opencode/themes/tinty-*.json` 为运行时产物，
   绝不入库。

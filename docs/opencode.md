@@ -21,7 +21,7 @@ ECC 配置会覆盖项目中的同名配置字段、agent 和 command。
 | --- | --- | --- |
 | `~/.config/opencode/opencode.json` | Provider、模型定义、权限等个人默认值 | dotfiles |
 | `~/.config/opencode/tui.json` | TUI 设置 | dotfiles |
-| `~/.config/opencode/themes/*.json` | 自定义主题；`catppuccin-yellow` 为 frappe 单色主题（dark/light 双槽同值，黄 accent `#f9e2af` 保留），由 `tui.json` 指定作为无 tinty 时的回退（见 `docs/theming.md`） | dotfiles |
+| `~/.config/opencode/themes/*.json` | 自定义主题；`catppuccin-frappe-yellow` 为 frappe 单色主题（dark/light 双槽同值，黄 accent `#f9e2af` 保留），由 `tui.json` 指定作为无 tinty 时的回退（见 `docs/theming.md`） | dotfiles |
 | `~/.config/opencode/tui-plugins/` | TUI 插件：tinty-theme 在 `tui.json` 的 `plugin` 数组声明加载（TUI 插件必须列在 tui.json，无目录自动发现）；epilogue-truecolor 等经 TUI `shift+i` 安装，注册状态在 `~/.local/state/opencode/plugin-meta.json` | dotfiles |
 | `~/.config/opencode/themes/tinty-*.json` | tinty-theme 插件按当前 scheme 生成的运行时主题（每 scheme 一个），不入库 | 本机 |
 | `~/.config/opencode/agents/`、`commands/` | 链到 `~/.agents/personal-harness`（另一体系） | personal-harness |
@@ -89,7 +89,7 @@ OpenCode 深合并各配置源；冲突时后加载者覆盖前者。按本机�
 - Provider、`baseURL`、模型定义和全局权限改
   `~/.config/opencode/opencode.json`。
 - TUI 设置改 `~/.config/opencode/tui.json`。TUI 主题用
-  `catppuccin-yellow`（tinty 在场时由 tinty-theme 插件实时接管；无 tinty
+  `catppuccin-frappe-yellow`（tinty 在场时由 tinty-theme 插件实时接管；无 tinty
   时为 frappe 单色回退，黄 accent `#f9e2af` 保留，见 `docs/theming.md`）。
 - 项目专属设置优先放项目 `opencode.json` 或 `.opencode/`。避免与 ECC 定义同名的
   叶子字段、agent 或 command；确需覆盖时，检查 `~/.opencode`。
