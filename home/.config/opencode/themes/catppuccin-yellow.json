@@ -1,261 +1,223 @@
 {
   "$schema": "https://opencode.ai/theme.json",
   "defs": {
-    "mocAccent": "#f9e2af",
-    "mocRosewater": "#f5e0dc",
-    "mocFlamingo": "#f2cdcd",
-    "mocPink": "#f5c2e7",
-    "mocMauve": "#cba6f7",
-    "mocRed": "#f38ba8",
-    "mocMaroon": "#eba0ac",
-    "mocPeach": "#fab387",
-    "mocYellow": "#f9e2af",
-    "mocGreen": "#a6e3a1",
-    "mocTeal": "#94e2d5",
-    "mocSky": "#89dceb",
-    "mocSapphire": "#74c7ec",
-    "mocBlue": "#89b4fa",
-    "mocLavender": "#b4befe",
-    "mocText": "#cdd6f4",
-    "mocSubtext1": "#bac2de",
-    "mocSubtext0": "#a6adc8",
-    "mocOverlay2": "#9399b2",
-    "mocOverlay1": "#7f849c",
-    "mocOverlay0": "#6c7086",
-    "mocSurface2": "#585b70",
-    "mocSurface1": "#45475a",
-    "mocSurface0": "#313244",
-    "mocBase": "#1e1e2e",
-    "mocMantle": "#181825",
-    "mocCrust": "#11111b",
-    "latAccent": "#df8e1d",
-    "latRosewater": "#dc8a78",
-    "latFlamingo": "#dd7878",
-    "latPink": "#ea76cb",
-    "latMauve": "#8839ef",
-    "latRed": "#d20f39",
-    "latMaroon": "#e64553",
-    "latPeach": "#fe640b",
-    "latYellow": "#df8e1d",
-    "latGreen": "#40a02b",
-    "latTeal": "#179299",
-    "latSky": "#04a5e5",
-    "latSapphire": "#209fb5",
-    "latBlue": "#1e66f5",
-    "latLavender": "#7287fd",
-    "latText": "#4c4f69",
-    "latSubtext1": "#5c5f77",
-    "latSubtext0": "#6c6f85",
-    "latOverlay2": "#7c7f93",
-    "latOverlay1": "#8c8fa1",
-    "latOverlay0": "#9ca0b0",
-    "latSurface2": "#acb0be",
-    "latSurface1": "#bcc0cc",
-    "latSurface0": "#ccd0da",
-    "latBase": "#eff1f5",
-    "latMantle": "#e6e9ef",
-    "latCrust": "#dce0e8"
+    "yellow": "#f9e2af",
+    "text": "#c6d0f5",
+    "subtext0": "#a5adce",
+    "overlay2": "#949cbb",
+    "surface0": "#414559",
+    "surface1": "#51576d",
+    "surface2": "#626880",
+    "base": "#303446",
+    "mantle": "#292c3c",
+    "crust": "#232634",
+    "red": "#e78284",
+    "peach": "#ef9f76",
+    "green": "#a9b665",
+    "teal": "#81c8be",
+    "sky": "#99d1db",
+    "blue": "#8caaee"
   },
   "theme": {
     "primary": {
-      "dark": "mocAccent",
-      "light": "latAccent"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "secondary": {
-      "dark": "mocAccent",
-      "light": "latAccent"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "accent": {
-      "dark": "mocPink",
-      "light": "latBlue"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "error": {
-      "dark": "mocRed",
-      "light": "latRed"
+      "dark": "red",
+      "light": "red"
     },
     "warning": {
-      "dark": "mocYellow",
-      "light": "latYellow"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "success": {
-      "dark": "mocGreen",
-      "light": "latGreen"
+      "dark": "green",
+      "light": "green"
     },
     "info": {
-      "dark": "mocTeal",
-      "light": "latTeal"
+      "dark": "teal",
+      "light": "teal"
     },
     "text": {
-      "dark": "mocText",
-      "light": "latText"
+      "dark": "text",
+      "light": "text"
     },
     "textMuted": {
-      "dark": "mocSubtext1",
-      "light": "latSubtext0"
+      "dark": "subtext0",
+      "light": "subtext0"
     },
     "background": {
-      "dark": "mocBase",
-      "light": "latBase"
+      "dark": "base",
+      "light": "base"
     },
     "backgroundPanel": {
-      "dark": "mocMantle",
-      "light": "latMantle"
+      "dark": "mantle",
+      "light": "mantle"
     },
     "backgroundElement": {
-      "dark": "mocCrust",
-      "light": "latCrust"
+      "dark": "crust",
+      "light": "crust"
     },
     "border": {
-      "dark": "mocSurface0",
-      "light": "latSurface0"
+      "dark": "surface0",
+      "light": "surface0"
     },
     "borderActive": {
-      "dark": "mocSurface1",
-      "light": "latSurface1"
+      "dark": "surface1",
+      "light": "surface1"
     },
     "borderSubtle": {
-      "dark": "mocSurface2",
-      "light": "latSurface2"
+      "dark": "surface2",
+      "light": "surface2"
     },
     "diffAdded": {
-      "dark": "mocGreen",
-      "light": "latGreen"
+      "dark": "green",
+      "light": "green"
     },
     "diffRemoved": {
-      "dark": "mocRed",
-      "light": "latRed"
+      "dark": "red",
+      "light": "red"
     },
     "diffContext": {
-      "dark": "mocOverlay2",
-      "light": "latOverlay2"
+      "dark": "overlay2",
+      "light": "overlay2"
     },
     "diffHunkHeader": {
-      "dark": "mocPeach",
-      "light": "latPeach"
+      "dark": "peach",
+      "light": "peach"
     },
     "diffHighlightAdded": {
-      "dark": "mocGreen",
-      "light": "latGreen"
+      "dark": "green",
+      "light": "green"
     },
     "diffHighlightRemoved": {
-      "dark": "mocRed",
-      "light": "latRed"
+      "dark": "red",
+      "light": "red"
     },
     "diffAddedBg": {
-      "dark": "#a6e3a180",
-      "light": "#40a02b80"
+      "dark": "#a9b66580",
+      "light": "#a9b66580"
     },
     "diffRemovedBg": {
-      "dark": "#f38ba880",
-      "light": "#d20f3980"
+      "dark": "#e7828480",
+      "light": "#e7828480"
     },
     "diffContextBg": {
-      "dark": "mocMantle",
-      "light": "latMantle"
+      "dark": "mantle",
+      "light": "mantle"
     },
     "diffLineNumber": {
-      "dark": "mocSurface1",
-      "light": "latSurface1"
+      "dark": "surface1",
+      "light": "surface1"
     },
     "diffAddedLineNumberBg": {
-      "dark": "#a6e3a140",
-      "light": "#40a02b40"
+      "dark": "#a9b66540",
+      "light": "#a9b66540"
     },
     "diffRemovedLineNumberBg": {
-      "dark": "#f38ba840",
-      "light": "#d20f3940"
+      "dark": "#e7828440",
+      "light": "#e7828440"
     },
     "markdownText": {
-      "dark": "mocText",
-      "light": "latText"
+      "dark": "text",
+      "light": "text"
     },
     "markdownHeading": {
-      "dark": "mocAccent",
-      "light": "latAccent"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "markdownLink": {
-      "dark": "mocBlue",
-      "light": "latBlue"
+      "dark": "blue",
+      "light": "blue"
     },
     "markdownLinkText": {
-      "dark": "mocSky",
-      "light": "latSky"
+      "dark": "sky",
+      "light": "sky"
     },
     "markdownCode": {
-      "dark": "mocGreen",
-      "light": "latGreen"
+      "dark": "green",
+      "light": "green"
     },
     "markdownBlockQuote": {
-      "dark": "mocYellow",
-      "light": "latYellow"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "markdownEmph": {
-      "dark": "mocYellow",
-      "light": "latYellow"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "markdownStrong": {
-      "dark": "mocPeach",
-      "light": "latPeach"
+      "dark": "peach",
+      "light": "peach"
     },
     "markdownHorizontalRule": {
-      "dark": "mocSubtext0",
-      "light": "latSubtext0"
+      "dark": "subtext0",
+      "light": "subtext0"
     },
     "markdownListItem": {
-      "dark": "mocBlue",
-      "light": "latBlue"
+      "dark": "blue",
+      "light": "blue"
     },
     "markdownListEnumeration": {
-      "dark": "mocSky",
-      "light": "latSky"
+      "dark": "sky",
+      "light": "sky"
     },
     "markdownImage": {
-      "dark": "mocBlue",
-      "light": "latBlue"
+      "dark": "blue",
+      "light": "blue"
     },
     "markdownImageText": {
-      "dark": "mocSky",
-      "light": "latSky"
+      "dark": "sky",
+      "light": "sky"
     },
     "markdownCodeBlock": {
-      "dark": "mocText",
-      "light": "latText"
+      "dark": "text",
+      "light": "text"
     },
     "syntaxComment": {
-      "dark": "mocOverlay2",
-      "light": "latOverlay2"
+      "dark": "overlay2",
+      "light": "overlay2"
     },
     "syntaxKeyword": {
-      "dark": "mocAccent",
-      "light": "latAccent"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "syntaxFunction": {
-      "dark": "mocBlue",
-      "light": "latBlue"
+      "dark": "blue",
+      "light": "blue"
     },
     "syntaxVariable": {
-      "dark": "mocRed",
-      "light": "latRed"
+      "dark": "red",
+      "light": "red"
     },
     "syntaxString": {
-      "dark": "mocGreen",
-      "light": "latGreen"
+      "dark": "green",
+      "light": "green"
     },
     "syntaxNumber": {
-      "dark": "mocPeach",
-      "light": "latPeach"
+      "dark": "peach",
+      "light": "peach"
     },
     "syntaxType": {
-      "dark": "mocYellow",
-      "light": "latYellow"
+      "dark": "yellow",
+      "light": "yellow"
     },
     "syntaxOperator": {
-      "dark": "mocSky",
-      "light": "latSky"
+      "dark": "sky",
+      "light": "sky"
     },
     "syntaxPunctuation": {
-      "dark": "mocText",
-      "light": "latText"
+      "dark": "text",
+      "light": "text"
     }
   }
 }

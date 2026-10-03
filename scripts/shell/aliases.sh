@@ -70,9 +70,10 @@ command -v eza >/dev/null 2>&1 && alias la='eza -la'
 command -v eza >/dev/null 2>&1 && alias lt='eza -la --tree --level=4'
 # lazygit：UI 主题跟随 tinty——启动前刷新运行时产物，优先叠加生成的
 # ~/.config/lazygit/tinty.yml（当前 scheme 渲染，_tinty_scheme 标记须与
-# current_scheme 一致，防切换后陈旧深浅错配）；标记不符/生成失败/无 tinty
-# 时按 variant 回退 frappe.yml(dark)/latte-theme.yml(light) overlay；两者皆
-# 不可用时裸启动（内建主题）。delta 明暗由 tinty 的 git config 决定。
+# current_scheme 一致，防切换后陈旧深浅错配）；标记不符/生成失败时按
+# tinty variant 回退 frappe.yml(dark)/latte-theme.yml(light) overlay；无
+# tinty 时统一叠 frappe.yml（对齐 nvim :LazyGit 的 frappe 兜底）；overlay
+# 或 base 不可读时才裸启动（内建主题）。delta 明暗由 tinty 的 git config 决定。
 command -v lazygit >/dev/null 2>&1 && lg() {
 	local dir="${XDG_CONFIG_HOME:-$HOME/.config}/lazygit"
 	local base="$dir/config.yml" overlay=""
@@ -88,6 +89,8 @@ command -v lazygit >/dev/null 2>&1 && lg() {
 			dark) overlay="$dir/frappe.yml" ;;
 			light) overlay="$dir/latte-theme.yml" ;;
 		esac
+	else
+		overlay="$dir/frappe.yml"
 	fi
 	if [ -n "$overlay" ] && [ -r "$base" ] && [ -r "$overlay" ]; then
 		LG_CONFIG_FILE="$base,$overlay" command lazygit "$@"
