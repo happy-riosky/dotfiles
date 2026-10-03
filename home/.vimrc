@@ -87,10 +87,9 @@ if exists('&t_SI')
   let &t_SI = "\<Esc>[6 q"  " Steady beam in Insert mode
   let &t_EI = "\<Esc>[2 q"  " Steady block outside Insert mode
 endif
-colorscheme catppuccin_latte_yellow
 
 let g:lightline = {
-  \ 'colorscheme': 'catppuccin_latte_yellow',
+  \ 'colorscheme': 'tinty',
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'filename', 'modified' ] ],
   \   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'filetype', 'fileencoding', 'fileformat' ] ]
@@ -240,6 +239,35 @@ inoreabbrev <expr> ,u system('uuidgen')->trim()->tolower()
 " Plugins
 " ------------------------------------------------------------------------------
 packloadall
+
+" 配色跟随 tinty：source tinted-vim 生成的调色板文件（暴露 g:tinted_gui*，
+" 供高亮组与 lightline tinty colorscheme 使用），FocusGained 时重新 source
+" 并重建 lightline palette（tmux 内焦点事件由 tmux-sensible 的
+" focus-events on 传递；SSH 裸用无焦点事件，下次打开刷新——与 nvim 同款
+" 限制）。无 tinty 的机器回退 catppuccin_frappe（catppuccin/vim 插件自带，
+" 须在 packloadall 之后才可 colorscheme）。
+let s:tinty_colors = expand('~/.local/share/tinted-theming/tinty/base16-vim-colors-file.vim')
+if filereadable(s:tinty_colors)
+  let g:tinted_colorspace = 256
+  execute 'source' fnameescape(s:tinty_colors)
+  augroup dotfiles_tinty
+    autocmd!
+    autocmd FocusGained * call s:TintyRefresh()
+  augroup END
+else
+  colorscheme catppuccin_frappe
+endif
+
+function! s:TintyRefresh() abort
+  if !filereadable(s:tinty_colors)
+    return
+  endif
+  execute 'source' fnameescape(s:tinty_colors)
+  " 重建 lightline palette：unlet 缓存 → 重载 colorscheme → 重新应用
+  unlet! g:lightline#colorscheme#tinty#palette
+  runtime autoload/lightline/colorscheme/tinty.vim
+  call lightline#colorscheme()
+endfunction
 
 " Change the default mapping and the default command to invoke CtrlP
 let g:ctrlp_map = '<c-p>'
