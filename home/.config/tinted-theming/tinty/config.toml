@@ -44,7 +44,7 @@ path = "https://github.com/tinted-theming/tinted-tmux"
 themes-dir = "colors"
 hook = '(tmux run 2>/dev/null && tmux source-file "$TINTY_THEME_FILE_PATH") || true'
 
-# nvim/vim 配色：init.lua 直接 source 生成文件并在 FocusGained 时跟随切换
+# nvim/vim 配色：init.lua/.vimrc 直接 source 生成文件并在 FocusGained 时跟随切换
 [[items]]
 name = "base16-vim"
 path = "https://github.com/tinted-theming/base16-vim"
