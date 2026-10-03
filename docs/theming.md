@@ -74,7 +74,8 @@ tinty apply base16-catppuccin-frappe
   真相；每个 shell 各自 init 会与用户的 `cycle/apply` 竞态（迟到的 init 把旧
   scheme 覆写回全局，实测造成连环闪变）。`*.sh` 全缺失时才 init 一次引导。
 - **tmux**：`simple_batt.tmux.conf` 只管布局/格式（电池/时间/窗口标签）；
-  配色先无条件 source `simple_batt_fallback.tmux.conf` 打底（消灭 tmux 内建
+  配色先无条件 source `simple_batt_fallback.tmux.conf` 打底（frappe 中性面 +
+  黄 `#da831b`，消灭 tmux 内建
   绿色状态栏的启动一闪，也覆盖 server/Termux/首次 apply 前），tinty 生成的
   主题文件存在则覆盖（tinted-tmux 模板不设置 status-right-style，覆盖后
   `.tmux.conf` 显式清空以继承 status-style 配色）。apply 时 hook 对运行中
@@ -87,9 +88,10 @@ tinty apply base16-catppuccin-frappe
   yellow 主题——base0A 黄强调边框，catppuccin 系 scheme 下与原硬编码
   overlay 值一致）；标记不符（切换 scheme 后生成失败/残留）时按
   `tinty current variant` 回退 `frappe.yml`（dark）/ `latte-theme.yml`
-  （light）受管 overlay，经 `LG_CONFIG_FILE` 叠加。nvim `:LazyGit` 同一
+  （light）受管 overlay，经 `LG_CONFIG_FILE` 叠加；无 tinty 时统一叠
+  `frappe.yml`（对齐 `:LazyGit` 兜底）。nvim `:LazyGit` 同一
   优先级与回退链（不主动刷新，靠 lg/其他入口刷新 + 标记校验兜底）。
-  无 tinty 时裸 lazygit 用内建主题；macOS 由 `platform/darwin.sh` 导出
+  不经 `lg` 的裸 lazygit 用内建主题；macOS 由 `platform/darwin.sh` 导出
   `CONFIG_DIR` 统一到 `~/.config/lazygit`（App Support 下不再有重复副本）。
 - **gh-dash**：基础 `config.yml` 主题中立（不定义 colors，裸 `gh dash` /
   标记校验失败时回退 gh-dash 内建自适应默认色）；`gd`（受管启动器
@@ -139,12 +141,16 @@ tinty apply base16-catppuccin-frappe
   不可变故幂等覆写；dark/light 同值，模式探测不再起作用，tmux 内也
   正确）并 `theme.set`；每 3s 轮询，`tinty apply`/`cycle` 后正在运行的
   会话即时切换、无需重启。无 tinty 时插件静默不动作，回落到
-  `tui.json` 指定的 `catppuccin-yellow`（合并深/浅主题，`T` vim-normal 可
-  手动翻转明暗，`<leader>t` 切换主题）。生成的
-  `~/.config/opencode/themes/tinty-*.json` 为运行时产物，绝不入库；
-  `mocha/latte-yellow` 单色主题保留可随时选回。
-- **nvim/vim**：`init.lua` source `base16-vim-colors-file.vim` 并在 FocusGained
-  时跟随切换；无该文件（未装 tinty 的机器）回退 catppuccin-frappe。
+  `tui.json` 指定的 `catppuccin-yellow`（frappe 单色：dark/light 双槽同值，
+  黄 accent `#f9e2af` 保留，`T` 翻转明暗无视觉效果，`<leader>t` 切换
+  主题）。生成的 `~/.config/opencode/themes/tinty-*.json` 为运行时产物，
+  绝不入库。
+- **nvim/vim**：同构接线——source tinty 生成的 `base16-vim-colors-file.vim`
+  （暴露 `g:tinted_gui*` 调色板）并在 FocusGained 时跟随切换（SSH 裸用无
+  焦点事件，下次打开刷新）；无该文件（未装 tinty 的机器）回退
+  catppuccin-frappe。vim 的 lightline 用 `tinty` colorscheme
+  （`home/.vim/autoload/lightline/colorscheme/tinty.vim`）动态取当前
+  scheme 的黄槽 gui0A 作 accent，无 tinty 时内置 frappe 常量兜底。
 - **git-delta**：darwin 的 `~/.config/git/config`（受管）设 `core.pager=delta`
   并 include 生成的 `tinted-delta-configs-file.gitconfig`；include 目标缺失时
   git 静默忽略。
@@ -153,9 +159,13 @@ tinty apply base16-catppuccin-frappe
 
 ## 服务器 / Termux
 
-未装 tinty 时所有接线静默降级：kitty/tmux 的 include/source 缺失即忽略、git
-include 忽略、nvim 回退 catppuccin、zsh 守卫跳过。如需在 Debian/Termux 使用，
-手动 `cargo install tinty`（需 Rust 工具链），配置与数据路径完全一致。
+未装 tinty 时所有接线静默降级，兜底为**单一 frappe 观感**：kitty/tmux 的
+include/source 缺失即忽略、git include 忽略、nvim/vim/opencode/lazygit 回退
+catppuccin-frappe、zsh 守卫跳过。黄 accent 各处保留（tmux `#da831b` /
+opencode `#f9e2af` / lazygit·vim `#e5c890`）；`latte-theme.yml` 属 tinty
+在场时的 variant 陈旧保护，不是无 tinty 兜底；无受管资产的应用
+（glow/gh-dash/kitty/bat/zsh）用内建默认。如需在 Debian/Termux 使用，手动
+`cargo install tinty`（需 Rust 工具链），配置与数据路径完全一致。
 
 ## 排障
 
@@ -182,7 +192,7 @@ tinty config --data-dir-path  # 运行时目录；ls 查看生成的主题文件
 - 主题在 zsh 没生效 → 当前会话须通过包装函数执行（新开 shell 或
   `tinty init`）。
 - lazygit 主题不对 → `tinty current variant` 确认明暗；`lg`/`:LazyGit`
-  按 variant 选 overlay，裸 `lazygit` 用内建主题。
+  按 variant 选 overlay（无 tinty 时统一 frappe），裸 `lazygit` 用内建主题。
 - gh dash 没跟随 → 确认经 `gd` 启动（裸 `gh dash` 用内建自适应默认色）；
   `~/.config/gh-dash/tinty.yml` 存在且 `_tinty_scheme` 与 `current_scheme`
   一致（不一致属回退保护，重跑 `scripts/tinty/generate` 看报错）；repo

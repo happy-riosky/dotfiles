@@ -122,7 +122,8 @@ DOTFILES_PLATFORM=<p> [DOTFILES_PROFILE=<pr>]`；覆盖项：
   `.gitignore` 的 `/.omo/` 必须保持锚定（未锚定会误伤 `home/.omo/`）。
   TUI 主题由 `tui-plugins/tinty-theme.js` 实时跟随 tinty（`tui.json` 的
   `plugin` 数组声明加载；生成 `~/.config/opencode/themes/tinty-*.json`，
-  运行时产物不入库），回退主题为合并版 `catppuccin-yellow`。
+  运行时产物不入库），回退主题为 frappe 单色版 `catppuccin-yellow`
+  （黄 `#f9e2af` accent）。
   细节见 `docs/opencode.md` 与 `docs/theming.md`。
 - `docs/process.md` 为收尾记录（含 A–E 待办清单）；迁移计划已归档到
   `docs/archive/MIGRATION_PLAN.md`——动手前先读。
