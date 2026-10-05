@@ -1,0 +1,6 @@
+# 搜索工具（opencode / neovim / rg / fd）的作用域覆盖：本仓库几乎全是
+# dotfiles，显式包含隐藏文件与 *.local（.gitignore 只管版本库，不挡搜索），
+# 排除 .git。注意 .git/ 必须列在 !.* 之后（后匹配优先）。
+!.*
+!*.local
+.git/

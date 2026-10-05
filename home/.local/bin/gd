@@ -1,10 +1,28 @@
 #!/usr/bin/env bash
-# gd — context-aware gh-dash launcher.
+# gd — context-aware, tinty-themed gh-dash launcher.
 # Inside a repo with a GitHub remote, hide the repo column via an overlay
 # config (smartFilteringAtLaunch already scopes every section to that repo).
+# UI colors follow tinty: refresh scripts/tinty/generate, then --config the
+# rendered tinty.yml (in-repo: tinty-context.yml, the repo-context overlay
+# spliced with the theme fragment -- gh-dash's --config is a single slot).
+# Stale marker / no tinty -> current behavior (repo-context.yml / bare start,
+# gh-dash built-in colors); explicit --config / GH_DASH_CONFIG / repo-local
+# .gh-dash.y[a]ml always pass through untouched.
+#
+# gh-dash renders PR/issue bodies with a glamour dark/light style picked by
+# live OSC 11 probing (bubbletea + lipgloss compat). Inside tmux the server
+# answers those queries with its CACHED client background, which tinty apply
+# never refreshes (probe: attached-during-latte cache kept answering
+# #eff1f5 after the terminal switched to a dark scheme -> dark body text).
+# tmux answers per-pane once the pane sets its own background via OSC 11, so
+# before launching we set this pane's bg to the scheme's base00 (its HSL
+# luma verdict matches the scheme variant) and reset via OSC 111 afterwards.
+# Only sent under tmux -- a bare kitty/Ghostty would truly recolor the
+# window background.
 set -euo pipefail
 
-override="${XDG_CONFIG_HOME:-$HOME/.config}/gh-dash/repo-context.yml"
+dir="${XDG_CONFIG_HOME:-$HOME/.config}/gh-dash"
+override="$dir/repo-context.yml"
 
 # Explicit user config wins: pass through untouched.
 for a in "$@"; do
@@ -26,20 +44,16 @@ if [ -n "$root" ] && { [ -f "$root/.gh-dash.yml" ] || [ -f "$root/.gh-dash.yaml"
   exec gh dash "$@"
 fi
 
-use_overlay() {
-  if [ -f "$override" ]; then
-    exec gh dash --config "$override" "$@"
-  fi
-}
-
 # Only treat GitHub repos as repo context; otherwise smart filtering stays
 # off and the repo column is still needed. Mirror gh-dash's remote order:
 # upstream -> github -> origin -> first remote.
-if [ -n "$root" ]; then
+in_github_repo() {
+  [ -n "$root" ] || return 1
+  local r url first
   for r in upstream github origin; do
     if url=$(git remote get-url "$r" 2>/dev/null); then
       case "$url" in
-        *github.com*) use_overlay ;;
+        *github.com*) return 0 ;;
       esac
     fi
   done
@@ -47,9 +61,57 @@ if [ -n "$root" ]; then
   if [ -n "$first" ]; then
     url=$(git remote get-url "$first" 2>/dev/null || true)
     case "$url" in
-      *github.com*) use_overlay ;;
+      *github.com*) return 0 ;;
     esac
   fi
+  return 1
+}
+
+# tinty theme overlay: freshness gated on the _tinty_scheme marker matching
+# current_scheme (same contract as lg()); a stale/missing file after a failed
+# regen falls back to the plain paths below, never an outdated variant.
+theme_overlay=""
+context_overlay=""
+if [ -n "${DOTFILES_ROOT:-}" ] && [ -f "$DOTFILES_ROOT/scripts/tinty/generate" ]; then
+  bash "$DOTFILES_ROOT/scripts/tinty/generate" >/dev/null 2>&1 || true
+fi
+scheme_file="${XDG_DATA_HOME:-$HOME/.local/share}/tinted-theming/tinty/current_scheme"
+if [ -r "$dir/tinty.yml" ] && [ -r "$scheme_file" ]; then
+  marker="# _tinty_scheme: $(tr -d '[:space:]' < "$scheme_file")"
+  if grep -q "$marker" "$dir/tinty.yml"; then
+    theme_overlay="$dir/tinty.yml"
+    if grep -q "$marker" "$dir/tinty-context.yml" 2>/dev/null; then
+      context_overlay="$dir/tinty-context.yml"
+    fi
+  fi
+fi
+
+base00=""
+if [ -n "${TMUX:-}" ] && [ -n "$theme_overlay" ]; then
+  base00="$(sed -n 's/^# _tinty_base00: \(#[0-9A-Fa-f]\{6\}\).*/\1/p' "$theme_overlay" | head -n 1)"
+fi
+
+launch() {
+  if [ -n "$base00" ]; then
+    printf '\033]11;%s\033\\' "$base00" > /dev/tty 2>/dev/null || true
+    rc=0
+    gh dash "$@" || rc=$?
+    printf '\033]111\033\\' > /dev/tty 2>/dev/null || true
+    exit "$rc"
+  fi
+  exec gh dash "$@"
+}
+
+if in_github_repo; then
+  if [ -n "$context_overlay" ]; then
+    launch --config "$context_overlay" "$@"
+  fi
+  if [ -f "$override" ]; then
+    launch --config "$override" "$@"
+  fi
+fi
+if [ -n "$theme_overlay" ]; then
+  launch --config "$theme_overlay" "$@"
 fi
 
 exec gh dash "$@"

@@ -27,8 +27,12 @@
   },
   "model": "zhipuai-coding-plan/glm-5.3",
   "agent": {
+    "build": {
+      "color": "secondary"
+    },
     "plan": {
-      "model": "zhipuai-coding-plan/glm-5.3"
+      "model": "zhipuai-coding-plan/glm-5.3",
+      "color": "primary"
     }
   },
   "provider": {

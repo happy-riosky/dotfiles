@@ -1,0 +1,32 @@
+# Catppuccin Latte（浅色）overlay：lg 函数 / nvim :LazyGit 在 tinty variant
+# 为 light 时经 LG_CONFIG_FILE 叠加到 config.yml 之上（见 docs/theming.md）。
+gui:
+  theme:
+    activeBorderColor:
+      - '#df8e1d'
+      - bold
+    inactiveBorderColor:
+      - '#6c6f85'
+    searchingActiveBorderColor:
+      - '#df8e1d'
+    optionsTextColor:
+      - '#1e66f5'
+    selectedLineBgColor:
+      - '#ccd0da'
+    inactiveViewSelectedLineBgColor:
+      - '#9ca0b0'
+    cherryPickedCommitFgColor:
+      - '#df8e1d'
+    cherryPickedCommitBgColor:
+      - '#bcc0cc'
+    markedBaseCommitFgColor:
+      - '#1e66f5'
+    markedBaseCommitBgColor:
+      - '#df8e1d'
+    unstagedChangesColor:
+      - '#d20f39'
+    defaultFgColor:
+      - '#4c4f69'
+
+  authorColors:
+    '*': '#7287fd'

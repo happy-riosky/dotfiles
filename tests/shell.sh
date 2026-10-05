@@ -158,6 +158,62 @@ test_conda_darwin_zsh_only() {
   [[ ! -s "$calls" ]] || fail 'Darwin bash invoked Conda'
 }
 
+test_tinty_nvim_guard() {
+  local home="$TMP_ROOT/tinty-home" zdotdir="$TMP_ROOT/tinty-zdotdir"
+  local bin="$TMP_ROOT/tinty-bin" data="$home/.local/share/tinted-theming/tinty"
+  local probe="$TMP_ROOT/tinty-probe" tinty_out="$TMP_ROOT/tinty-fake-out"
+  mkdir -p "$home" "$zdotdir" "$bin" "$data"
+  cp -R "$ROOT/home/." "$home/"
+  printf '%s\n' \
+    '#!/usr/bin/env sh' \
+    'printf "%s\n" "argv=$*" >> "$DOTFILES_TEST_TINTY_OUT"' \
+    'if [ -t 0 ]; then echo stdin_tty=1 >> "$DOTFILES_TEST_TINTY_OUT"; else echo stdin_tty=0 >> "$DOTFILES_TEST_TINTY_OUT"; fi' \
+    'cp "$DOTFILES_TEST_TINTY_DATA/probe2.template" "$DOTFILES_TEST_TINTY_DATA/probe2.sh"' \
+    > "$bin/tinty"
+  chmod +x "$bin/tinty"
+  printf '%s\n' \
+    'printf "%s\n" "probe1:${TTY:-empty}" >> "$DOTFILES_TEST_TINTY_PROBE"' \
+    > "$data/probe.sh"
+  printf '%s\n' \
+    'printf "%s\n" "probe2:${TTY:-empty}" >> "$DOTFILES_TEST_TINTY_PROBE"' \
+    > "$data/probe2.template"
+
+  # nvim :terminal 子进程（NVIM 已设、TMUX 泄漏）：source 守卫生效
+  HOME="$home" PATH="$bin:/usr/bin:/bin" DOTFILES_ROOT="$ROOT" \
+    DOTFILES_PLATFORM=darwin DOTFILES_PROFILE=full ZDOTDIR="$zdotdir" \
+    DOTFILES_TEST_TINTY_PROBE="$probe" DOTFILES_TEST_TINTY_OUT="$tinty_out" \
+    DOTFILES_TEST_TINTY_DATA="$data" \
+    NVIM=/tmp/fake-nvim TMUX=/tmp/fake,123,0 \
+    /bin/zsh -dfi -c 'unsetopt monitor; source "$HOME/.zshrc"' || \
+    fail 'zsh startup failed with tinty nvim guard'
+  grep -q '^probe1:/nonexistent-tty-nvim-guard$' "$probe" || fail 'tinty source guard inactive inside nvim terminal'
+
+  # 普通 shell（无 NVIM）：守卫不得激活（真 tmux pane 行为不变）
+  : > "$probe"
+  HOME="$home" PATH="$bin:/usr/bin:/bin" DOTFILES_ROOT="$ROOT" \
+    DOTFILES_PLATFORM=darwin DOTFILES_PROFILE=full ZDOTDIR="$zdotdir" \
+    DOTFILES_TEST_TINTY_PROBE="$probe" DOTFILES_TEST_TINTY_OUT="$tinty_out" \
+    DOTFILES_TEST_TINTY_DATA="$data" \
+    TMUX=/tmp/fake,123,0 \
+    /bin/zsh -dfi -c 'unsetopt monitor; source "$HOME/.zshrc"' || \
+    fail 'zsh startup failed without nvim'
+  grep -q '^probe1:/nonexistent-tty-nvim-guard$' "$probe" && fail 'tinty source guard activated outside nvim terminal'
+
+  # dotfiles_tinty：NVIM 下非交互子命令 stdin 屏蔽；apply 后新 *.sh 走守卫 source
+  : > "$probe"
+  : > "$tinty_out"
+  HOME="$home" PATH="$bin:/usr/bin:/bin" DOTFILES_ROOT="$ROOT" \
+    DOTFILES_PLATFORM=darwin DOTFILES_PROFILE=full ZDOTDIR="$zdotdir" \
+    DOTFILES_TEST_TINTY_PROBE="$probe" DOTFILES_TEST_TINTY_OUT="$tinty_out" \
+    DOTFILES_TEST_TINTY_DATA="$data" \
+    NVIM=/tmp/fake-nvim TMUX=/tmp/fake,123,0 \
+    /bin/zsh -dfi -c 'unsetopt monitor; source "$HOME/.zshrc"; dotfiles_tinty apply; alias tinty | grep -q dotfiles_tinty' || \
+    fail 'dotfiles_tinty apply failed inside nvim terminal'
+  grep -q '^argv=apply$' "$tinty_out" || fail 'dotfiles_tinty did not invoke tinty apply'
+  grep -q '^stdin_tty=0$' "$tinty_out" || fail 'dotfiles_tinty did not shield stdin inside nvim terminal'
+  grep -q '^probe2:/nonexistent-tty-nvim-guard$' "$probe" || fail 'post-apply re-source bypassed tinty nvim guard'
+}
+
 test_public_paths
 test_load_order
 test_noninteractive_silence
@@ -166,4 +222,5 @@ test_darwin_homebrew_and_oc
 test_missing_optional_tools
 test_zoxide_init
 test_conda_darwin_zsh_only
+test_tinty_nvim_guard
 printf 'shell integration tests passed\n'

@@ -1,0 +1,223 @@
+{
+  "$schema": "https://opencode.ai/theme.json",
+  "defs": {
+    "yellow": "#f9e2af",
+    "text": "#c6d0f5",
+    "subtext0": "#a5adce",
+    "overlay2": "#949cbb",
+    "surface0": "#414559",
+    "surface1": "#51576d",
+    "surface2": "#626880",
+    "base": "#303446",
+    "mantle": "#292c3c",
+    "crust": "#232634",
+    "red": "#e78284",
+    "peach": "#ef9f76",
+    "green": "#a9b665",
+    "teal": "#81c8be",
+    "sky": "#99d1db",
+    "blue": "#8caaee"
+  },
+  "theme": {
+    "primary": {
+      "dark": "yellow",
+      "light": "yellow"
+    },
+    "secondary": {
+      "dark": "yellow",
+      "light": "yellow"
+    },
+    "accent": {
+      "dark": "yellow",
+      "light": "yellow"
+    },
+    "error": {
+      "dark": "red",
+      "light": "red"
+    },
+    "warning": {
+      "dark": "yellow",
+      "light": "yellow"
+    },
+    "success": {
+      "dark": "green",
+      "light": "green"
+    },
+    "info": {
+      "dark": "teal",
+      "light": "teal"
+    },
+    "text": {
+      "dark": "text",
+      "light": "text"
+    },
+    "textMuted": {
+      "dark": "subtext0",
+      "light": "subtext0"
+    },
+    "background": {
+      "dark": "base",
+      "light": "base"
+    },
+    "backgroundPanel": {
+      "dark": "mantle",
+      "light": "mantle"
+    },
+    "backgroundElement": {
+      "dark": "crust",
+      "light": "crust"
+    },
+    "border": {
+      "dark": "surface0",
+      "light": "surface0"
+    },
+    "borderActive": {
+      "dark": "surface1",
+      "light": "surface1"
+    },
+    "borderSubtle": {
+      "dark": "surface2",
+      "light": "surface2"
+    },
+    "diffAdded": {
+      "dark": "green",
+      "light": "green"
+    },
+    "diffRemoved": {
+      "dark": "red",
+      "light": "red"
+    },
+    "diffContext": {
+      "dark": "overlay2",
+      "light": "overlay2"
+    },
+    "diffHunkHeader": {
+      "dark": "peach",
+      "light": "peach"
+    },
+    "diffHighlightAdded": {
+      "dark": "green",
+      "light": "green"
+    },
+    "diffHighlightRemoved": {
+      "dark": "red",
+      "light": "red"
+    },
+    "diffAddedBg": {
+      "dark": "#a9b66580",
+      "light": "#a9b66580"
+    },
+    "diffRemovedBg": {
+      "dark": "#e7828480",
+      "light": "#e7828480"
+    },
+    "diffContextBg": {
+      "dark": "mantle",
+      "light": "mantle"
+    },
+    "diffLineNumber": {
+      "dark": "surface1",
+      "light": "surface1"
+    },
+    "diffAddedLineNumberBg": {
+      "dark": "#a9b66540",
+      "light": "#a9b66540"
+    },
+    "diffRemovedLineNumberBg": {
+      "dark": "#e7828440",
+      "light": "#e7828440"
+    },
+    "markdownText": {
+      "dark": "text",
+      "light": "text"
+    },
+    "markdownHeading": {
+      "dark": "yellow",
+      "light": "yellow"
+    },
+    "markdownLink": {
+      "dark": "blue",
+      "light": "blue"
+    },
+    "markdownLinkText": {
+      "dark": "sky",
+      "light": "sky"
+    },
+    "markdownCode": {
+      "dark": "green",
+      "light": "green"
+    },
+    "markdownBlockQuote": {
+      "dark": "yellow",
+      "light": "yellow"
+    },
+    "markdownEmph": {
+      "dark": "yellow",
+      "light": "yellow"
+    },
+    "markdownStrong": {
+      "dark": "peach",
+      "light": "peach"
+    },
+    "markdownHorizontalRule": {
+      "dark": "subtext0",
+      "light": "subtext0"
+    },
+    "markdownListItem": {
+      "dark": "blue",
+      "light": "blue"
+    },
+    "markdownListEnumeration": {
+      "dark": "sky",
+      "light": "sky"
+    },
+    "markdownImage": {
+      "dark": "blue",
+      "light": "blue"
+    },
+    "markdownImageText": {
+      "dark": "sky",
+      "light": "sky"
+    },
+    "markdownCodeBlock": {
+      "dark": "text",
+      "light": "text"
+    },
+    "syntaxComment": {
+      "dark": "overlay2",
+      "light": "overlay2"
+    },
+    "syntaxKeyword": {
+      "dark": "yellow",
+      "light": "yellow"
+    },
+    "syntaxFunction": {
+      "dark": "blue",
+      "light": "blue"
+    },
+    "syntaxVariable": {
+      "dark": "red",
+      "light": "red"
+    },
+    "syntaxString": {
+      "dark": "green",
+      "light": "green"
+    },
+    "syntaxNumber": {
+      "dark": "peach",
+      "light": "peach"
+    },
+    "syntaxType": {
+      "dark": "yellow",
+      "light": "yellow"
+    },
+    "syntaxOperator": {
+      "dark": "sky",
+      "light": "sky"
+    },
+    "syntaxPunctuation": {
+      "dark": "text",
+      "light": "text"
+    }
+  }
+}

@@ -3,3 +3,4 @@
 **/.netrc
 **/auth.json
 **/*license*
+*.local

@@ -445,26 +445,39 @@ do
   }
 
   -- [[ Colorscheme ]]
-  vim.pack.add { { src = gh 'catppuccin/nvim', name = 'catppuccin' } }
-  vim.o.termguicolors = true
-  vim.o.background = 'dark'
-  require('catppuccin').setup {
-    flavour = 'frappe',
-    -- Some plugins are added later in this file, so enable their highlights explicitly.
-    auto_integrations = false,
-    integrations = {
-      blink_cmp = true,
-      diffview = true,
-      fidget = true,
-      gitsigns = true,
-      mason = true,
-      mini = true,
-      neotree = true,
-      telescope = true,
-      which_key = true,
-    },
-  }
-  vim.cmd.colorscheme 'catppuccin-frappe'
+  -- tinty (tinted-theming) 生成的 base16 主题存在时直接 source，并在
+  -- FocusGained 时跟随 tinty 切换；否则（未装 tinty 的机器）回退 catppuccin
+  local tinty_base16 = vim.fn.expand '~/.local/share/tinted-theming/tinty/base16-vim-colors-file.vim'
+  if vim.fn.filereadable( tinty_base16 ) == 1 then
+    vim.o.termguicolors = true
+    vim.g.tinted_colorspace = 256
+    local tinty_source = function()
+      vim.cmd.source( tinty_base16 )
+    end
+    tinty_source()
+    vim.api.nvim_create_autocmd( 'FocusGained', { callback = tinty_source } )
+  else
+    vim.pack.add { { src = gh 'catppuccin/nvim', name = 'catppuccin' } }
+    vim.o.termguicolors = true
+    vim.o.background = 'dark'
+    require('catppuccin').setup {
+      flavour = 'frappe',
+      -- Some plugins are added later in this file, so enable their highlights explicitly.
+      auto_integrations = false,
+      integrations = {
+        blink_cmp = true,
+        diffview = true,
+        fidget = true,
+        gitsigns = true,
+        mason = true,
+        mini = true,
+        neotree = true,
+        telescope = true,
+        which_key = true,
+      },
+    }
+    vim.cmd.colorscheme 'catppuccin-frappe'
+  end
 
   -- Highlight todo, notes, etc in comments
   vim.pack.add { gh 'folke/todo-comments.nvim' }

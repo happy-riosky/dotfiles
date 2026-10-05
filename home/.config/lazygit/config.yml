@@ -1,5 +1,8 @@
 notARepository: 'skip'
 
+# 主题中立的基础配置：配色由 overlay 提供——lg 函数 / nvim :LazyGit 按
+# tinty variant 经 LG_CONFIG_FILE 附加 frappe.yml(dark) / latte-theme.yml
+# (light)；裸 lazygit 使用内建默认主题。见 docs/theming.md
 os:
   editPreset: 'nvim-remote'
 
@@ -7,42 +10,18 @@ gui:
   language: "en"
   fileTreeSortOrder: filesFirst
   showNumstatInFilesView: true
-  theme:
-    activeBorderColor:
-      - '#df8e1d'
-      - bold
-    inactiveBorderColor:
-      - '#6c6f85'
-    searchingActiveBorderColor:
-      - '#df8e1d'
-    optionsTextColor:
-      - '#1e66f5'
-    selectedLineBgColor:
-      - '#ccd0da'
-    inactiveViewSelectedLineBgColor:
-      - '#9ca0b0'
-    cherryPickedCommitFgColor:
-      - '#df8e1d'
-    cherryPickedCommitBgColor:
-      - '#bcc0cc'
-    markedBaseCommitFgColor:
-      - '#1e66f5'
-    markedBaseCommitBgColor:
-      - '#df8e1d'
-    unstagedChangesColor:
-      - '#d20f39'
-    defaultFgColor:
-      - '#4c4f69'
-
-  authorColors:
-    '*': '#7287fd'
 
 git:
+  paging:
+    # 不带 --dark/--light，让 delta 跟随 tinty 的 git config；
+    # lazygit 内建默认 pager 是 delta --dark ...，会在浅色 scheme 下强制深色
+    pager: delta --paging=always
+  # delta 配色同样由 tinty 决定，不在此传明暗开关
   diffRenderers:
     - name: delta (unified)
-      command: delta --light --paging=never --line-numbers
+      command: delta --paging=never --line-numbers
     - name: delta (split)
-      command: delta --light --paging=never --line-numbers --side-by-side
+      command: delta --paging=never --line-numbers --side-by-side
 
 keybinding:
   universal:
@@ -58,7 +37,7 @@ customCommands:
     description: 'Copy worktree path to clipboard'
     command: >-
       p="{{.SelectedWorktree.Path}}";
-      if command -v pbcopy >/dev/null 2>&1; then printf "%s" "$p" | pbcopy;
-      elif command -v wl-copy >/dev/null 2>&1; then printf "%s" "$p" | wl-copy;
-      elif command -v xclip >/dev/null 2>&1; then printf "%s" "$p" | xclip -selection clipboard; fi
+      if command -v pbcopy >/dev/null 2>&1; then printf '%s' "$p" | pbcopy;
+      elif command -v wl-copy >/dev/null 2>&1; then printf '%s' "$p" | wl-copy;
+      elif command -v xclip >/dev/null 2>&1; then printf '%s' "$p" | xclip -selection clipboard; fi
     output: none

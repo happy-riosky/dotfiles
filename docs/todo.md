@@ -56,6 +56,9 @@
   软链，会把叶子软链顶回实体文件。若未来需要版本化，改用
   `platforms/darwin/managed/` 黄金文件 + export/restore 模式（参照 macOS
   Preferences），不要软链。
+- kitty 标题栏切主题闪青/白（macOS 26 Liquid Glass + kitty 标题栏色 hack，
+  2026-10-06）：纯瞬态、最终态正确，暂不处理；完整根因与源码依据见
+  `docs/theming.md` 排障节，日后有兴趣可据此报上游 issue。
 
 ## 3. 操作记录
 

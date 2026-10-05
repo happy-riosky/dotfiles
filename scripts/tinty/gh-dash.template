@@ -1,0 +1,28 @@
+# tinty gh-dash overlay（运行时产物，由 scripts/tinty/generate 按当前
+# scheme 渲染；gd 启动器优先以 --config 叠加此文件——GitHub repo 内改用
+# 拼接了 repo-context 的 tinty-context.yml——_tinty_scheme 标记与
+# current_scheme 不符或缺失时回退 gh-dash 内建默认色，绝不渲染过期深浅）。
+# 槽位语义对齐上游 catppuccin/gh-dash（frappe/latte lavender）：catppuccin
+# 系 scheme 下 primary/warning/success/error/selected/border.* 逐值一致，
+# inverted（上游 crust）与 faint（上游 subtext1，非 base16 色）取最近槽位
+# base01/base04；secondary/border.primary 用语义强调槽 c_emph——深色
+# scheme=base07（catppuccin 系恰为 lavender），浅色=base05，规避
+# base07=bright white 的 scheme 白字白底（同 yazi flavor 的 c_emph 决策）。
+# _tinty_scheme: {{scheme_id}}
+# _tinty_base00: {{base00}} — gd 在 tmux 内据此发 pane 级 OSC 11 SET，修正 gh-dash 正文渲染的明暗探测
+theme:
+  colors:
+    text:
+      primary: '{{base05}}'
+      secondary: '{{c_emph}}'
+      inverted: '{{base01}}'
+      faint: '{{base04}}'
+      warning: '{{base0A}}'
+      success: '{{base0B}}'
+      error: '{{base08}}'
+    background:
+      selected: '{{base02}}'
+    border:
+      primary: '{{c_emph}}'
+      secondary: '{{base03}}'
+      faint: '{{base02}}'

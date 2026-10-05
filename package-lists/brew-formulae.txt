@@ -26,6 +26,7 @@ ripgrep
 scrcpy
 stow
 tesseract-lang
+tinted-theming/tinted/tinty
 tldr
 tmux
 tree
