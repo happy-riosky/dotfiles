@@ -106,7 +106,15 @@ init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 
   `tinty-<system>-<slug>`（每 scheme 一个，dark/light 同值，tmux 内也
   正确）并 `theme.set`；每 3s 轮询，apply/cycle 后运行中会话即时切换。
   无 tinty 时静默回落 `catppuccin-frappe-yellow`（frappe 单色：双槽同值，
-  黄 `#f9e2af` 保留，`T` 翻转明暗无视觉效果）。
+  黄 `#f9e2af` 保留，`T` 翻转明暗无视觉效果）。diff 槽位全部**预混为不
+  透明色**（对齐上游生成器 `tint(bg, accent, alpha)` 的做法）：正文 =
+  accent 混 base00；行号列底/上下文行 = base01；+/- 行号槽 = accent 混
+  base01（上游式微深 gutter）。浓度按 scheme 明暗自适应（base00 加权
+  亮度 ≥128 判浅色）：暗色 60%、浅色 15%——浅色 accent 本是为白底设计
+  的中等深色，浓混进近白的 base00 会吃掉深色正文的对比度；delta hook
+  同规则同浓度。绝不传原始 `#rrggbbaa`——渲染器对文字格与空白格走不同
+  的 alpha 解析路径（空白格还会与 backdrop 兜底色混合，该值随视图/终端
+  漂移），同一行会被劈成深浅两截。
 - **nvim/vim**：同构接线——source 生成的 `base16-vim-colors-file.vim`
   （暴露 `g:tinted_gui*` 调色板）+ FocusGained 跟随切换；无 tinty 回退
   catppuccin-frappe。vim 的 lightline 用 `tinty` colorscheme（受管

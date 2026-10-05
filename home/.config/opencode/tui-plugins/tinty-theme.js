@@ -46,11 +46,31 @@ export function parsePalette(yaml) {
   return Object.keys(palette).length === 16 ? palette : undefined
 }
 
-// Map the 16 base16 colors onto opencode theme keys. Every entry carries
-// identical dark/light values so the TUI mode never changes the outcome.
+// Map the 16 base16 colors onto opencode theme keys; dark/light values stay
+// identical so the TUI mode never changes the outcome. Diff backgrounds are
+// pre-blended opaque — raw #rrggbbaa renders inconsistently across glyph and
+// empty cells, splitting one line into two shades (see docs/theming.md):
+// body = accent over base00, gutter = accent over base01. Strength follows
+// scheme lightness (base00 luminance >= 128 is light: those accents are
+// mid-dark colors where a heavy blend swallows the dark text); delta.sh
+// mirrors the rule.
 export function buildTheme(palette) {
   const c = (key) => palette[key]
-  const a = (key, alpha) => palette[key] + alpha
+  const luminance = (key) => {
+    const h = palette[key].slice(1)
+    const part = (i) => Number.parseInt(h.slice(i, i + 2), 16)
+    return (2126 * part(0) + 7152 * part(2) + 722 * part(4)) / 10000
+  }
+  const alpha = luminance("base00") >= 128 ? 0.15 : 0.6
+  const mix = (baseKey, accentKey, blend) => {
+    const b = palette[baseKey].slice(1)
+    const x = palette[accentKey].slice(1)
+    const part = (i) =>
+      Math.round(Number.parseInt(x.slice(i, i + 2), 16) * blend + Number.parseInt(b.slice(i, i + 2), 16) * (1 - blend))
+        .toString(16)
+        .padStart(2, "0")
+    return `#${part(0)}${part(2)}${part(4)}`
+  }
   const pair = (value) => ({ dark: value, light: value })
   const entries = {
     primary: c("base0d"),
@@ -74,12 +94,12 @@ export function buildTheme(palette) {
     diffHunkHeader: c("base0d"),
     diffHighlightAdded: c("base0b"),
     diffHighlightRemoved: c("base08"),
-    diffAddedBg: a("base0b", "80"),
-    diffRemovedBg: a("base08", "80"),
+    diffAddedBg: mix("base00", "base0b", alpha),
+    diffRemovedBg: mix("base00", "base08", alpha),
     diffContextBg: c("base01"),
     diffLineNumber: c("base04"),
-    diffAddedLineNumberBg: a("base0b", "40"),
-    diffRemovedLineNumberBg: a("base08", "40"),
+    diffAddedLineNumberBg: mix("base01", "base0b", alpha),
+    diffRemovedLineNumberBg: mix("base01", "base08", alpha),
     markdownText: c("base05"),
     markdownHeading: c("base0e"),
     markdownLink: c("base0d"),
