@@ -74,7 +74,7 @@ export function buildTheme(palette) {
   const pair = (value) => ({ dark: value, light: value })
   const entries = {
     primary: c("base0d"),
-    secondary: c("base0e"),
+    secondary: c("base0a"),
     accent: c("base0f"),
     error: c("base08"),
     warning: c("base09"),
