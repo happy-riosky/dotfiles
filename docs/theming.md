@@ -9,6 +9,7 @@ opencode/lazygit/yazi/glow/gh-dash 经 `scripts/tinty/generate` 与启动器跟�
 | 路径 | 性质 |
 |---|---|
 | `home/.config/tinted-theming/tinty/config.toml` | 受管 leaf link（本仓库） |
+| `home/.config/tinted-theming/tinty/hooks/delta.sh` | 受管（tinty hook：按 apply 的 scheme 渲染 delta 样式 hex） |
 | `home/.config/lazygit/{config,frappe,latte-theme}.yml`、`home/.tmux/colors/simple_batt*.tmux.conf` | 受管（lazygit 基础+overlay / tmux 布局与回退配色） |
 | `home/.config/gh-dash/config.yml`、`home/.local/bin/gd` | 受管（gh-dash 主题中立基础配置 / tinty 感知启动器） |
 | `home/.config/opencode/tui-plugins/tinty-theme.js`、`home/.config/opencode/themes/catppuccin-frappe-yellow.json` | 受管（实时跟随插件 / 无 tinty 回退主题） |
@@ -19,6 +20,7 @@ opencode/lazygit/yazi/glow/gh-dash 经 `scripts/tinty/generate` 与启动器跟�
 | `platforms/darwin/home/.config/git/config` | 受管（delta pager + 主题 include，仅 macOS） |
 | `home/.config/kitty/kitty.conf` 末尾 `include current-theme.conf` | 受管配置引用运行时文件 |
 | `~/.config/kitty/current-theme.conf` | tinty hook 生成，**不入库** |
+| `~/.local/share/tinted-theming/tinty/delta-scheme-colors.gitconfig` | `hooks/delta.sh` 渲染的 delta 样式（受管 git config include），**不入库** |
 | `~/.local/share/tinted-theming/tinty/` | tinty 运行时（模板仓库、`current_scheme`、生成的主题文件），**不入库** |
 
 ## 安装与日常
@@ -111,16 +113,28 @@ init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 
   `tinty.vim`）动态取当前 scheme 的黄槽 gui0A 作 accent，无 tinty 时
   内置 frappe 常量兜底。
 - **git-delta**：darwin 的 `~/.config/git/config`（受管）设
-  `core.pager=delta` 并 include 生成的 `tinted-delta-configs-file.gitconfig`；
-  目标缺失时 git 静默忽略。
+  `core.pager=delta` 并 include 两个运行时产物：tinted-delta item 生成的
+  `tinted-delta-configs-file.gitconfig`（syntax-theme + light），及
+  `hooks/delta.sh`（tinty hook，读 `TINTY_SCHEME_PALETTE_BASE*_RGB_*` env）
+  按 apply 的 scheme 渲染的 `delta-scheme-colors.gitconfig`（首行
+  `_tinty_scheme` 标记）。槽位（全部预混不透明，浓度与 opencode 同步、
+  按 base00 加权亮度自适应：暗色正文 60%/emph 75%、浅色 15%/emph 30%，
+  亮度 ≥128 判浅色）：加减行正文 = syntax 前景 + base08/base0B 向
+  base00 混；行号 = 纯前景（minus·left=base08、
+  plus·right=base0B、zero=base04），**刻意无底色格**——行号底色只能经
+  left/right/minus/plus 样式落地，而 left/right 会连带染色 `⋮`/`│`/`⋯`
+  分界符（opencode 侧行号槽保留 tint，两工具此槽位刻意不同）；
+  hunk 头 = base0D；blame 梯度 = base00/01/02；上下文行刻意
+  不覆盖（delta 原生，与 opencode 的 base01 横带不同）。无 tinty 时
+  include 缺失即忽略，delta 回原生默认（无静态兜底）。
 - **bat**：有 tinty 时 alias `bat --theme=base16-256`（跟随终端 16 色
   调色板）；`fr` 预览里显式 `--theme` 仍优先生效。
 
 ## 服务器 / Termux
 
 未装 tinty 时所有接线静默降级，兜底为**单一 frappe 观感**：kitty/tmux 的
-include/source 缺失即忽略、git include 忽略、nvim/vim/opencode/lazygit 回退
-catppuccin-frappe、zsh 守卫跳过。黄 accent 各处保留（tmux `#da831b` /
+include/source 缺失即忽略、git include 缺失即忽略（delta 用原生默认）、
+nvim/vim/opencode/lazygit 回退 catppuccin-frappe、zsh 守卫跳过。黄 accent 各处保留（tmux `#da831b` /
 opencode `#f9e2af` / lazygit·vim `#e5c890`）；`latte-theme.yml` 属 tinty
 在场时的 variant 陈旧保护，不是无 tinty 兜底；无受管资产的应用
 （glow/gh-dash/kitty/bat/zsh）用内建默认。如需在 Debian/Termux 使用，手动
@@ -151,3 +165,7 @@ tinty config --data-dir-path  # 运行时目录；ls 查看生成的主题文件
   `docs/gh-dash.md`。
 - glow 没跟随 → 同款标记校验；显式传 `-s` 不受包装影响；`gl` 新逻辑需
   新 shell；yazi 内预览需重开 `y`。
+- delta 没跟随 scheme → 确认 `tinty apply` 触发过 hook（config.toml 的
+  `hooks` 改动即时生效，无需 sync）；查 `<data>/delta-scheme-colors.gitconfig`
+  首行 `_tinty_scheme` 标记是否为当前 scheme；无 tinty 时 include 缺失被
+  忽略，delta 用原生默认，属预期。

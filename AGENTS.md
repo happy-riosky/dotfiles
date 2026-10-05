@@ -109,6 +109,10 @@ DOTFILES_PLATFORM=<p> [DOTFILES_PROFILE=<pr>]`；覆盖项：
 - Tinty 主题：`home/.config/tinted-theming/tinty/config.toml` 与 darwin 的
   `platforms/darwin/home/.config/git/config` 受管；`~/.local/share/tinted-theming/tinty/`
   与 `~/.config/kitty/current-theme.conf` 为运行时产物，绝不入库。
+  delta 样式由 tinty hook `home/.config/tinted-theming/tinty/hooks/delta.sh`（读
+  `TINTY_SCHEME_PALETTE_BASE*_RGB_*` env）渲染到 `<data>/delta-scheme-colors.gitconfig`，
+  受管 git config 第二个 include 引用；无 tinty 时 include 缺失即忽略（delta
+  原生）；槽位语义见 `docs/theming.md`。
   yazi flavor / glow 样式 / lazygit overlay / gh-dash overlay 由
   `scripts/tinty/generate` 生成到
   `~/.config/yazi/flavors/tinty-{dark,light}.yazi/`、
