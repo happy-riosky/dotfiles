@@ -48,11 +48,18 @@ init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 
   --configured`——reload/SIGUSR1 只热应用 fg/bg/ANSI 调色板，**不重应用
   cursor/tab bar 等 UI 色**（0.48 实测）；为此 kitty.conf 开
   `allow_remote_control socket-only` + `listen_on unix:kitty`（这两项
-  reload 不生效，改动后需冷启动）。socket 不可用（如 Ghostty 内切主题）时
-  hook 回退 SIGUSR1 半量重载，回 kitty 跑一次 `theme` 即全量追平。macOS
-  标题栏不在 set-colors 词汇表内，靠 include 之后的
-  `macos_titlebar_color background` 跟随背景（顺序颠倒会被主题文件的
-  显式 hex 覆盖）。
+  reload 不生效，改动后需冷启动）。socket 路径两路解析：`KITTY_LISTEN_ON`
+  env（kitty 直接子进程才有，tmux pane 里被剥离）+ 扫描
+  `${TMPDIR}kitty-*`（config 相对 listen_on 按临时目录解析并追加 PID），
+  多实例 kitty 全部套用。kitten 调用必须 `</dev/null`：stdin 为 TTY
+  （hook 继承 pane 终端）且 socket 不可达时，kitten 走 DCS `@kitty-cmd`
+  终端回退并等待终端回应——tmux 不应答此握手，硬等 **10s i/o timeout**
+  （kitty 0.49.2 实测：`tinty apply` 卡在 `Child::wait/__wait4`，且 tinty
+  串行执行 item hooks，后续 hook 全被堵住）；关闭 stdin 后毫秒级快速
+  失败。全部 socket 失败时 hook 回退 SIGUSR1 半量重载，回 kitty 直接跑
+  一次 `theme` 即全量追平。macOS 标题栏不在 set-colors 词汇表内，靠
+  include 之后的 `macos_titlebar_color background` 跟随背景（顺序颠倒
+  会被主题文件的显式 hex 覆盖）。
 - **zsh**：`.zshrc` 的 `dotfiles_tinty` 包装函数在 apply/init 后 source
   数据目录新生成的 `*.sh`（tinted-shell 16 色 + fzf 配色；hook 只影响
   子进程）；nvim `:terminal` 里以 `$NVIM` 判定、经不可写 TTY 静默 source
@@ -65,6 +72,8 @@ init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 
   `simple_batt_fallback.tmux.conf` 打底（frappe 中性面 + 黄 `#da831b`，
   消灭内建绿色状态栏的启动一闪，覆盖 server/Termux/首次 apply 前），
   tinty 生成的主题文件存在则覆盖。apply 时 hook 对运行中的 server 热加载。
+  item 刻意排在 kitty 之前：tinty 串行执行 item hooks，kitty hook 的
+  失败路径（socket 缺失时的 DCS 超时/快速失败）不应拖住 statusline。
 - **lazygit**：基础 `config.yml` 主题中立（delta 明暗完全跟随 tinty）。
   `lg`（aliases.sh）启动前刷新 `~/.config/lazygit/tinty.yml`（generate 按
   当前 scheme 渲染，`_tinty_scheme` 标记须与 `current_scheme` 一致，防

@@ -24,25 +24,33 @@ name = "tinted-fzf"
 path = "https://github.com/tinted-theming/tinted-fzf"
 themes-dir = "sh"
 
-# kitty 终端：复制为不受管的 current-theme.conf（kitty.conf 末尾 include）。
-# 刷色优先 kitten @ set-colors --all --configured：--all 覆盖所有窗口，
-# --configured 同步新窗口/reset 的基准色——弥补 kitty reload 只热应用
-# fg/bg/调色板、不重应用 cursor/tab bar 等 UI 色的缺陷（0.48 实测）。
-# socket 不可用（kitty 未冷启动过带 listen_on 的配置/不在 kitty 内切换）时
-# 回退 SIGUSR1 半量重载；kitty 内下一次 shell 启动的 tinty init 会全量修补。
-[[items]]
-name = "kitty"
-path = "https://github.com/tinted-theming/tinted-terminal"
-themes-dir = "themes/kitty"
-supported-systems = ["base16", "base24"]
-hook = 'mkdir -p "$HOME/.config/kitty" && cp -f "$TINTY_THEME_FILE_PATH" "$HOME/.config/kitty/current-theme.conf" && { kitten @ set-colors --all --configured "$HOME/.config/kitty/current-theme.conf" >/dev/null 2>&1 || { [ "$TINTY_THEME_OPERATION" = "apply" ] && pgrep -x kitty >/dev/null 2>&1 && pkill -USR1 -x kitty; }; } || true'
-
-# tmux 状态栏：apply 时热加载；tmux.conf 启动时 source 生成文件（-q 容忍缺失）
+# tmux 状态栏：apply 时热加载；tmux.conf 启动时 source 生成文件（-q 容忍缺失）。
+# item 必须在 kitty 之前：tinty 串行执行 item hooks，kitty hook 的失败
+# 路径（socket 缺失）不该拖住 statusline 刷新。
 [[items]]
 name = "tinted-tmux"
 path = "https://github.com/tinted-theming/tinted-tmux"
 themes-dir = "colors"
 hook = '(tmux run 2>/dev/null && tmux source-file "$TINTY_THEME_FILE_PATH") || true'
+
+# kitty 终端：复制为不受管的 current-theme.conf（kitty.conf 末尾 include）。
+# 刷色优先 kitten @ set-colors --all --configured：--all 覆盖所有窗口，
+# --configured 同步新窗口/reset 的基准色——弥补 kitty reload 只热应用
+# fg/bg/调色板、不重应用 cursor/tab bar 等 UI 色的缺陷（0.48 实测）。
+# socket 路径两路解析：KITTY_LISTEN_ON env（kitty 直接子进程才有；tmux
+# pane 里被剥离）+ 扫描 ${TMPDIR}kitty-*（kitty.conf 的 listen_on unix:kitty
+# 按临时目录解析并追加 PID；kitty 0.49.2 实测无 CLI 覆盖时不追加——两条
+# 路径都试，多实例 kitty 全部套用）。kitten 必须 </dev/null：stdin 为 TTY
+# 且 socket 不可达时，kitten 走 DCS @kitty-cmd 终端回退等回应——tmux 不
+# 应答此握手，硬等 10s i/o timeout（0.49.2 实测，sample 见 Child::wait/
+# __wait4）；关闭 stdin 即毫秒级快速失败。全部 socket 失败时回退
+# SIGUSR1 半量重载；kitty 内下一次 shell 启动的 tinty init 会全量修补。
+[[items]]
+name = "kitty"
+path = "https://github.com/tinted-theming/tinted-terminal"
+themes-dir = "themes/kitty"
+supported-systems = ["base16", "base24"]
+hook = 'mkdir -p "$HOME/.config/kitty" && cp -f "$TINTY_THEME_FILE_PATH" "$HOME/.config/kitty/current-theme.conf" && { rc=1; if [ -n "${KITTY_LISTEN_ON:-}" ]; then kitten @ set-colors --all --configured "$HOME/.config/kitty/current-theme.conf" </dev/null >/dev/null 2>&1 && rc=0; fi; for s in "${TMPDIR:-/tmp}"kitty-*; do [ -S "$s" ] || continue; kitten @ --to "unix:$s" set-colors --all --configured "$HOME/.config/kitty/current-theme.conf" </dev/null >/dev/null 2>&1 && rc=0; done; [ "$rc" = 0 ] || { [ "$TINTY_THEME_OPERATION" = "apply" ] && pgrep -x kitty >/dev/null 2>&1 && pkill -USR1 -x kitty; }; } || true'
 
 # nvim/vim 配色：init.lua/.vimrc 直接 source 生成文件并在 FocusGained 时跟随切换
 [[items]]
