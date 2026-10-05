@@ -177,3 +177,15 @@ tinty config --data-dir-path  # 运行时目录；ls 查看生成的主题文件
   `hooks` 改动即时生效，无需 sync）；查 `<data>/delta-scheme-colors.gitconfig`
   首行 `_tinty_scheme` 标记是否为当前 scheme；无 tinty 时 include 缺失被
   忽略，delta 用原生默认，属预期。
+- 非全屏切主题时标题栏先闪青/白再落主题色 → 已知无害瞬态，非配置问题。
+  kitty 的 `macos_titlebar_color background` 靠"透明标题栏 + 垫底 NSView"
+  hack 实现（`glfw/cocoa_window.m` 的 `glfwCocoaSetWindowChrome`）：每次
+  `set-colors` 都按新背景 luma 翻 `NSWindow.appearance`、把
+  `window.background` 重置为系统动态色（且 `setBackgroundColor` 先于
+  `setAppearance`，动态色先按旧外观解析，亮→暗切换偶发闪白），再拆掉重建
+  垫底视图；macOS 26 Liquid Glass 会用系统强调色（默认蓝→观感青）染玻璃、
+  appearance 切换带动画，中间态肉眼可见。全屏标题栏隐藏故无此现象。
+  v0.49.2（2026-10 最新）无修复；合理修法是垫底视图复用、只改
+  `layer.backgroundColor` 使颜色变化原子提交。缓解可选：系统设置→外观→
+  颜色改石墨灰、关 wallpaper tinting。验证：手动 `kitten @ set-colors
+  --all --configured ~/.config/kitty/current-theme.conf` + 慢速录屏。
