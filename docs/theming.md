@@ -39,6 +39,9 @@ tinty apply base16-catppuccin-frappe
 | `theme` | fzf 挑选并应用（`aliases.sh` 提供，需 tinty+fzf） |
 | `tinty sync` / `tinty update` | `config.toml` 变更后同步 / 更新 schemes 与模板 |
 
+特殊主题速查（纯黑背景 / 纯灰度 / 纯白背景 / 复古仿真）见
+[tinty-themes.md](tinty-themes.md)。
+
 日常切换**不需要改仓库**：当前 scheme 记在运行时 `current_scheme`，`tinty
 init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 `config.toml` 的
 `default-scheme` / `[[rings]]` 并提交。
