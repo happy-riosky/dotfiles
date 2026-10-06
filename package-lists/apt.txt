@@ -23,7 +23,6 @@ stow
 tealdeer
 tmux
 tree
-urlview
 uuid-runtime
 vim
 wget

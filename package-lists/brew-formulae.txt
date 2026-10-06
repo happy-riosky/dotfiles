@@ -30,7 +30,6 @@ tinted-theming/tinted/tinty
 tldr
 tmux
 tree
-urlview
 vim
 wget
 xclip

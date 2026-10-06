@@ -115,7 +115,7 @@ APT 清单中的某个包不可用时，脚本会先尝试整批安装；整批�
 验证主要二进制：
 
 ```bash
-command -v ack bc clang curl fzf git pipx rg stow tldr tmux tree urlview vim zoxide zsh
+command -v ack bc clang curl fzf git pipx rg stow tldr tmux tree vim zoxide zsh
 ```
 
 每一项都应输出路径。额外检查：

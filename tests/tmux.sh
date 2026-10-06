@@ -21,7 +21,7 @@ test_no_percent_before_hash_expansion() {
 }
 
 # Plugins executed by TPM run via run-shell with the tmux SERVER's PATH,
-# captured at server start -- it may lack ~/.local/bin (Termux urlview).
+# captured at server start -- it may lack ~/.local/bin.
 # .tmux.conf must prepend user-local bins to the global environment BEFORE
 # TPM is initialized, so plugin detection and source-file reloads both work.
 test_server_path_fix_precedes_tpm() {

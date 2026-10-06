@@ -59,7 +59,7 @@ pkg update
 验证二进制：
 
 ```bash
-command -v ack git jq ssh termux-battery-status tmux urlview vim zoxide zsh lazygit
+command -v ack git jq ssh termux-battery-status tmux vim zoxide zsh lazygit
 ```
 
 每一项都应输出 `$PREFIX/bin/...` 路径。
@@ -78,10 +78,6 @@ lazygit --version
 `jq` 和 `termux-battery-status` 分别由 `jq`、`termux-api` 提供；它们是
 tmux 电池状态栏的运行时依赖。若 `termux-battery-status` 不存在，请确认
 Termux:API 应用也已安装并与当前 Termux 来源匹配。
-
-`urlview` 不是包，而是本仓库提供的脚本（`platforms/termux/home/.local/bin/urlview`，
-基于 fzf），由 `./install termux` 链接到 `~/.local/bin/urlview`，供
-tmux-urlview 使用。
 
 ## 4. 验证链接 dry-run
 
