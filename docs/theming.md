@@ -120,7 +120,10 @@ init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 
   漂移），同一行会被劈成深浅两截。
 - **nvim/vim**：同构接线——source 生成的 `base16-vim-colors-file.vim`
   （暴露 `g:tinted_gui*` 调色板）+ FocusGained 跟随切换；无 tinty 回退
-  catppuccin-frappe。vim 的 lightline 用 `tinty` colorscheme（受管
+  catppuccin-frappe。`:LazyGit` 浮窗 winhighlight 链
+  NormalFloat/FloatBorder→Normal（对齐 toggleterm 同款映射，规避 base16
+  模板给 NormalFloat 的 base01 底色——lazygit 不刷窗口底色会整窗露出）。
+  vim 的 lightline 用 `tinty` colorscheme（受管
   `tinty.vim`）动态取当前 scheme 的黄槽 gui0A 作 accent，无 tinty 时
   内置 frappe 常量兜底。
 - **git-delta**：darwin 的 `~/.config/git/config`（受管）设

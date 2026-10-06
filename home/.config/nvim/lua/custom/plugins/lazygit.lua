@@ -35,6 +35,11 @@ vim.api.nvim_create_user_command('LazyGit', function(opts)
     style = 'minimal',
     border = 'rounded',
   })
+  -- 对齐 toggleterm 浮窗（其 config 默认同款映射）：base16 模板给
+  -- NormalFloat/FloatBorder 的底色是 base01，lazygit 自身不刷窗口底色、
+  -- 整窗回落 NormalFloat；链回 Normal 后底色为 base00，且按名字链接，
+  -- tinty 切主题 / 无 tinty 回退 catppuccin 时自动跟随。
+  vim.wo[float_win].winhighlight = 'NormalFloat:Normal,FloatBorder:Normal'
 
   vim.bo[buf].bufhidden = 'wipe'
   vim.keymap.set('n', 'q', close_float, { buffer = buf })
