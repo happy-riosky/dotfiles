@@ -7,11 +7,13 @@ default-cycle-ring = "default"
 
 # hooks 跟随 scheme：delta 渲染 <data>/delta-scheme-colors.gitconfig（受管
 # darwin git config include 引用）；otty 渲染 ~/.config/otty/themes/
-# tinty.ottytheme（theme 键由机器本地 otty-cli 设置，不入库）。bash 显式
-# 调用免 exec 位。见 docs/theming.md
+# tinty.ottytheme（theme 键由机器本地 otty-cli 设置，不入库）；tmux 渲染
+# <data>/tmux-status-colors.conf（@tp_* 黄色阶，simple_batt 布局与
+# status-line.sh 引用）。bash 显式调用免 exec 位。见 docs/theming.md
 hooks = [
 	'bash "$HOME"/.config/tinted-theming/tinty/hooks/delta.sh',
 	'bash "$HOME"/.config/tinted-theming/tinty/hooks/otty.sh',
+	'bash "$HOME"/.config/tinted-theming/tinty/hooks/tmux.sh',
 ]
 
 # `tinty cycle` 在深/浅之间轮换
