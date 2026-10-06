@@ -19,6 +19,8 @@ require('neo-tree').setup {
     window = {
       mappings = {
         ['<leader>e'] = 'close_window',
+        -- 释放 <space>，让全局 <leader> 快捷键在树内可用
+        ['<space>'] = 'none',
       },
     },
   },
