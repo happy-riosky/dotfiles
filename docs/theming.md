@@ -101,6 +101,29 @@ init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 
   tinty 生成的主题文件存在则覆盖。apply 时 hook 对运行中的 server 热加载。
   item 刻意排在 kitty 之前：tinty 串行执行 item hooks，kitty hook 的
   失败路径（socket 缺失时的 DCS 超时/快速失败）不应拖住 statusline。
+- **tmux 黄色阶斜切块**：hook `hooks/tmux.sh`（delta.sh 同款 env 契约）
+  渲染 `<data>/tmux-status-colors.conf`（`@tp_bg/fg/accent/seg{1..4}_{bg,fg}`
+  + `_tinty_scheme` 标记），apply/init 时热加载，`.tmux.conf` 启动 source。
+  色槽 = 中性海拔 + 黄锚点（与 vim lightline tinty 配色同构）：seg1 =
+  纯 base0A 黄（左=会话块/右=日期块，镜像锚点，字色按 scheme 明暗：
+  深色→base00、浅色→base05），seg2/3/4 = base03/02/01（海拔层，字色
+  base05）。prefix 按下 = 前景色块（@tp_fg 底 + 底色字 + 加粗，块形/尾边不变）。注意：
+  simple_batt_fallback 与 status-line.sh 的 frappe 兜底常量仍是旧
+  黄混设计，同步缓议。布局引用：`simple_batt.tmux.conf` 会话块/窗口块
+  （左组 `\` 斜：入 `` ◥ U+25E5 / 出 `` ◣ U+25E3，块间斜缝分开）与
+  `~/.tmux/scripts/status-line.sh`（左右两 mode）。左组：会话段=seg1 黄锚点
+  （conf 静态）+ cmd=seg2（与日期同色，常驻）**合并为一块**——段间 ◥ 过渡边
+  由 conf 内联、prefix 两分支同拍翻转（#() 任务滞后不参与变色；cmd 为空
+  时脚本仅输出闭合尾边）；右组
+  （`/` 斜 `` ◢ U+25E2 单斜边块块贴合，首块自底色升、末块平边收）：
+  电池=seg4（≥60）→ uptime=seg3（≥100）→ 日期=seg2（≥100）→ 时刻=
+  seg1 黄锚点（常驻）——两端黄锚点镜像、内侧中性海拔向中心渐深；
+  电池直调 tmux-battery 插件脚本，uptime 读 /proc/uptime 或
+  sysctl kern.boottime）。
+  无 tinty 时 fallback conf 的 frappe 预混常量（同公式硬编码）打底。
+  几何三角 U+25E2-E5 任何字体都有——刻意不用 powerline `` ``：
+  字体覆盖不稳（曾实测回退成圆头形）。`#()` 输出内嵌 `#[...]` 样式码
+  在 tmux 3.5a 实测可渲染（探针差分验证）。
 - **lazygit**：基础 `config.yml` 主题中立（delta 明暗完全跟随 tinty）。
   `lg`（aliases.sh）启动前刷新 `~/.config/lazygit/tinty.yml`（generate 按
   当前 scheme 渲染，`_tinty_scheme` 标记须与 `current_scheme` 一致，防
