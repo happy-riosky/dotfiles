@@ -5,9 +5,14 @@
 default-scheme = "base16-catppuccin-frappe"
 default-cycle-ring = "default"
 
-# delta 样式跟随 scheme：渲染 <data>/delta-scheme-colors.gitconfig（受管
-# darwin git config include 引用；bash 显式调用免 exec 位）。见 docs/theming.md
-hooks = ['bash "$HOME"/.config/tinted-theming/tinty/hooks/delta.sh']
+# hooks 跟随 scheme：delta 渲染 <data>/delta-scheme-colors.gitconfig（受管
+# darwin git config include 引用）；otty 渲染 ~/.config/otty/themes/
+# tinty.ottytheme（theme 键由机器本地 otty-cli 设置，不入库）。bash 显式
+# 调用免 exec 位。见 docs/theming.md
+hooks = [
+	'bash "$HOME"/.config/tinted-theming/tinty/hooks/delta.sh',
+	'bash "$HOME"/.config/tinted-theming/tinty/hooks/otty.sh',
+]
 
 # `tinty cycle` 在深/浅之间轮换
 [[rings]]

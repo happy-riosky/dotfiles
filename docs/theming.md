@@ -9,7 +9,7 @@ opencode/lazygit/yazi/glow/gh-dash 经 `scripts/tinty/generate` 与启动器跟�
 | 路径 | 性质 |
 |---|---|
 | `home/.config/tinted-theming/tinty/config.toml` | 受管 leaf link（本仓库） |
-| `home/.config/tinted-theming/tinty/hooks/delta.sh` | 受管（tinty hook：按 apply 的 scheme 渲染 delta 样式 hex） |
+| `home/.config/tinted-theming/tinty/hooks/{delta,otty}.sh` | 受管（tinty hooks：按 apply 的 scheme 渲染 delta 样式 hex / otty 用户主题） |
 | `home/.config/lazygit/{config,frappe,latte-theme}.yml`、`home/.tmux/colors/simple_batt*.tmux.conf` | 受管（lazygit 基础+overlay / tmux 布局与回退配色） |
 | `home/.config/gh-dash/config.yml`、`home/.local/bin/gd` | 受管（gh-dash 主题中立基础配置 / tinty 感知启动器） |
 | `home/.config/opencode/tui-plugins/tinty-theme.js`、`home/.config/opencode/themes/catppuccin-frappe-yellow.json` | 受管（实时跟随插件 / 无 tinty 回退主题） |
@@ -21,6 +21,7 @@ opencode/lazygit/yazi/glow/gh-dash 经 `scripts/tinty/generate` 与启动器跟�
 | `home/.config/kitty/kitty.conf` 末尾 `include current-theme.conf` | 受管配置引用运行时文件 |
 | `~/.config/kitty/current-theme.conf` | tinty hook 生成，**不入库** |
 | `~/.local/share/tinted-theming/tinty/delta-scheme-colors.gitconfig` | `hooks/delta.sh` 渲染的 delta 样式（受管 git config include），**不入库** |
+| `~/.config/otty/themes/tinty-<scheme>.ottytheme` | `hooks/otty.sh` 渲染的 Otty 用户主题（每 scheme 一个，旧 scheme 自动清理），**不入库** |
 | `~/.local/share/tinted-theming/tinty/` | tinty 运行时（模板仓库、`current_scheme`、生成的主题文件），**不入库** |
 
 ## 安装与日常
@@ -65,6 +66,27 @@ init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 
   一次 `theme` 即全量追平。macOS 标题栏不在 set-colors 词汇表内，靠
   include 之后的 `macos_titlebar_color background` 跟随背景（顺序颠倒
   会被主题文件的显式 hex 覆盖）。
+- **otty**：无上游 tinty 模板，且 Otty 保存配置为原子写（temp+rename
+  不跟随软链），受管软链会被顶回（2026-09-16 退管，见
+  `docs/archive/process.md`），故不经 link 管理——`hooks/otty.sh` 把
+  当前 scheme 渲染为 `~/.config/otty/themes/tinty-<scheme>.ottytheme`
+  （16 色 base16 标准映射，与 kitty 同源；base00 加权亮度判
+  `[meta] mode`；旧 scheme 文件自动清理）。`config reload` **不重读
+  同名主题文件的内容、也不对已存在窗口重应用主题**——hook 经 otty-cli
+  把 `theme`/`theme-dark` set 到当前 slug，键值变化使 reload 后
+  **新建窗口/标签即时拿到新配色**；旧窗口需关闭重开，app 重启必然正确
+  （持久层不依赖 IPC：无 CLI / 未运行时只写文件与下次 set 补做）。
+  已穷尽 1.5.4 全部外部途径（`config set --reload`、`theme import
+  --activate`、`--transient` 未实现、auto-theme toggle、分布式通知）
+  均不重应用旧窗口；引擎本身支持（系统外观切换实时刷色），官方文档
+  已承诺 `otty theme set` 命令（1.5.4 未含）——发布后 hook 改用之并
+  重新验证。**旧窗口过渡工作流（实测）**：`tinty apply` 后在 Otty 内
+  ⌘⇧P（或 View → Themes / Settings → Appearance）选中 `tinty <scheme>`
+  用户主题——app 内选择器走引擎活体路径，全窗口实时变色（带 fade）；
+  若对已激活同名主题选择无动作，先选其他主题再选回。内联
+  `palette-*`/`foreground`/`background` 快照色优先于
+  主题文件，首次接入需 `config unset` 清除（Otty 颜色 UI 日后也会写回
+  内联覆盖，需重清）。`~/.config/otty` 缺失（server/termux）整段跳过。
 - **zsh**：`.zshrc` 的 `dotfiles_tinty` 包装函数在 apply/init 后 source
   数据目录新生成的 `*.sh`（tinted-shell 16 色 + fzf 配色；hook 只影响
   子进程）；nvim `:terminal` 里以 `$NVIM` 判定、经不可写 TTY 静默 source
@@ -183,6 +205,13 @@ tinty config --data-dir-path  # 运行时目录；ls 查看生成的主题文件
   `hooks` 改动即时生效，无需 sync）；查 `<data>/delta-scheme-colors.gitconfig`
   首行 `_tinty_scheme` 标记是否为当前 scheme；无 tinty 时 include 缺失被
   忽略，delta 用原生默认，属预期。
+- otty 没跟随 → 已存在窗口**不**经 CLI 实时跟随（1.5.4 外部途径穷尽）：
+  新窗口/标签即时生效；旧窗口在 Otty 内 ⌘⇧P 选中当前 `tinty <scheme>`
+  主题即全窗口实时变色（过渡工作流），或关闭重开、重启 app。仍不对时查
+  `otty-cli config get theme` 是否为当前 slug（`tinty-<scheme>`）、
+  `~/.config/otty/themes/` 对应文件首行 `_tinty_scheme` 标记是否为
+  当前 scheme；`config show` 确认无内联 `palette-*`/`foreground`/
+  `background` 覆盖（颜色 UI 会写回内联，重新 `config unset` 清除）。
 - 非全屏切主题时标题栏先闪青/白再落主题色 → 已知无害瞬态，非配置问题。
   kitty 的 `macos_titlebar_color background` 靠"透明标题栏 + 垫底 NSView"
   hack 实现（`glfw/cocoa_window.m` 的 `glfwCocoaSetWindowChrome`）：每次
