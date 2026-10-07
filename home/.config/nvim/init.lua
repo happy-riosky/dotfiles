@@ -578,11 +578,17 @@ do
     -- You can put your default mappings / updates / etc. in here
     --  All the info you're looking for is in `:help telescope.setup()`
     --
-    -- defaults = {
-    --   mappings = {
-    --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-    --   },
-    -- },
+    -- Prompt normal mode (<esc> once): k/j cycle prompt history, matching the
+    -- zsh vicmd history-substring-search bindings in ~/.zshrc. Result
+    -- selection stays on <Up>/<Down>/<C-n>/<C-p>.
+    defaults = {
+      mappings = {
+        n = {
+          ['k'] = require('telescope.actions').cycle_history_prev,
+          ['j'] = require('telescope.actions').cycle_history_next,
+        },
+      },
+    },
     -- pickers = {}
     extensions = {
       ['ui-select'] = { require('telescope.themes').get_dropdown() },
