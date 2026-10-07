@@ -217,6 +217,7 @@ do
   vim.keymap.set('n', '<leader>wq', '<cmd>wq<CR>', { desc = '[W]rite and [Q]uit', silent = true })
   vim.keymap.set('n', '<leader>qa', '<cmd>qa<CR>', { desc = '[Q]uit [A]ll', silent = true })
   vim.keymap.set('n', '<leader>Q', '<cmd>q!<CR>', { desc = 'Force quit', silent = true })
+  vim.keymap.set('n', '<leader>R', '<cmd>restart<CR>', { desc = '[R]estart Neovim (keep session)', silent = true })
 
   -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
   -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
