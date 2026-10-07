@@ -25,7 +25,7 @@
 - [ ] lazygit 浮窗（`3b25917`）已覆盖 diff/stage/历史工作流，移除 diffview.nvim：
       删 `init.lua` 中 diffview 的 `vim.pack.add` 行（plenary 保留，neo-tree 仍
       依赖）与 `<leader>gd/gs/gf/gh` 映射、catppuccin 的 `diffview = true`
-      集成项；同步更新 `docs/neovim.md`（Managed Files 与 Theme 节）；随后
+      集成项；同步更新 `docs/neovim.md`（受管文件与主题节）；随后
       `:lua vim.pack.del({ 'diffview.nvim' })` 卸载磁盘克隆并清理
       `nvim-pack-lock.json`（`vim.pack.update()` 只更新已装插件，不会移除条目）。
 
@@ -166,7 +166,7 @@
   下的克隆未删，而 vim.pack 启动时的 lock-repair 机制按磁盘克隆的 HEAD/origin
   自动补写缺失条目（runtime `lua/vim/pack.lua` 的 `lock_sync`/`lock_repair`），
   故每次回退 lock 都会被写回。执行 `:lua vim.pack.del({ 'minuet-ai.nvim' })`
-  同时删除克隆与条目；`docs/neovim.md` Maintenance 节补充卸载规则，本文件
+  同时删除克隆与条目；`docs/neovim.md` 维护节补充卸载规则，本文件
   Diffview 待办的 `vim.pack.update()` 错误指引同步修正为 `vim.pack.del`。
 - 结果：通过。lock 与 HEAD 逐字节一致，无需提交；`git diff --check` 干净。
 - 证据：nvim 输出 "vim.pack: Removed plugin 'minuet-ai.nvim'"；`git status`

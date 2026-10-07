@@ -1,38 +1,36 @@
-# macOS Application Configuration
+# macOS 应用配置
 
-This guide covers macOS-only application configuration for the `full` profile.
-Run repository commands from the repository root. See the [README](../README.md)
-for installing packages, linking configs, and installing plugins.
+本指南覆盖 `full` profile 的 macOS 专属应用配置。请在仓库根目录执行仓库命令；
+包安装、配置链接与插件安装见 [README](../README.md)。
 
-## Configuration Management
+## 配置管理
 
-macOS Preferences plists are **real files**, never symlinks. Goldens live under
-`platforms/darwin/managed/`. Ordinary application config files use managed links.
+macOS Preferences plist 是**真实文件**，绝不是软链接。黄金文件位于
+`platforms/darwin/managed/`；普通应用配置文件使用受管软链接。
 
-| Config | Runtime | Repository source | Tool |
+| 配置 | 形态 | 仓库来源 | 工具 |
 |--------|---------|-------------------|------|
-| Core (Git, SSH, tmux, Vim, shell) | leaf links | `home/` | `install` |
-| Karabiner | directory link | `platforms/darwin/home/.config/karabiner/` | `install` |
-| Amethyst | leaf link | `platforms/darwin/home/.config/amethyst/amethyst.yml` | `install` |
-| AeroSpace | leaf link | `platforms/darwin/home/.config/aerospace/` | `install` |
-| Hammerspoon | leaf link | `platforms/darwin/home/.hammerspoon/init.lua` | `install` |
-| Mouseless | leaf link | `platforms/darwin/home/Library/Application Support/Mouseless/configs/config.yaml` | `install` |
-| Git delta + tinty theme | leaf link | `platforms/darwin/home/.config/git/config` | `install` |
-| System hotkeys | real plist | `platforms/darwin/managed/hotkeys/` | `scripts/hotkeys-*.sh` |
-| Rectangle | real plist | `platforms/darwin/managed/hotkeys/` | `scripts/hotkeys-*.sh` |
-| App Preferences | real plists | `platforms/darwin/managed/preferences/` | `scripts/prefs-*.sh` |
+| 核心（Git、SSH、tmux、Vim、shell） | 叶子软链接 | `home/` | `install` |
+| Karabiner | 目录软链接 | `platforms/darwin/home/.config/karabiner/` | `install` |
+| Amethyst | 叶子软链接 | `platforms/darwin/home/.config/amethyst/amethyst.yml` | `install` |
+| AeroSpace | 叶子软链接 | `platforms/darwin/home/.config/aerospace/` | `install` |
+| Hammerspoon | 叶子软链接 | `platforms/darwin/home/.hammerspoon/init.lua` | `install` |
+| Mouseless | 叶子软链接 | `platforms/darwin/home/Library/Application Support/Mouseless/configs/config.yaml` | `install` |
+| Git delta + tinty 主题 | 叶子软链接 | `platforms/darwin/home/.config/git/config` | `install` |
+| 系统快捷键 | 真实 plist | `platforms/darwin/managed/hotkeys/` | `scripts/hotkeys-*.sh` |
+| Rectangle | 真实 plist | `platforms/darwin/managed/hotkeys/` | `scripts/hotkeys-*.sh` |
+| 应用 Preferences | 真实 plist | `platforms/darwin/managed/preferences/` | `scripts/prefs-*.sh` |
 
-## Restore Preferences
+## 恢复偏好设置
 
 ```bash
 bash scripts/hotkeys-restore.sh --yes
 bash scripts/prefs-restore.sh --yes
 ```
 
-Backups are saved to `~/.local/state/dotfiles/`. Omit `--yes` for a confirmation
-prompt.
+备份保存到 `~/.local/state/dotfiles/`。省略 `--yes` 时会先要求确认。
 
-## Export Preferences After Changes
+## 修改后导出偏好
 
 ```bash
 bash scripts/hotkeys-export.sh
@@ -41,200 +39,178 @@ git add platforms/darwin/managed
 git commit -m "chore(macos): update preference goldens"
 ```
 
-## Configure Amethyst
+## 配置 Amethyst
 
-The Amethyst YAML configuration is maintained at
-`platforms/darwin/home/.config/amethyst/amethyst.yml` and linked to
-`~/.config/amethyst/amethyst.yml` by `./install full`. See Amethyst's [official
-Configuration Files documentation](https://github.com/ianyh/Amethyst/blob/development/docs/configuration-files.md)
-for supported locations, settings, and command syntax; the [official sample
-configuration](https://github.com/ianyh/Amethyst/blob/development/.amethyst.sample.yml)
-is a useful reference.
+Amethyst 的 YAML 配置维护在
+`platforms/darwin/home/.config/amethyst/amethyst.yml`，由 `./install full`
+链接到 `~/.config/amethyst/amethyst.yml`。支持的位置、设置项与命令语法见
+Amethyst [官方配置文件文档](https://github.com/ianyh/Amethyst/blob/development/docs/configuration-files.md)；
+[官方示例配置](https://github.com/ianyh/Amethyst/blob/development/.amethyst.sample.yml)
+也是有用的参考。
 
-Amethyst stores GUI preferences separately, and a custom YAML configuration takes
-precedence over GUI settings. Manage each setting from one source to avoid
-confusing behavior, restart Amethyst after editing the YAML file, and run
-`./scripts/doctor` to verify the managed link. The app's configuration-file
-warning is expected whenever a custom configuration is present.
+Amethyst 的 GUI 偏好单独存储，自定义 YAML 配置优先于 GUI 设置。每个设置只从
+一个来源管理，避免行为混乱；编辑 YAML 后重启 Amethyst，并运行
+`./scripts/doctor` 验证受管链接。存在自定义配置时，应用的配置文件警告属预期。
 
-## Configure AeroSpace
+## 配置 AeroSpace
 
-The AeroSpace TOML configuration is maintained at
-`platforms/darwin/home/.config/aerospace/aerospace.toml` and linked to
-`~/.config/aerospace/aerospace.toml` by `./install full`. Changes made through the
-linked file are therefore visible in Git immediately.
+AeroSpace 的 TOML 配置维护在
+`platforms/darwin/home/.config/aerospace/aerospace.toml`，由 `./install full`
+链接到 `~/.config/aerospace/aerospace.toml`。通过链接文件做的修改会立即反映在
+Git 中。
 
-## Configure Hammerspoon Space Controls
+## 配置 Hammerspoon Space 控制
 
-The Hammerspoon configuration is maintained at
-`platforms/darwin/home/.hammerspoon/init.lua` and linked to
-`~/.hammerspoon/init.lua` by `./install full`. Install Hammerspoon explicitly with
-`./scripts/packages full` or `brew install --cask hammerspoon`. Launch the app,
-grant it Accessibility access in System Settings, and choose `Reload Config` from
-its menu bar menu after changing the configuration. See Hammerspoon's [Getting
-Started guide](https://www.hammerspoon.org/go/) and [`hs.spaces` API
-documentation](https://www.hammerspoon.org/docs/hs.spaces.html) for the underlying
-runtime and Space operations.
+Hammerspoon 配置维护在 `platforms/darwin/home/.hammerspoon/init.lua`，由
+`./install full` 链接到 `~/.hammerspoon/init.lua`。用 `./scripts/packages full`
+或 `brew install --cask hammerspoon` 显式安装 Hammerspoon。启动应用，在系统
+设置中授予辅助功能权限，修改配置后从其菜单栏菜单选择 `Reload Config`。底层
+运行时与 Space 操作见 Hammerspoon [入门指南](https://www.hammerspoon.org/go/)
+与 [`hs.spaces` API 文档](https://www.hammerspoon.org/docs/hs.spaces.html)。
 
-The current shortcuts use **Left Command+Control+Shift** to avoid the Amethyst
-bindings and the existing Karabiner Right Command layer:
+当前快捷键使用**左 Command+Control+Shift**，避开 Amethyst 绑定与本仓库
+Karabiner 既有的右 Command 层：
 
-| Shortcut | Action |
+| 快捷键 | 动作 |
 |----------|--------|
-| `Left Command+Control+Shift+N` | Create and switch to a native Space |
-| `Left Command+Control+Shift+E` | Move ordinary windows from the current Space to an adjacent Space |
-| `Left Command+Control+Shift+D` twice | Switch away and delete the current native Space |
-| `Left Command+Control+Shift+F` | Exit the focused application's native full-screen mode |
+| `左 Command+Control+Shift+N` | 创建原生 Space 并切换过去 |
+| `左 Command+Control+Shift+E` | 把普通窗口从当前 Space 移到相邻 Space |
+| 连按两次 `左 Command+Control+Shift+D` | 切走并删除当前原生 Space |
+| `左 Command+Control+Shift+F` | 退出焦点应用的原生全屏模式 |
 
-Hammerspoon receives Command as an aggregate modifier and cannot distinguish the
-left and right Command keys itself. Use the Left Command key for these bindings;
-the Right Command key remains reserved for the existing Karabiner layer.
+Hammerspoon 收到的 Command 是聚合修饰键，自身无法区分左右 Command。这些绑定
+请使用左 Command；右 Command 保留给既有的 Karabiner 层。
 
-Space operations use Hammerspoon's `hs.spaces` module and may briefly show Mission
-Control. The module depends on macOS Accessibility behavior and private APIs; if
-deleting a Space fails after a macOS update, use Mission Control manually rather
-than closing windows blindly. Do not bind the clear action to a close-all-windows
-workflow unless unsaved documents have been accounted for. `N` also works while the
-focused Space is full-screen or Split View; `E` and `D` deliberately refuse those
-Spaces until you press `F` or the native `Control+Command+F` shortcut first.
+Space 操作使用 Hammerspoon 的 `hs.spaces` 模块，可能短暂显示 Mission Control。
+该模块依赖 macOS 辅助功能行为与私有 API；若 macOS 更新后删除 Space 失败，手动
+使用 Mission Control，不要盲目关闭窗口。除非已妥善处理未保存的文档，不要把
+清除动作绑定到"关闭全部窗口"式的工作流。当前 Space 为全屏或 Split View 时 `N`
+同样可用；`E` 和 `D` 刻意拒绝这类 Space，需先按 `F` 或原生
+`Control+Command+F` 快捷键退出。
 
-The clear action moves only ordinary windows that belong exclusively to the current
-Space. Windows assigned to All Desktops, full-screen applications, Split View, or
-other special Spaces are skipped. Deleting a Space moves its remaining windows to
-another Space; it does not close those applications. The delete shortcut requires
-two presses within two seconds and never removes the last regular Desktop Space.
+清除动作只移动仅属于当前 Space 的普通窗口。分配给所有桌面（All Desktops）、
+全屏应用、Split View 或其他特殊 Space 的窗口会被跳过。删除 Space 会把其剩余
+窗口移到另一个 Space，不会关闭这些应用。删除快捷键要求两秒内按两次，且绝不
+删除最后一个常规桌面 Space。
 
-## Configure Homerow
+## 配置 Homerow
 
-Configure activation shortcuts in Homerow's Settings. The notes below describe
-upstream reports checked on **2026-09-07**, not verified settings on this machine;
-the example bindings have not been applied to Homerow or Karabiner.
+在 Homerow 的 Settings 中配置激活快捷键。以下笔记描述 **2026-09-07** 查证的上游
+报告，不是本机已验证的设置；示例绑定尚未应用到 Homerow 或 Karabiner。
 
-### Space Shortcuts Requiring Two Presses
+### 需按两次的 Space 快捷键
 
-Requiring two presses to activate Homerow is not the normal workflow or evidence
-that double-tap activation was configured. [Issue #212](https://github.com/nchudleigh/homerow/issues/212),
-opened on 2026-03-31, reports a regression affecting `Command+Shift+Space` in
-**1.5.0-1.5.3**, with **1.4.x** working correctly:
+需要按两次才激活 Homerow 不是正常工作流，也不是已配置 double-tap 激活的证据。
+[Issue #212](https://github.com/nchudleigh/homerow/issues/212)（2026-03-31 提出）
+报告了影响 **1.5.0–1.5.3** 中 `Command+Shift+Space` 的回归，**1.4.x** 正常：
 
-- The first press does nothing; the second activates Homerow.
-- Pressing Space alone beforehand makes the next activation work on the first try.
-- After dismissing Homerow, other Space shortcuts, such as Raycast's
-  `Command+Space`, can also require two presses.
-- The reporter reproduced it with Karabiner and BetterTouchTool disabled; other
-  users confirmed the symptoms, including on macOS Tahoe.
+- 第一次按无动作，第二次才激活 Homerow。
+- 事先单独按一次 Space，下一次激活第一次就生效。
+- 关闭 Homerow 后，其他 Space 快捷键（如 Raycast 的 `Command+Space`）也可能
+  需要按两次。
+- 报告者禁用 Karabiner 与 BetterTouchTool 后仍可复现；其他用户确认了相同症状，
+  包括 macOS Tahoe。
 
-As of the check date, the issue remains open. The [official changelog](https://www.homerow.app/changelog)
-lists **1.5.3 (2026-03-19)** as its latest entry, with no explicit fix for this bug.
-These reports do not establish the cause of every local activation failure.
+截至查证日该 issue 仍为 open。[官方 changelog](https://www.homerow.app/changelog)
+最新条目为 **1.5.3（2026-03-19）**，没有针对此 bug 的明确修复。这些报告并不能
+解释所有本机激活失败的原因。
 
-Reported workarounds:
+报告的变通方案：
 
-1. Use a shortcut without Space, such as `Command+Shift+F`, after checking for
-   conflicts. The issue author reports that this works on the first press.
-2. Alternatively, disable **Automatic click**. A [user reports this workaround](https://github.com/nchudleigh/homerow/issues/212#issuecomment-4641217347),
-   but each target click then needs confirmation with Space or Return.
+1. 检查无冲突后，改用不含 Space 的快捷键，如 `Command+Shift+F`。issue 作者
+   报告这样第一次按键即生效。
+2. 或者关闭 **Automatic click**。[有用户报告此方案可行](https://github.com/nchudleigh/homerow/issues/212#issuecomment-4641217347)，
+   但之后每次点击目标都需要用 Space 或 Return 确认。
 
-### Multiple Shortcuts for One Mode
+### 单一模式的多个快捷键
 
-Separate shortcuts for different modes are not the same as multiple shortcuts
-activating one mode. Native support for the latter has not been confirmed:
-[issue #181](https://github.com/nchudleigh/homerow/issues/181), requesting both
-`Command+Shift+J` and `Command+Shift+K` to activate scroll mode, remains open as of
-the check date. The discussion recommends Karabiner as a workaround; this is
-community advice, not an official statement of a product limitation.
+不同模式的独立快捷键，不等于一个模式被多个快捷键激活。后者未有原生支持的确
+证：请求让 `Command+Shift+J` 与 `Command+Shift+K` 都激活 scroll 模式的
+[issue #181](https://github.com/nchudleigh/homerow/issues/181) 截至查证日仍为
+open。讨论中推荐用 Karabiner 变通；这是社区建议，不是官方对产品限制的声明。
 
-For example, bind the desired Homerow mode to `Command+Shift+F`, then use Karabiner
-to map `Left Command+Shift+Space` to that same shortcut. Both physical shortcuts
-can then reach the same mode, while Homerow receives a shortcut without Space.
-Use Left Command to avoid this repository's Right Command layer, check both
-shortcuts for conflicts, and test both entry points on the installed version.
-This combined mapping is a proposed workaround, not a locally verified fix.
+例如，把想要的 Homerow 模式绑定到 `Command+Shift+F`，再用 Karabiner 把
+`左 Command+Shift+Space` 映射到同一快捷键。两个物理快捷键都能进入同一模式，
+而 Homerow 收到的是不含 Space 的快捷键。使用左 Command 以避开本仓库的右
+Command 层，检查两个快捷键有无冲突，并在已安装版本上实测两个入口。该组合映射
+是提议的变通方案，不是本机已验证的修复。
 
-## Configure Mouseless
+## 配置 Mouseless
 
-The Mouseless YAML configuration is maintained at
-`platforms/darwin/home/Library/Application Support/Mouseless/configs/config.yaml`
-and linked to `~/Library/Application Support/Mouseless/configs/config.yaml` by
-`./install full`. Edits through the linked file are visible in Git.
+Mouseless 的 YAML 配置维护在
+`platforms/darwin/home/Library/Application Support/Mouseless/configs/config.yaml`，
+由 `./install full` 链接到
+`~/Library/Application Support/Mouseless/configs/config.yaml`。通过链接文件
+做的修改会反映在 Git 中。
 
-The current `mac` keymap includes:
+当前 `mac` 键位包含：
 
-| Shortcut | Action |
+| 快捷键 | 动作 |
 |----------|--------|
-| Meh+M (`Control+Option+Shift+M`) | Toggle the overlay (`toggle overlay`) |
-| `Escape` | Hide the overlay |
-| Meh+F (`Control+Option+Shift+F`) | Toggle free mode (`toggle free mode`) |
-| `Escape` | Exit free mode |
-| `Tab` while the overlay is visible | Open the config editor |
+| Meh+M（`Control+Option+Shift+M`） | 切换 overlay（`toggle overlay`） |
+| `Escape` | 隐藏 overlay |
+| Meh+F（`Control+Option+Shift+F`） | 切换 free mode（`toggle free mode`） |
+| `Escape` | 退出 free mode |
+| overlay 可见时按 `Tab` | 打开配置编辑器 |
 
-Meh means Control+Option+Shift, without Command. The YAML binding is
-`toggle overlay: ctrl+alt+shift+M` and `toggle free mode: ctrl+alt+shift+F`.
-Karabiner turns a tap of Left Command into Meh+M and a tap of Left Option into
-Meh+F on keyboards that are not ignored by the active Karabiner profile. Holding
-either modifier still passes through the original Left Command or Left Option,
-so Mouseless `hold for drag` and `hold for move` remain available. The Meh+M and
-Meh+F pass-through exceptions must stay ahead of the general Control mappings.
-Other Control editing shortcuts are unchanged.
+Meh 指 Control+Option+Shift，不含 Command。YAML 绑定为
+`toggle overlay: ctrl+alt+shift+M` 与 `toggle free mode: ctrl+alt+shift+F`。
+在未被当前 Karabiner profile 忽略的键盘上，Karabiner 把左 Command 的 tap 变成
+Meh+M、左 Option 的 tap 变成 Meh+F。按住任一修饰键仍透传原始的左 Command 或左
+Option，因此 Mouseless 的 `hold for drag` 与 `hold for move` 依然可用。
+Meh+M 与 Meh+F 的透传例外必须排在一般 Control 映射之前。其他 Control 编辑
+快捷键不变。
 
-Settings are also available from the Mouseless menu. Changes made in the config
-editor apply immediately; save them in the editor to persist them to disk.
+设置也可以从 Mouseless 菜单访问。配置编辑器中的修改立即生效；在编辑器中保存
+才会持久化到磁盘。
 
-**After editing the YAML file externally, restart Mouseless to load the changes.**
-The file is read at startup; do not rely on hot reload. A running instance and its
-settings UI may still show the previous bindings even when Git shows the desired
-change. See the [official configuration documentation](https://mouseless.click/docs/customizing_mouseless.html).
+**在外部编辑 YAML 文件后，重启 Mouseless 才能加载修改。**该文件在启动时读取；
+不要指望热重载。即使 Git 已显示期望的修改，运行中的实例及其设置界面仍可能显示
+旧绑定。见[官方配置文档](https://mouseless.click/docs/customizing_mouseless.html)。
 
-For manual file edits, first quit Mouseless gracefully and check that it stopped:
+手动编辑文件前，先优雅退出 Mouseless 并确认它已停止：
 
 ```bash
 osascript -e 'if application "Mouseless" is running then tell application "Mouseless" to quit'
 osascript -e 'application "Mouseless" is running'
 ```
 
-The second command must print `false` before you edit the file. If it prints
-`true`, finish any save/confirmation dialog, wait for the app to exit, and check
-again. Then edit the repository YAML file or its linked HOME path and start the
-app:
+编辑文件前第二条命令必须输出 `false`。若输出 `true`，先完成保存/确认对话框，
+等应用退出后再检查。然后编辑仓库 YAML 文件或其链接的 HOME 路径，并启动应用：
 
 ```bash
 open -a "Mouseless"
 ```
 
-Opening an already running application does not restart it. After startup, confirm
-that Settings shows Control+Option+Shift+M for `toggle overlay` and
-Control+Option+Shift+F for `toggle free mode`. Tap Left Command to toggle the
-overlay, tap Left Option to toggle free mode on or off, and press Escape to exit
-either state.
-Check the saved diff and managed link separately:
+对已运行的应用执行 open 不会重启它。启动后确认 Settings 中 `toggle overlay`
+显示 Control+Option+Shift+M、`toggle free mode` 显示 Control+Option+Shift+F。
+tap 左 Command 切换 overlay，tap 左 Option 开关 free mode，按 Escape 退出两种
+状态。分别检查已保存的 diff 与受管链接：
 
 ```bash
 git diff -- "platforms/darwin/home/Library/Application Support/Mouseless/configs/config.yaml"
 ./scripts/doctor
 ```
 
-These repository checks do not verify which configuration the running app has
-loaded. Missing or invalid YAML can make Mouseless fall back to its defaults.
+这些仓库检查不能验证运行中的应用实际加载了哪份配置。YAML 缺失或无效时，
+Mouseless 会回退到默认值。
 
-## Theming with tinty
+## tinty 主题
 
-tinty applies one base16/base24 scheme across kitty, zsh (incl. fzf), tmux,
-Neovim, lazygit, opencode, and git-delta with a single command. The scheme
-inventory lives in `home/.config/tinted-theming/tinty/config.toml` (all
-platforms); the macOS-specific delta pager setup is linked from
-`platforms/darwin/home/.config/git/config`. Generated theme files are runtime
-artifacts and are never committed. See [theming.md](theming.md) for setup and
-daily usage.
+tinty 用一条命令把同一个 base16/base24 scheme 应用到 kitty、zsh（含 fzf）、
+tmux、Neovim、lazygit、opencode 和 git-delta。scheme 清单位于
+`home/.config/tinted-theming/tinty/config.toml`（全平台）；macOS 专属的 delta
+pager 设置链接自 `platforms/darwin/home/.config/git/config`。生成的主题文件是
+运行时产物，绝不提交。安装与日常使用见 [theming.md](theming.md)。
 
 ## Docker Desktop
 
-Docker Desktop's `$HOME/.docker/daemon.json` is intentionally not managed by
-this repository. [Docker documents it](https://docs.docker.com/desktop/settings-and-maintenance/settings/#docker-engine)
-as the Docker Engine configuration file and directs users to edit it in Docker
-Desktop or a text editor. It remains a real local file because Docker Desktop
-can reject a symlink during startup.
+Docker Desktop 的 `$HOME/.docker/daemon.json` 刻意不由本仓库管理。
+[Docker 官方文档](https://docs.docker.com/desktop/settings-and-maintenance/settings/#docker-engine)
+把它描述为 Docker Engine 配置文件，并指引用户在 Docker Desktop 或文本编辑器中
+修改。它保持为本地真实文件，因为 Docker Desktop 启动时可能拒绝软链接。
 
-## TCC-Protected Domains
+## TCC 保护域
 
-`com.apple.Music.plist` may refuse `cp` (`Operation not permitted`). Grant Full
-Disk Access to Terminal, or copy manually from the golden.
+`com.apple.Music.plist` 可能拒绝 `cp`（`Operation not permitted`）。给终端授予
+完全磁盘访问，或手动从黄金文件复制。
