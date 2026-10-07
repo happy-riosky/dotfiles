@@ -1,26 +1,27 @@
-## Intro
+## 简介
 
-Cross-platform dotfiles managed with explicit HOME links. Supports macOS (full),
-Debian/Ubuntu (server), and Termux.
+用显式 HOME 软链接管理的跨平台个人 dotfiles。支持 macOS（`full`）、
+Debian/Ubuntu（`server`，含 WSL2 内的 Debian/Ubuntu 发行版）与 Termux
+（`termux`）；不支持的平台/profile 组合会显式报错。
 
-## Layout
+## 布局
 
 ```text
-home/                          # cross-platform, linked into $HOME
-platforms/darwin/home/         # macOS-only linked configs (Karabiner, Hammerspoon, etc.)
-platforms/darwin/managed/      # macOS Preferences goldens (real files, not linked)
-package-lists/                 # brew, apt, termux package lists
-plugin-lists/                  # tmux/vim/zsh plugin sources
-manual/                        # manually-applied overrides, kept out of the managed link domain
-docs/                          # platform guides and application configuration notes
-scripts/                       # link, unlink, doctor, plugins, prefs/hotkeys
-scripts/shell/                 # shared shell loader, aliases, and platform/profile fragments
-install                        # entry point: ./install {full|server|termux}
+home/                          # 跨平台，链接到 $HOME
+platforms/darwin/home/         # macOS 专属可链接配置（Karabiner、Hammerspoon 等）
+platforms/darwin/managed/      # macOS Preferences 黄金文件（真实文件，不链接）
+package-lists/                 # brew、apt、termux 包清单
+plugin-lists/                  # tmux/vim/zsh 插件来源
+manual/                        # 手动应用的覆盖配置与脚本（不在受管链接域）
+docs/                          # 文档，索引见 docs/README.md
+scripts/                       # link、unlink、doctor、plugins、prefs/hotkeys
+scripts/shell/                 # 共享 shell 加载器、aliases 与 platform/profile 片段
+install                        # 入口：./install {full|server|termux}
 ```
 
-## Usage
+## 用法
 
-### Link configs
+### 链接配置
 
 ```bash
 ./install full --dry-run       # macOS
@@ -28,45 +29,50 @@ install                        # entry point: ./install {full|server|termux}
 ./scripts/doctor
 ```
 
-Other profiles: `./install server` (Debian/Ubuntu), `./install termux` (Termux).
-Unsupported platform/profile combinations fail explicitly.
+其他 profile：`./install server`（Debian/Ubuntu 与 WSL）、`./install termux`
+（Termux）。不支持的平台/profile 组合会显式失败。
 
-### Install packages
+### 安装软件包
 
-Package installation is explicit so linking configs never unexpectedly uses the
-network or privilege escalation. The same platform/profile restrictions as
-`install` apply.
+包安装是显式入口，链接配置永远不会意外联网或提权；与 `install` 相同的
+平台/profile 限制同样适用。
 
 ```bash
-./scripts/packages full --dry-run       # macOS: Homebrew formulae and casks
-./scripts/packages server --dry-run     # Debian/Ubuntu: apt
-./scripts/packages termux --dry-run     # Termux: pkg
+./scripts/packages full --dry-run       # macOS：Homebrew formulae 与 casks
+./scripts/packages server --dry-run     # Debian/Ubuntu：apt
+./scripts/packages termux --dry-run     # Termux：pkg
 ./scripts/packages full
 ```
 
-Every selected manifest is validated before the package manager runs. Dry-run
-only prints `RUN ...` commands.
+每个选中的清单在包管理器运行前都会校验。dry-run 只打印 `RUN ...` 命令。
 
-### Install plugins
+### 安装插件
 
-Plugin repositories are grouped by host application and listed without commit
-pins, so new installs use each repository's default branch. Existing targets
-must be real checkouts with the expected origin; every checkout is verified with
-`git fsck`.
+插件仓库按宿主应用分组、不锁 commit，新安装用各仓库默认分支。已存在的目标
+必须是指定 origin 的真实检出；每个检出都经 `git fsck` 校验。
 
 ```bash
 ./scripts/plugins --dry-run --app tmux
 ./scripts/plugins --app tmux
 ```
 
+## 文档
+
+文档索引见 [docs/README.md](docs/README.md)。常用入口：
+
+- 平台指南：[Linux](docs/linux.md) / [macOS](docs/macos.md) /
+  [Termux](docs/termux.md) / [WSL](docs/wsl.md)
+- 专题：[tinty 主题总纲](docs/theming.md)、[OpenCode/ECC](docs/opencode.md)、
+  [Neovim](docs/neovim.md)；活跃待办见 [docs/todo.md](docs/todo.md)
+
 ## Neovim
 
-The current Kickstart-based configuration lives in `home/.config/nvim/`, including
-custom Diffview mappings and the plugin revision lockfile. See [the Neovim guide](docs/neovim.md)
-for requirements, linking, and plugin updates.
+当前基于 Kickstart 的配置位于 `home/.config/nvim/`，含自定义 Diffview 映射与
+插件 revision lockfile。版本要求、链接与插件更新见
+[Neovim 指南](docs/neovim.md)。
 
-## macOS Application Configuration
+## macOS 应用配置
 
-See [the macOS guide](docs/macos.md) for application configuration paths,
-Preferences restore/export, Amethyst, AeroSpace, Hammerspoon, Mouseless (including
-restarting after configuration edits), Docker Desktop, and TCC permissions.
+应用配置路径、Preferences 恢复/导出、Amethyst、AeroSpace、Hammerspoon、
+Mouseless（含配置修改后的重启要求）、Docker Desktop 与 TCC 权限见
+[macOS 指南](docs/macos.md)。
