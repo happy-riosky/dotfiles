@@ -1,5 +1,9 @@
 # 从命令行打开 Obsidian Vault
 
+本仓库提供 `obs` 包装命令（vault 安全封装：注册表解析、路径沙箱、URI 编码），
+安装与用法见 [`manual/obsidian/README.md`](../manual/obsidian/README.md)；本文是
+官方 Obsidian CLI 与 URI 的用法手册。
+
 ## 直接答案
 
 在 macOS 上，**真正打开或聚焦一个已经注册的 vault**，最直接的方法是使用 Obsidian URI：
