@@ -134,5 +134,9 @@ DOTFILES_PLATFORM=<p> [DOTFILES_PROFILE=<pr>]`；覆盖项：
   运行时产物不入库），回退主题为 frappe 单色版 `catppuccin-frappe-yellow`
   （黄 `#f9e2af` accent）。
   细节见 `docs/opencode.md` 与 `docs/theming.md`。
+- rmpc/MPD：`platforms/darwin/home/.mpdconf` 与
+  `platforms/darwin/home/.config/rmpc/config.ron` 由本仓库 leaf-link 管理；
+  `~/.local/state/mpd/` 与 `~/Music/` 为本机数据，绝不入库。新增音乐后需
+  `mpu`（macOS 无 inotify）。细节见 `docs/rmpc.md`。
 - 活跃待办与操作记录在 `docs/todo.md`（归档规则见文内）——动手前先读；重构
   历史（迁移计划、收尾记录、已完成操作记录）归档在 `docs/archive/`。

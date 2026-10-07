@@ -16,6 +16,7 @@ jq
 lazygit
 minikube
 mongodb/brew/mongodb-community
+mpd
 mysql
 pipx
 pnpm
@@ -23,6 +24,7 @@ python-tk@3.13
 qpdf
 redis
 ripgrep
+rmpc
 scrcpy
 stow
 tesseract-lang

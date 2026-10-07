@@ -1,0 +1,6 @@
+// rmpc 配置：省略字段一律用内置默认值。lyrics_dir 指向 MPD music 目录，
+// 使同目录 .lrc（song.flac 旁的 song.lrc）按 same-path 规则直接命中；
+// ~/Music/vncmd/**/*.lrc 同时进入索引（[ar:]/[ti:] 标签匹配）。
+(
+    lyrics_dir: Some("~/Music"),
+)

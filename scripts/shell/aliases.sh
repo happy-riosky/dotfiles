@@ -105,4 +105,8 @@ command -v bat >/dev/null 2>&1 && command -v tinty >/dev/null 2>&1 && \
 	alias bat='bat --theme=base16-256'
 command -v tinty >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1 && \
 	alias theme='tinty apply "$(tinty list | fzf)"'
+# mpu：往 ~/Music 加了文件后手动触发 MPD 库扫描（macOS 无 inotify，
+# mpd.conf 的 auto_update 不生效，rmpc update 走 MPD update 命令）
+command -v rmpc >/dev/null 2>&1 && \
+	alias mpu='rmpc update'
 DOTFILES_LOAD_TRACE="${DOTFILES_LOAD_TRACE}:aliases"

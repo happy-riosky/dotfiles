@@ -1,0 +1,19 @@
+# MPD (Music Player Daemon) — macOS profile.
+# Runtime data (database/state/stickers/playlists) lives under
+# ~/.local/state/mpd/ and is created by setup; it is machine-local.
+
+music_directory    "~/Music"
+playlist_directory "~/.local/state/mpd/playlists"
+db_file            "~/.local/state/mpd/database"
+sticker_file       "~/.local/state/mpd/sticker.sql"
+state_file         "~/.local/state/mpd/state"
+
+log_file           "syslog"
+bind_to_address    "localhost"
+port               "6600"
+auto_update        "yes"
+
+audio_output {
+    type "osx"
+    name "CoreAudio"
+}

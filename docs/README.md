@@ -19,6 +19,7 @@
 | [neovim.md](neovim.md) | Neovim（Kickstart + vim.pack）受管文件、主题、插件、维护 |
 | [nvim-markdown.md](nvim-markdown.md) | Neovim markdown 阅读环境：render-markdown + aerial |
 | [obsidian.md](obsidian.md) | Obsidian 官方 CLI/URI 手册；`obs` 包装命令见 manual/obsidian/ |
+| [rmpc.md](rmpc.md) | rmpc/MPD 音乐播放：受管配置、新增下载工作流（.lrc 补 tags + mpu）、歌词排障 |
 
 ## 参考
 

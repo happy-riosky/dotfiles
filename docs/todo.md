@@ -79,3 +79,19 @@
 [`archive/operations.md`](./archive/operations.md)（按时间正序插入，内容原样
 保留，不改写）；本文只保留仍被活跃待办引用的记录。2026-09 的 5 条记录已
 归档。
+
+```text
+日期：2026-10-07
+环境：darwin
+操作：rmpc/MPD 入库：platforms/darwin/home/.mpdconf（osx 输出、
+      ~/.local/state/mpd 运行时数据）与 platforms/darwin/home/.config/rmpc/
+      config.ron（lyrics_dir=~/Music）leaf-link 管理；brew-formulae.txt 加
+      mpd/rmpc；aliases.sh 加 mpu；下载 .lrc 批量补 [ti:]/[ar:] 头；新增
+      docs/rmpc.md 并在 README/AGENTS 加引用。
+结果：通过
+证据：rmpc lyricsindex 18/18 匹配（title/artist 非空）、rmpc listall
+      19 曲、scripts/doctor 与 tests/link|shell|packages 全绿。
+后续：rmpc TUI 原子重写会吃掉 ~/.config/rmpc/config.ron 叶子链接
+      （2026-10-07 已复现一次，./install full 恢复；同备忘节 Otty 原子写
+      问题），恢复法见 docs/rmpc.md 排障节。
+```
