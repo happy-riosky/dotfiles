@@ -16,7 +16,7 @@ manual/                        # 手动应用的覆盖配置与脚本（不链�
 scripts/shell/                 # core + aliases + platform/ + profiles/ 加载片段，load.zsh/load.bash
 install                        # 入口：./install {full|server|termux} [--dry-run]
 tests/                         # link.sh, shell.sh, vim.sh
-docs/                          # 平台指南 linux.md/macos.md/termux.md/wsl.md；opencode.md、nvim-*.md、todo.md、archive/MIGRATION_PLAN.md
+docs/                          # 文档，索引见 docs/README.md（平台指南/应用专题/参考/归档）
 ```
 
 ## 命令
@@ -134,5 +134,5 @@ DOTFILES_PLATFORM=<p> [DOTFILES_PROFILE=<pr>]`；覆盖项：
   运行时产物不入库），回退主题为 frappe 单色版 `catppuccin-frappe-yellow`
   （黄 `#f9e2af` accent）。
   细节见 `docs/opencode.md` 与 `docs/theming.md`。
-- `docs/process.md` 为收尾记录（含 A–E 待办清单）；迁移计划已归档到
-  `docs/archive/MIGRATION_PLAN.md`——动手前先读。
+- 活跃待办与操作记录在 `docs/todo.md`（归档规则见文内）——动手前先读；重构
+  历史（迁移计划、收尾记录、已完成操作记录）归档在 `docs/archive/`。

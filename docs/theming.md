@@ -9,7 +9,7 @@ opencode/lazygit/yazi/glow/gh-dash 经 `scripts/tinty/generate` 与启动器跟�
 | 路径 | 性质 |
 |---|---|
 | `home/.config/tinted-theming/tinty/config.toml` | 受管 leaf link（本仓库） |
-| `home/.config/tinted-theming/tinty/hooks/{delta,otty}.sh` | 受管（tinty hooks：按 apply 的 scheme 渲染 delta 样式 hex / otty 用户主题） |
+| `home/.config/tinted-theming/tinty/hooks/{delta,tmux,otty}.sh` | 受管（tinty hooks：按 apply 的 scheme 渲染 delta 样式 hex / tmux 状态栏配色 / otty 用户主题） |
 | `home/.config/lazygit/{config,frappe,latte-theme}.yml`、`home/.tmux/colors/simple_batt*.tmux.conf` | 受管（lazygit 基础+overlay / tmux 布局与回退配色） |
 | `home/.config/gh-dash/config.yml`、`home/.local/bin/gd` | 受管（gh-dash 主题中立基础配置 / tinty 感知启动器） |
 | `home/.config/opencode/tui-plugins/tinty-theme.js`、`home/.config/opencode/themes/catppuccin-frappe-yellow.json` | 受管（实时跟随插件 / 无 tinty 回退主题） |
