@@ -656,6 +656,40 @@ do
     })
   end, { desc = '[/] Fuzzily search in current buffer' })
 
+  -- Non-fuzzy search in current buffer: the whole prompt is one Lua pattern
+  -- (regex-ish: %d, ., [a-z], +). Invalid patterns simply match nothing.
+  local pattern_sorter = require('telescope.sorters').new {
+    scoring_function = function(_, prompt, line)
+      if prompt == '' then
+        return 0
+      end
+      local ok, s = pcall(line.find, line, prompt)
+      if ok and s then
+        return 0
+      end
+      return -1 -- no match (or invalid pattern): filter out
+    end,
+    highlighter = function(_, prompt, display)
+      if prompt == '' then
+        return {}
+      end
+      local ok, s, e = pcall(display.find, display, prompt)
+      if ok and s then
+        return { { start = s, finish = e } }
+      end
+      return {}
+    end,
+  }
+
+  vim.keymap.set('n', '<leader>sb', function()
+    builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+      prompt_title = 'Current Buffer Regex',
+      winblend = 10,
+      previewer = false,
+      sorter = pattern_sorter,
+    })
+  end, { desc = '[S]earch in [B]uffer (regex)' })
+
   -- It's also possible to pass additional configuration options.
   --  See `:help telescope.builtin.live_grep()` for information about particular keys
   vim.keymap.set(
