@@ -1,5 +1,6 @@
 # One Homebrew formula or tap-qualified formula per line.
 ack
+aichat
 anomalyco/tap/opencode
 bat
 bc
