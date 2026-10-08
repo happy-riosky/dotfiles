@@ -1,12 +1,30 @@
 # yazi：启动前按当前 tinty scheme 生成/刷新 flavor 与 glow 样式（yazi 无
 # theme 热重载，见 docs/theming.md）；theme.toml 的 [flavor] dark/light 同指
-# tinty，明暗探测失效化。刷新失败仅告警，裸启动（沿用上次生成或内建主题）
+# tinty，明暗探测失效化。刷新失败仅告警，裸启动（沿用上次生成或内建主题）。
+# keymap 的 R 绑 quit --code=99：本包装以哨兵循环原地重启——重启前重刷生成
+# 器，并经 --cwd-file 回到最后浏览目录（重启后原显式参数如 --debug 丢弃，
+# 只留目录）；正常退出不改 shell cwd（刻意无 cd-on-quit）。裸 yazi 退出码
+# 99 无副作用。进程无法自行重启，须由本外层循环重新拉起。
 command -v yazi >/dev/null 2>&1 && y() {
-	if [ -n "${DOTFILES_ROOT:-}" ] && [ -f "$DOTFILES_ROOT/scripts/tinty/generate" ]; then
-		bash "$DOTFILES_ROOT/scripts/tinty/generate" >/dev/null 2>&1 || \
-			printf 'y: tinty/generate 刷新失败，沿用上次生成的主题\n' >&2
-	fi
-	command yazi "$@"
+	local tmp cwd rc
+	tmp="$(mktemp -t yazi-cwd.XXXXXX 2>/dev/null)" || tmp=
+	while true; do
+		if [ -n "${DOTFILES_ROOT:-}" ] && [ -f "$DOTFILES_ROOT/scripts/tinty/generate" ]; then
+			bash "$DOTFILES_ROOT/scripts/tinty/generate" >/dev/null 2>&1 || \
+				printf 'y: tinty/generate 刷新失败，沿用上次生成的主题\n' >&2
+		fi
+		if [ -n "$tmp" ]; then
+			command yazi "$@" --cwd-file="$tmp"
+		else
+			command yazi "$@"
+		fi
+		rc=$?
+		[ "$rc" -eq 99 ] || break
+		cwd="$(command cat -- "$tmp" 2>/dev/null)" || cwd=
+		[ -n "$cwd" ] && set -- "$cwd"
+	done
+	[ -n "$tmp" ] && rm -f -- "$tmp"
+	return "$rc"
 }
 command -v nvim >/dev/null 2>&1 && alias v='nvim'
 command -v fd >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1 && command -v pbcopy >/dev/null 2>&1 && \

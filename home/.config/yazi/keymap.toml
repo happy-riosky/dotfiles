@@ -56,3 +56,10 @@ desc = "Seek preview up 5 lines"
 on = "<PageDown>"
 run = "seek 5"
 desc = "Seek preview down 5 lines"
+
+# R：原地重启（y 包装函数以退出码 99 哨兵循环重新拉起，见
+# scripts/shell/aliases.sh；默认键位无单键 R，R 在 rename 家族旁）
+[[mgr.prepend_keymap]]
+on = "R"
+run = "quit --code=99"
+desc = "Restart yazi (relaunched by y wrapper)"

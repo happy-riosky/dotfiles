@@ -141,7 +141,10 @@ init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 
 - **yazi**：`[flavor] dark/light` 同指生成的 `tinty-{dark,light}`（明暗
   探测无关化）；`y` 启动前刷新。模板 base16 槽位外有语义强调槽 `c_emph`
   （浅色取 base05，防 kissa-latte 这类 base07=bright white 的白字白底）。
-  无热重载，重开生效；markdown 预览同链路（glow 用生成样式、bat 用内建
+  无热重载：`y` 包装内按 `R` 原地重启（`quit --code=99` 哨兵循环——进程
+  无法自行重启，由包装函数重新拉起；重启前重刷生成器、经 `--cwd-file`
+  回到最后浏览目录、原显式参数丢弃；正常退出不改 shell cwd；裸 `yazi`
+  退出码 99 无副作用）；markdown 预览同链路（glow 用生成样式、bat 用内建
   `base16-256`）。无 tinty 时生成器以仓库 catppuccin-frappe-lavender
   flavor 兜底。
 - **glow**：`gl`/`glow` 启动前刷新 `~/.config/tinted-theming/tinty-glow.json`
@@ -223,7 +226,7 @@ tinty config --data-dir-path  # 运行时目录；ls 查看生成的主题文件
   `current_scheme` 一致（不符重跑 `scripts/tinty/generate`）；详见
   `docs/gh-dash.md`。
 - glow 没跟随 → 同款标记校验；显式传 `-s` 不受包装影响；`gl` 新逻辑需
-  新 shell；yazi 内预览需重开 `y`。
+  新 shell；yazi 内预览按 `R` 原地重启（经 `y` 启动才生效）或重开 `y`。
 - delta 没跟随 scheme → 确认 `tinty apply` 触发过 hook（config.toml 的
   `hooks` 改动即时生效，无需 sync）；查 `<data>/delta-scheme-colors.gitconfig`
   首行 `_tinty_scheme` 标记是否为当前 scheme；无 tinty 时 include 缺失被

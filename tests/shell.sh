@@ -214,6 +214,80 @@ test_tinty_nvim_guard() {
   grep -q '^probe2:/nonexistent-tty-nvim-guard$' "$probe" || fail 'post-apply re-source bypassed tinty nvim guard'
 }
 
+test_yazi_restart_wrapper() {
+  # y() 哨兵循环：R 绑 quit --code=99 后由包装函数重新拉起——重启前重跑
+  # tinty/generate、经 --cwd-file 回到最后浏览目录、其余退出码透传且不重启
+  local bin="$TMP_ROOT/yazi-bin" fake_root="$TMP_ROOT/yazi-fake-root"
+  local browsed="$TMP_ROOT/yazi-browsed"
+  mkdir -p "$bin" "$fake_root/scripts/tinty" "$browsed"
+  printf '#!/usr/bin/env sh\nprintf "generate\\n" >> "${DOTFILES_TEST_YAZI_GEN:-/dev/null}"\n' \
+    > "$fake_root/scripts/tinty/generate"
+  chmod +x "$fake_root/scripts/tinty/generate"
+  printf '%s\n' \
+    '#!/usr/bin/env sh' \
+    'printf "run:%s\n" "$*" >> "$DOTFILES_TEST_YAZI_OUT"' \
+    'n=0' \
+    '[ -f "$DOTFILES_TEST_YAZI_COUNT" ] && n=$(cat "$DOTFILES_TEST_YAZI_COUNT")' \
+    'n=$((n + 1)); printf "%s\n" "$n" > "$DOTFILES_TEST_YAZI_COUNT"' \
+    'if [ "$n" -le "${DOTFILES_TEST_YAZI_RESTARTS:-0}" ]; then' \
+    '  for a in "$@"; do' \
+    '    case "$a" in' \
+    '      --cwd-file=*) [ -n "${DOTFILES_TEST_YAZI_CWD:-}" ] && printf "%s\n" "$DOTFILES_TEST_YAZI_CWD" > "${a#--cwd-file=}" ;;' \
+    '    esac' \
+    '  done' \
+    '  exit 99' \
+    'fi' \
+    'exit "${DOTFILES_TEST_YAZI_FINAL_RC:-0}"' \
+    > "$bin/yazi"
+  chmod +x "$bin/yazi"
+
+  local shell out gen count rc_out
+  local -a flags
+  for shell in zsh bash; do
+    if [ "$shell" = zsh ]; then flags=(-df); else flags=(--noprofile --norc); fi
+    out="$TMP_ROOT/yazi-$shell.out"
+    gen="$TMP_ROOT/yazi-$shell.gen"
+    count="$TMP_ROOT/yazi-$shell.count"
+    rc_out="$(HOME="$TMP_ROOT/yazi-$shell-home" PATH="$bin:/usr/bin:/bin" \
+      DOTFILES_ROOT="$fake_root" DOTFILES_TEST_ALIASES="$ROOT/scripts/shell/aliases.sh" \
+      DOTFILES_TEST_YAZI_OUT="$out" DOTFILES_TEST_YAZI_GEN="$gen" DOTFILES_TEST_YAZI_COUNT="$count" \
+      DOTFILES_TEST_YAZI_RESTARTS=1 DOTFILES_TEST_YAZI_CWD="$browsed" \
+      /bin/$shell "${flags[@]}" -c 'source "$DOTFILES_TEST_ALIASES"; y; printf "RC:%s\n" "$?"')" || \
+      fail "y() restart loop failed to run in $shell"
+    [[ "$rc_out" == 'RC:0' ]] || fail "y() did not absorb restart exit code ($shell): $rc_out"
+    [[ "$(command cat -- "$count")" == 2 ]] || fail "y() did not relaunch yazi after code 99 ($shell)"
+    sed -n '1p' "$out" | grep -q '^run:--cwd-file=' || fail "y() first launch lacks --cwd-file ($shell)"
+    sed -n '2p' "$out" | grep -q "^run:$browsed --cwd-file=" || \
+      fail "y() relaunch did not restore browsed cwd ($shell)"
+    [ "$(grep -c '^generate$' "$gen")" = 2 ] || \
+      fail "y() did not re-run tinty/generate before relaunch ($shell)"
+
+    out="$TMP_ROOT/yazi-$shell-rc.out"
+    count="$TMP_ROOT/yazi-$shell-rc.count"
+    rc_out="$(HOME="$TMP_ROOT/yazi-$shell-home" PATH="$bin:/usr/bin:/bin" \
+      DOTFILES_ROOT="$fake_root" DOTFILES_TEST_ALIASES="$ROOT/scripts/shell/aliases.sh" \
+      DOTFILES_TEST_YAZI_OUT="$out" DOTFILES_TEST_YAZI_COUNT="$count" \
+      DOTFILES_TEST_YAZI_RESTARTS=0 DOTFILES_TEST_YAZI_FINAL_RC=42 \
+      /bin/$shell "${flags[@]}" -c 'source "$DOTFILES_TEST_ALIASES"; y; printf "RC:%s\n" "$?"')" || \
+      fail "y() plain-run failed in $shell"
+    [[ "$rc_out" == 'RC:42' ]] || fail "y() did not propagate yazi exit code ($shell): $rc_out"
+    [[ "$(command cat -- "$count")" == 1 ]] || fail "y() restarted without code 99 ($shell)"
+  done
+
+  # 重启但 cwd 文件未写入：保留原参数重启，不误入无限循环以外的路径
+  out="$TMP_ROOT/yazi-nocwd.out"
+  count="$TMP_ROOT/yazi-nocwd.count"
+  HOME="$TMP_ROOT/yazi-nocwd-home" PATH="$bin:/usr/bin:/bin" \
+    DOTFILES_ROOT="$fake_root" DOTFILES_TEST_ALIASES="$ROOT/scripts/shell/aliases.sh" \
+    DOTFILES_TEST_YAZI_OUT="$out" DOTFILES_TEST_YAZI_COUNT="$count" \
+    DOTFILES_TEST_YAZI_RESTARTS=1 \
+    /bin/zsh -df -c 'source "$DOTFILES_TEST_ALIASES"; y' || \
+    fail "y() restart without cwd file failed in zsh"
+  [[ "$(command cat -- "$count")" == 2 ]] || fail "y() did not relaunch without cwd file (zsh)"
+  sed -n '2p' "$out" | grep -q '^run:--cwd-file=' || \
+    fail "y() relaunch without cwd file changed args (zsh)"
+}
+
 test_public_paths
 test_load_order
 test_noninteractive_silence
@@ -223,4 +297,5 @@ test_missing_optional_tools
 test_zoxide_init
 test_conda_darwin_zsh_only
 test_tinty_nvim_guard
+test_yazi_restart_wrapper
 printf 'shell integration tests passed\n'

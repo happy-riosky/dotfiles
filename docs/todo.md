@@ -95,3 +95,22 @@
       （2026-10-07 已复现一次，./install full 恢复；同备忘节 Otty 原子写
       问题），恢复法见 docs/rmpc.md 排障节。
 ```
+
+```text
+日期：2026-10-08
+环境：darwin
+操作：yazi 原地重启入库：keymap.toml 绑 R → quit --code=99（默认键位无
+      单键 R；进程无法自行重启，见 sxyazi/yazi#1757，须由外层拉起），
+      aliases.sh 的 y() 改哨兵循环——退出码 99 时重刷 tinty/generate 并经
+      --cwd-file 回到最后浏览目录重新拉起（重启后原显式参数丢弃；正常
+      退出仍不改 shell cwd）；theming.md yazi 节与排障同步。
+结果：通过
+证据：tests/shell.sh 新增 test_yazi_restart_wrapper（zsh+bash：99 重启、
+      cwd 恢复、generate 每次启动前重跑、退出码透传、无 cwd 文件时保留
+      原参数）；隔离 tmux server 真机 smoke：R 后进程参数为
+      `yazi ~/dotfiles --cwd-file=…`，R→q 往返 YRC:0；全套件（link/shell/
+      packages/plugins/termux/tmux/vim）与 install --dry-run、doctor 绿。
+后续：yazi 26.9.1 在 tmux pane 内启动后前数秒吞键（裸 yazi 同样复现，
+      与本改动无关，输入就绪后一切正常）；macOS mktemp -t 不展开 XXXXXX
+      （BSD 前缀语义），cwd 临时文件名含字面 XXXXXX 但唯一，无功能影响。
+```
