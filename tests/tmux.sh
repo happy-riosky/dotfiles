@@ -33,6 +33,23 @@ test_server_path_fix_precedes_tpm() {
     fail '.tmux.conf initializes TPM before fixing the server PATH'
 }
 
+# yazi requires TERM and TERM_PROGRAM to be refreshed from the attaching
+# client (https://yazi-rs.github.io/docs/image-preview). The update-environment
+# override replaces tmux's default wholesale, so it must carry them explicitly.
+test_update_environment_keeps_term_vars() {
+  local conf="$ROOT/home/.tmux.conf"
+  local vars v has_term=0 has_tp=0
+  vars=$(sed -n 's/^set -g update-environment "\(.*\)"$/\1/p' "$conf")
+  [ -n "$vars" ] || fail 'update-environment override not found in .tmux.conf'
+  for v in $vars; do
+    [ "$v" = "TERM" ] && has_term=1
+    [ "$v" = "TERM_PROGRAM" ] && has_tp=1
+  done
+  [ "$has_term" = 1 ] || fail 'update-environment is missing TERM (yazi requirement)'
+  [ "$has_tp" = 1 ] || fail 'update-environment is missing TERM_PROGRAM (yazi requirement)'
+}
+
 test_no_percent_before_hash_expansion
 test_server_path_fix_precedes_tpm
+test_update_environment_keeps_term_vars
 printf 'tmux integration tests passed\n'
