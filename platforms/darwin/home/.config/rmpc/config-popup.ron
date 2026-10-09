@@ -1,0 +1,93 @@
+#![enable(implicit_some)]
+#![enable(unwrap_newtypes)]
+#![enable(unwrap_variant_newtypes)]
+// popup 专用配置（.tmux.conf 的 C-f 经 `rmpc -c` 加载）：tmux display-popup
+// 丢弃一切图像转义序列（sixel/passthrough 均不支持，tmux/tmux#4329），故
+// Queue 布局去掉 AlbumArt pane、左列整列给 Lyrics；tabs 仅 Queue/
+// Directories/Search（键 1/2/7）。普通窗口跑默认 config.ron，封面正常。
+// 除 tabs/lyrics_dir 外省略字段一律用内置默认值（与 config.ron 同哲学）。
+(
+    lyrics_dir: "~/Music",
+    tabs: [
+        (
+            name: "Queue",
+            pane: Split(
+                direction: Horizontal,
+                panes: [
+                    (
+                        size: "35%",
+                        borders: "ALL",
+                        border_symbols: Rounded,
+                        border_title: [(kind: Text(" Lyrics "))],
+                        border_title_alignment: Right,
+                        pane: Pane(Lyrics)
+                    ),
+                    (
+                        size: "65%",
+                        pane: Split(
+                            direction: Vertical,
+                            panes: [
+                                (
+                                    size: "3",
+                                    borders: "ALL",
+                                    border_symbols: Inherited(parent: Rounded, bottom_left: "├", bottom_right: "┤",),
+                                    pane: Split(
+                                        direction: Horizontal,
+                                        panes: [
+                                            (
+                                                size: "1",
+                                                pane: Pane(Empty())
+                                            ),
+                                            (
+                                                size: "100%",
+                                                pane: Pane(QueueHeader())
+                                            ),
+                                        ]
+                                    )
+                                ),
+                                (
+                                    size: "100%",
+                                    borders: "LEFT | RIGHT | BOTTOM",
+                                    border_symbols: Rounded,
+                                    pane: Split(
+                                        direction: Horizontal,
+                                        panes: [
+                                            (
+                                                size: "1",
+                                                pane: Pane(Empty())
+                                            ),
+                                            (
+                                                size: "100%",
+                                                pane: Pane(Queue)
+                                            ),
+                                        ]
+                                    )
+                                ),
+                            ],
+                        )
+                    ),
+                ],
+            ),
+        ),
+        (
+            name: "Directories",
+            borders: "ALL",
+            border_symbols: Rounded,
+            pane: Split(
+                size: "100%",
+                direction: Vertical,
+                panes: [(pane: Pane(Directories), size: "100%", borders: "ALL", border_symbols: Rounded)],
+            )
+        ),
+        (
+            name: "Search",
+            borders: "ALL",
+            border_symbols: Rounded,
+            pane: Split(
+                size: "100%",
+                direction: Vertical,
+                panes: [(pane: Pane(Search), size: "100%", borders: "ALL", border_symbols: Rounded)],
+            )
+        ),
+    ],
+)

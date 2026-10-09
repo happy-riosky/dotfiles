@@ -9,6 +9,7 @@ rmpc 是 MPD（Music Player Daemon）的 TUI 客户端；MPD 由 brew services�
 | --- | --- | --- |
 | `platforms/darwin/home/.mpdconf` → `~/.mpdconf` | MPD 配置：music 目录 `~/Music`、`osx` 输出（插件名是 `osx` 不是 `coreaudio`）、运行时数据 `~/.local/state/mpd/` | dotfiles |
 | `platforms/darwin/home/.config/rmpc/config.ron` → `~/.config/rmpc/config.ron` | 仅设 `lyrics_dir: Some("~/Music")`（rmpc 支持 `~` 展开，省略字段用默认值） | dotfiles |
+| `platforms/darwin/home/.config/rmpc/config-popup.ron` → `~/.config/rmpc/config-popup.ron` | popup 专用（C-f 经 `rmpc -c` 加载）：Queue 去 AlbumArt、左列整列 Lyrics、tabs 仅 Queue/Directories/Search | dotfiles |
 | `~/.local/state/mpd/` | database/state/sticker/playlists，运行时产物 | 本机 |
 | `~/Music/` | 音乐库根（即 MPD music 目录），任意子目录均会被扫描；同名 `.lrc` 放在歌曲旁 | 本机 |
 | `package-lists/brew-formulae.txt` | `mpd`、`rmpc` 两行 | dotfiles |
@@ -51,6 +52,13 @@ GarageBand / Audio Music Apps 是工程文件非音频，网易云音乐的 `.nc
   原始文件没有，需按上文补头；③ `lyrics_dir` 未配置则完全不解析——本仓库已在
   config.ron 配好，且等于 music 根目录，同目录同名 `.lrc` 直接命中。用
   `rmpc lyricsindex` 验证（`"title": null` 即缺 tags）。
+- **popup（C-f）里没有专辑封面**：tmux display-popup 丢弃一切图像转义序列
+  （sixel 与 passthrough 均不支持，tmux/tmux#4329）。弹窗因此经
+  `rmpc -c ~/.config/rmpc/config-popup.ron` 启动，布局无 AlbumArt pane
+  （自然也不会触发 rmpc≤0.11 在 tmux 内 sixel 超 1MB 的报错）。普通
+  窗口/pane 直接 `rmpc`（默认配置）封面正常：kitty 经 tmux passthrough
+  走 kitty 图形协议；若探测退到 sixel 且封面过大，仍可能报 1MB 上限
+  （需 rmpc>0.11 + tmux≥3.6 的 `input-buffer-size` 才能解开）。
 
 ## 命令速查
 
