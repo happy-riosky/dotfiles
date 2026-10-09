@@ -13,19 +13,9 @@
     "session_rename": "none",
     "session_delete": "none",
     "vim.normal": {
-      "session_pin_toggle": "P",
-      "session_rename": "R",
-      "session_delete": "D",
-      "theme_switch_mode": "T",
-      "session_quick_switch_1": "1",
-      "session_quick_switch_2": "2",
-      "session_quick_switch_3": "3",
-      "session_quick_switch_4": "4",
-      "session_quick_switch_5": "5",
-      "session_quick_switch_6": "6",
-      "session_quick_switch_7": "7",
-      "session_quick_switch_8": "8",
-      "session_quick_switch_9": "9"
+      "session_rename": "shift+r",
+      "session_pin_toggle": "p",
+      "session_delete": "d",
     }
   }
 }
