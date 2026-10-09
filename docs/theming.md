@@ -99,6 +99,10 @@ init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 
   `simple_batt_fallback.tmux.conf` 打底（frappe 中性面 + 黄 `#da831b`，
   消灭内建绿色状态栏的启动一闪，覆盖 server/Termux/首次 apply 前），
   tinty 生成的主题文件存在则覆盖。apply 时 hook 对运行中的 server 热加载。
+  同一 hook 顺带把 `BASE16_THEME`/`FZF_DEFAULT_OPTS` 清源后经
+  `set-environment -g` 刷入 server 全局环境——display-popup/run-shell 等
+  非交互派生进程不加载 `.zshrc`、只能继承 server env（`prefix+T` 主题
+  弹窗的 fzf 配色即依赖此；apply 发生在 tmux 外时跳过）。
   item 刻意排在 kitty 之前：tinty 串行执行 item hooks，kitty hook 的
   失败路径（socket 缺失时的 DCS 超时/快速失败）不应拖住 statusline。
 - **tmux 黄色阶斜切块**：hook `hooks/tmux.sh`（delta.sh 同款 env 契约）

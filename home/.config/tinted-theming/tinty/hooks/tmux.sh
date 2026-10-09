@@ -84,3 +84,28 @@ mkdir -p "$data_dir"
 
 # 无运行中 server 时静默跳过；启动路径由 .tmux.conf source 兜底
 tmux source-file "$out" 2>/dev/null || true
+
+# 刷新 server 全局调色板环境（BASE16_THEME / FZF_DEFAULT_OPTS）：popup/
+# run-shell 等非交互派生进程不加载 .zshrc，只能继承 server env，陈旧值会
+# 让其内 fzf/base16 消费方停在旧 scheme（实测两者均冻结在 server 启动值）。
+# 必须在干净子 bash 里 source：本脚本的 set -u 会被 tinted-shell 脚本里
+# 未守卫的 $ITERM_SESSION_ID 等展开触发 unbound variable 致命错误（|| true
+# 接不住，交互 shell 无 set -u 故无恙）；子进程内 TTY 指向不可写路径屏蔽
+# OSC 输出，只取 env 副作用后回传。tmux CLI 同上面 source-file 裸调（默认
+# socket，命中即刷新）。缺产物/子进程失败静默跳过（保留旧 env）。
+if command -v tmux >/dev/null 2>&1 && \
+   [ -r "$data_dir/tinted-shell-scripts-file.sh" ] && \
+   [ -r "$data_dir/tinted-fzf-sh-file.sh" ]; then
+	fresh="$(bash -c '
+		unset FZF_DEFAULT_OPTS BASE16_THEME
+		TTY=/nonexistent-tty-env-only
+		. "$1"
+		. "$2"
+		printf "%s\n%s" "${BASE16_THEME:-}" "${FZF_DEFAULT_OPTS# }"
+	' hook-palette-env "$data_dir/tinted-shell-scripts-file.sh" \
+		"$data_dir/tinted-fzf-sh-file.sh" 2>/dev/null)" || fresh=
+	if [ -n "$fresh" ]; then
+		tmux set-environment -g BASE16_THEME "${fresh%%$'\n'*}" || true
+		tmux set-environment -g FZF_DEFAULT_OPTS "${fresh#*$'\n'}" || true
+	fi
+fi
