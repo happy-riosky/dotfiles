@@ -137,6 +137,10 @@ nmap k gk
 noremap J 10j
 noremap K 10k
 
+" Center the cursor line after half-page jumps
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+
 " Jump to start and end of line using the home row keys
 map H ^
 map L $

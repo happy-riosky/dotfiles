@@ -233,6 +233,10 @@ do
   -- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
   -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
+  -- Center the cursor line after half-page jumps
+  vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Half-page down, centered' })
+  vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Half-page up, centered' })
+
   -- Keybinds to make split navigation easier.
   --  CTRL+<hjkl> is owned by vim-tmux-navigator (custom/plugins/tmux-navigator.lua):
   --  nvim window moves with seamless tmux pane fallback at the edges.
