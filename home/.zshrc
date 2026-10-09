@@ -125,6 +125,29 @@ bindkey -M emacs '^O' clear-screen
 bindkey -M viins '^O' clear-screen
 bindkey -M vicmd '^O' clear-screen
 
+# fzf key-bindings：Ctrl-R 模糊搜历史（Enter 填入缓冲区，可改再执行）、
+# Ctrl-T 模糊插入路径；Alt-C 不绑（目录跳转由 zoxide 的 z/zi 负责）。
+# fzf >= 0.48 用内嵌 `fzf --zsh`；Debian/Ubuntu 仓库版偏旧，回退发行版脚本。
+if command -v fzf >/dev/null 2>&1; then
+  autoload -Uz is-at-least
+  export FZF_ALT_C_COMMAND=''   # 须在 source 前设置，key-bindings 据此跳过 Alt-C
+  fzf_version="${$(fzf --version 2>/dev/null)%% *}"
+  if is-at-least 0.48 "$fzf_version" 2>/dev/null; then
+    source <(fzf --zsh)
+  elif [[ -r /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
+    source /usr/share/doc/fzf/examples/key-bindings.zsh
+  fi
+  unset fzf_version
+  # zsh-vi-mode 延迟到首个 prompt 才初始化（precmd 里的 zvm_init），其中
+  # zvm_bindkey viins '^R' history-incremental-search-backward 会覆盖上面绑
+  # 好的 fzf widget（vicmd 走 lazy 列表不受影响，故仅 insert 模式失效）；
+  # 经官方 zvm_after_init 钩子在 zvm 初始化后重绑。
+  function zvm_after_init() {
+    bindkey -M viins '^R' fzf-history-widget
+    bindkey -M viins '^T' fzf-file-widget
+  }
+fi
+
 [ -r "$HOME/.config/broot/launcher/bash/br" ] && source "$HOME/.config/broot/launcher/bash/br"
 
 # >>> otty shell integration >>>
