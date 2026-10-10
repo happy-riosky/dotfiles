@@ -14,7 +14,7 @@
 
 可选插件示例保持禁用；自定义加载器（`init.lua` 中的
 `require 'custom.plugins'`）已启用，加载每个 `lua/custom/plugins/*.lua`
-（aerial、flash、lazygit、neo-tree、oil、render-markdown、toggleterm；
+（aerial、flash、lazygit、neo-tree、oil、project、render-markdown、toggleterm；
 `<leader>tt` 经 toggleterm.nvim 开关浮动终端，与 `<leader>gg` 的 lazygit 浮窗
 相互独立）。上游 Git 检出、GitHub templates/workflows、生成的 `doc/tags` 与
 上游 `.gitignore` 不受管。后者忽略 lockfile，而个人配置中保留它是有用的。
@@ -85,6 +85,19 @@ Telescope mock 了 `nvim-web-devicons`。
   全部修改。
 - 显示隐藏文件（`view_options.show_hidden`）；`g.` 切换显示，`<C-p>` 预览光标
   下文件（oil 默认）。完整键位见 `:h oil` 与 oil buffer 内的 `g?`。
+
+## 项目切换（project.nvim）
+
+[project.nvim](https://github.com/DrKJeff16/project.nvim)（ahmedkhalf/project.nvim
+的维护 fork，兼容 0.12 LSP API）自动记录打开过文件的项目根（git/LSP/pattern
+检测），配置在 `lua/custom/plugins/project.lua`。
+
+- `<leader>sp` 或 `:Telescope projects` 打开项目选择器：按最近使用排序，
+  路径显示为 `~/...`；`<CR>` 即 cd 到选中项目（仅切 cwd，无 session 恢复）。
+- picker 内 `f` 在项目中找文件、`s` live grep、`r` 最近文件、`b` 浏览目录、
+  `w` 改 cwd、`d` 删除历史条目、`n` 重命名（insert 模式对应 `<C-*>`）。
+- 项目历史存于 `~/.local/share/nvim/project_nvim/`（运行时数据，不入库）。
+- `:checkhealth project` 查看检测方法与配置。
 
 ## LazyGit 集成
 
