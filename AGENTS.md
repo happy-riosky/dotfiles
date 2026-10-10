@@ -91,7 +91,7 @@ docs/                          # 文档，索引见 docs/README.md（平台指�
 ./install <profile> --dry-run && scripts/doctor
 bash -n install scripts/link scripts/unlink scripts/doctor
 zsh -n home/.zshenv home/.zshrc scripts/shell/load.zsh scripts/shell/aliases.sh
-git diff --check && tests/link.sh && tests/shell.sh && tests/packages.sh && tests/plugins.sh && tests/termux.sh && bash tests/tmux.sh
+git diff --check && tests/link.sh && tests/shell.sh && tests/packages.sh && tests/plugins.sh && tests/termux.sh && bash tests/tmux.sh && bash tests/tmux-zen.sh
 bash tests/vim.sh # 需要 vim + Lightline 插件
 ```
 
@@ -140,5 +140,12 @@ DOTFILES_PLATFORM=<p> [DOTFILES_PROFILE=<pr>]`；覆盖项：
   pane）由本仓库 leaf-link 管理；
   `~/.local/state/mpd/` 与 `~/Music/` 为本机数据，绝不入库。新增音乐后需
   `mpu`（macOS 无 inotify）。细节见 `docs/rmpc.md`。
+- tmux zen 模式：`home/.tmux/scripts/zen.sh` + `.tmux.conf` 绑定
+  （`prefix+Z`，`@zen-width`）filler 居中整个 pane 布局（多 pane 时经
+  后台 park 窗口重组，退出按快照 + swap 精确还原）；主 pane 进程退出经
+  pane-died（pane-scoped remain-on-exit 护持）自动拆除、原生退出语义；
+  `@zen-*` 为运行时窗口选项，绝不入库；无缝边框经 `after-set-option[90]`
+  钩子随主题热切换自动重渲染（主题工具零耦合）。细节与 tmux 3.5a 钩子/
+  CLI 实测记于 zen.sh 头部注释（代码即文档，不另立 doc）。
 - 活跃待办与操作记录在 `docs/todo.md`（归档规则见文内）——动手前先读；重构
   历史（迁移计划、收尾记录、已完成操作记录）归档在 `docs/archive/`。

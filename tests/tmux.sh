@@ -49,6 +49,8 @@ test_update_environment_keeps_term_vars() {
   [ "$has_tp" = 1 ] || fail 'update-environment is missing TERM_PROGRAM (yazi requirement)'
 }
 
+# zen 生命周期契约测试已拆至 tests/tmux-zen.sh（需 tmux 运行时，缺失时跳过）。
+
 test_no_percent_before_hash_expansion
 test_server_path_fix_precedes_tpm
 test_update_environment_keeps_term_vars
