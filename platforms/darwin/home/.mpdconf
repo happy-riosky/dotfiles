@@ -16,4 +16,6 @@ auto_update        "yes"
 audio_output {
     type "osx"
     name "CoreAudio"
+    # osx 输出无硬件 mixer；software mixer 使 rmpc 音量滑块实际生效（100% = 不衰减）。
+    mixer_type "software"
 }
