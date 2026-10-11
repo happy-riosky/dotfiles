@@ -115,8 +115,8 @@ DOTFILES_PLATFORM=<p> [DOTFILES_PROFILE=<pr>]`；覆盖项：
   原生）；槽位语义见 `docs/theming.md`。
   tmux 状态栏黄色阶斜切块由同款 hook `hooks/tmux.sh` 渲染
   `<data>/tmux-status-colors.conf`（`@tp_*` 选项；`simple_batt.tmux.conf`
-  布局与 `home/.tmux/scripts/status-line.sh` 宽度门控段引用，几何三角
-  U+25E2-E5，无 tinty 时 fallback conf 的 frappe 常量打底）；细节见
+  布局与 `home/.tmux/scripts/status-line.sh` 宽度门控段引用，powerline 斜切
+  字形 U+E0BE/E0B8/E0BA，无 tinty 时 fallback conf 的 frappe 常量打底）；细节见
   `docs/theming.md`。
   yazi flavor / glow 样式 / lazygit overlay / gh-dash overlay 由
   `scripts/tinty/generate` 生成到

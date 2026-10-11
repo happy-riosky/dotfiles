@@ -6,7 +6,7 @@
 #        reload 前不断流）
 # 布局（斜切平行四边形，外亮内浅镜像，槽位语义见 hooks/tmux.sh）：
 #   左（"\" 斜）: 会话段=seg1(黄锚点,conf 静态) + cmd=seg2(与日期同色,
-#                 常驻)——合并为一块，段间 ◥ 过渡边由 conf 内联(prefix 同拍)
+#                 常驻)——合并为一块，段间  过渡边由 conf 内联(prefix 同拍)
 #   右（"/" 斜，块块贴合）:     电池=seg4 → uptime=seg3 → 日期=seg2 → 时刻=seg1(黄锚点)
 # 宽度门控（width 缺失/非数字按全显，不惩罚异常上下文）：
 #   cmd 常驻（左侧）；时刻 常驻（右端锚点）；电池 >=60；uptime、日期 >=100
@@ -121,29 +121,29 @@ fmt_uptime() {
 
 # ---- 发射 ---------------------------------------------------------------
 
-# 左组（合并进会话块）：会话段 + ◥ 过渡边由 conf 内联（prefix
+# 左组（合并进会话块）：会话段 +  过渡边由 conf 内联（prefix
 # 两分支同拍即时翻转——#() 任务输出有滞后，若过渡边出自脚本会与文本块
-# 变色不同步）；本脚本只补 cmd 段内容（seg2，与日期同色）+ ◣ 尾边；
+# 变色不同步）；本脚本只补 cmd 段内容（seg2，与日期同色）+  尾边；
 # cmd 为空时仅输出会话段的闭合尾边（颜色按 prefix 参数，此场景无同拍
 # 对比，滞后不可见）。
 if [ "$mode" = left ]; then
 	if [ -n "$cmd" ]; then
 		out="#[fg=$TP_S2_FG]#[bg=$TP_S2_BG] $cmd "
-		out="$out#[fg=$TP_S2_BG]#[bg=$TP_BG]◣"
+		out="$out#[fg=$TP_S2_BG]#[bg=$TP_BG]"
 	else
 		prev_bg="$TP_S1_BG"
 		if [ "${4:-0}" = "1" ]; then
 			prev_bg="$TP_FG"
 		fi
-		out="#[fg=$prev_bg]#[bg=$TP_BG]◣"
+		out="#[fg=$prev_bg]#[bg=$TP_BG]"
 	fi
 	printf '%s' "$out"
 	exit 0
 fi
 
-# 右组："/" 斜块块贴合：每块 ◢ 入首（fg=块色 bg=前块色，无底色
+# 右组："/" 斜块块贴合：每块  入首（fg=块色 bg=前块色，无底色
 # 斜缝），首块自底色升、末块平边收（tmux-power build_right_status 同款）。
-# 填充区必须含完整右边缘（◢）才能与色块连通，装反会断裂成楔子。
+# 填充区必须含完整右边缘（）才能与色块连通，装反会断裂成楔子。
 # 块内样式码随 #() 输出渲染（tmux 3.5a 实测，见 docs/theming.md）。
 segs=''
 
@@ -172,7 +172,7 @@ out=''
 prev_bg="$TP_BG"
 while IFS='|' read -r bg fg text; do
 	[ -n "$text" ] || continue
-	out="$out#[fg=$bg]#[bg=$prev_bg]◢"
+	out="$out#[fg=$bg]#[bg=$prev_bg]"
 	out="$out#[fg=$fg]#[bg=$bg] $text "
 	prev_bg="$bg"
 done <<EOF

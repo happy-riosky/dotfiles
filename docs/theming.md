@@ -114,20 +114,23 @@ init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 
   base05）。prefix 按下 = 前景色块（@tp_fg 底 + 底色字 + 加粗，块形/尾边不变）。注意：
   simple_batt_fallback 与 status-line.sh 的 frappe 兜底常量仍是旧
   黄混设计，同步缓议。布局引用：`simple_batt.tmux.conf` 会话块/窗口块
-  （左组 `\` 斜：入 `` ◥ U+25E5 / 出 `` ◣ U+25E3，块间斜缝分开）与
+  （左组 `\` 斜：入 ``  U+E0BE / 出 ``  U+E0B8，块间斜缝分开）与
   `~/.tmux/scripts/status-line.sh`（左右两 mode）。左组：会话段=seg1 黄锚点
-  （conf 静态）+ cmd=seg2（与日期同色，常驻）**合并为一块**——段间 ◥ 过渡边
+  （conf 静态）+ cmd=seg2（与日期同色，常驻）**合并为一块**——段间  U+E0BE 过渡边
   由 conf 内联、prefix 两分支同拍翻转（#() 任务滞后不参与变色；cmd 为空
   时脚本仅输出闭合尾边）；右组
-  （`/` 斜 `` ◢ U+25E2 单斜边块块贴合，首块自底色升、末块平边收）：
+  （`/` 斜 ``  U+E0BA 单斜边块块贴合，首块自底色升、末块平边收）：
   电池=seg4（≥60）→ uptime=seg3（≥100）→ 日期=seg2（≥100）→ 时刻=
   seg1 黄锚点（常驻）——两端黄锚点镜像、内侧中性海拔向中心渐深；
   电池直调 tmux-battery 插件脚本，uptime 读 /proc/uptime 或
   sysctl kern.boottime）。
   无 tinty 时 fallback conf 的 frappe 预混常量（同公式硬编码）打底。
-  几何三角 U+25E2-E5 任何字体都有——刻意不用 powerline `` ``：
-  字体覆盖不稳（曾实测回退成圆头形）。`#()` 输出内嵌 `#[...]` 样式码
-  在 tmux 3.5a 实测可渲染（探针差分验证）。
+  斜切用 powerline extras 三角字形（ple 三角，同旧 U+25E5/E3/E2 形）：入边 ``  U+E0BE、出边 ``  U+E0B8、
+  右组 `/` 斜入边 ``  U+E0BA——Windows Terminal 的 AtlasEngine 只对 block/
+  box-drawing/powerline 做满格像素渲染，U+25E2-E5 几何三角不在白名单内会被
+  渲染成内嵌小三角、拼不成平行四边形；powerline 字形被满格渲染。需 Nerd Font
+  （nvim 等已强制，见 docs/neovim.md；JetBrainsMono NF 亦无 U+25E2-E5 字形）。
+  `#()` 输出内嵌 `#[...]` 样式码在 tmux 3.5a 实测可渲染（探针差分验证）。
 - **lazygit**：基础 `config.yml` 主题中立（delta 明暗完全跟随 tinty）。
   `lg`（aliases.sh）启动前刷新 `~/.config/lazygit/tinty.yml`（generate 按
   当前 scheme 渲染，`_tinty_scheme` 标记须与 `current_scheme` 一致，防
