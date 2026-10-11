@@ -15,7 +15,7 @@
 |---|---|
 | [theming.md](theming.md) | tinty 主题总纲：受管/运行时布局、各应用接线、排障 |
 | [opencode.md](opencode.md) | OpenCode/ECC 配置目录、加载优先级、模型覆写（ocor） |
-| [gh-dash.md](gh-dash.md) | gh-dash 配置与调试：sub-issues 面板、tmux 内 OSC 11、bubbletea exec 复现器 |
+| [gh.md](gh.md) | gh CLI 与 gh-dash 扩展：安装、认证、常用命令、gd 启动器、sub-issues 面板、主题跟随 |
 | [neovim.md](neovim.md) | Neovim（Kickstart + vim.pack）受管文件、主题、插件、维护 |
 | [nvim-markdown.md](nvim-markdown.md) | Neovim markdown 阅读环境：render-markdown + aerial |
 | [obsidian.md](obsidian.md) | Obsidian 官方 CLI/URI 手册；`obs` 包装命令见 manual/obsidian/ |

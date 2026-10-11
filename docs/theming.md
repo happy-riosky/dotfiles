@@ -141,7 +141,7 @@ init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 
   （`--config` 是单槽 override、`include:` 目标缺失会硬报错，故不走
   include）；槽位语义对齐上游 catppuccin/gh-dash（强调槽 c_emph，浅色
   退 base05）。PR/issue 正文明暗由 OSC 11 探测，tmux 内由 gd 发 pane 级
-  SET/复位修正。机制与实测详见 `docs/gh-dash.md`。
+  SET/复位修正。机制与实测详见 `docs/gh.md`。
 - **yazi**：`[flavor] dark/light` 同指生成的 `tinty-{dark,light}`（明暗
   探测无关化）；`y` 启动前刷新。模板 base16 槽位外有语义强调槽 `c_emph`
   （浅色取 base05，防 kissa-latte 这类 base07=bright white 的白字白底）。
@@ -228,7 +228,7 @@ tinty config --data-dir-path  # 运行时目录；ls 查看生成的主题文件
   frappe；裸 `lazygit` 用内建主题。
 - gh dash 没跟随/正文错深浅 → 确认经 `gd` 启动；`_tinty_scheme` 标记与
   `current_scheme` 一致（不符重跑 `scripts/tinty/generate`）；详见
-  `docs/gh-dash.md`。
+  `docs/gh.md`。
 - glow 没跟随 → 同款标记校验；显式传 `-s` 不受包装影响；`gl` 新逻辑需
   新 shell；yazi 内预览按 `R` 原地重启（经 `y` 启动才生效）或重开 `y`。
 - delta 没跟随 scheme → 确认 `tinty apply` 触发过 hook（config.toml 的

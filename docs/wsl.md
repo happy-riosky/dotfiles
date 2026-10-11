@@ -60,6 +60,8 @@ apt 清单已含 `neovim`、`eza`、`lazygit`（Ubuntu resolute/universe 均有�
 |---|---|---|
 | **Neovim** | apt 是 0.11.x，本仓库 kickstart 配置用 `vim.pack`/`PackChanged`，**需 0.12+**，启动即报 `Invalid 'event': 'PackChanged'` | 官方预编译包：release 下载 `nvim-linux-x86_64.tar.gz` 解压到 `~/.local/opt/`，软链 `~/.local/bin/nvim`（PATH 优先于 `/usr/bin`，apt 版留着无害）。首次交互打开确认插件安装 |
 | **yazi** | 不在 Ubuntu apt 源 | 预编译 zip（含 `yazi` 和配套 CLI `ya`）解压到 `~/.local/bin/`。配置、flavor、插件由仓库 `home/.config/yazi/` 链接提供 |
+| **gh** | 不在 Ubuntu 官方源 | 预编译 tarball 解压到 `~/.local/opt/`，软链 `~/.local/bin/gh`（需 ≥ 2026-06 版，命令见第 6 节 / docs/gh.md 安装节） |
+| **gh-dash** | 是 gh 扩展，非独立二进制 | `gh extension install dlvhdr/gh-dash`；经受管启动器 `gd` 使用 |
 | tmux 插件 | tpm 只装管理器本身 | 进 tmux 后 `prefix + I` 拉取其余 |
 
 ## 4. zsh 提示符没有路径？
@@ -83,6 +85,10 @@ curl -fsSL -o /tmp/nvim.tar.gz https://github.com/neovim/neovim/releases/latest/
 mkdir -p ~/.local/opt && tar -C ~/.local/opt -xzf /tmp/nvim.tar.gz && ln -sfn ~/.local/opt/nvim-linux-x86_64/bin/nvim ~/.local/bin/nvim
 curl -fsSL -o /tmp/yazi.zip https://github.com/sxyazi/yazi/releases/latest/download/yazi-x86_64-unknown-linux-gnu.zip
 python3 -c "import zipfile,os;[open(os.path.expanduser('~/.local/bin/')+n,'wb').write(zipfile.ZipFile('/tmp/yazi.zip').read([i for i in zipfile.ZipFile('/tmp/yazi.zip').infolist() if i.filename.endswith(n)][0])) for n in ('yazi','ya')]" && chmod +x ~/.local/bin/yazi ~/.local/bin/ya
+VER=$(curl -s https://api.github.com/repos/cli/cli/releases/latest | jq -r .tag_name)
+curl -fsSL -o /tmp/gh.tar.gz "https://github.com/cli/cli/releases/download/${VER}/gh_${VER#v}_linux_amd64.tar.gz"
+mkdir -p ~/.local/opt && tar -C ~/.local/opt -xzf /tmp/gh.tar.gz && ln -sfn ~/.local/opt/gh_${VER#v}_linux_amd64/bin/gh ~/.local/bin/gh
+gh extension install dlvhdr/gh-dash
 chsh -s /usr/bin/zsh   # 若默认 shell 尚未是 zsh
 ```
 

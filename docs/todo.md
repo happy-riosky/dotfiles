@@ -33,11 +33,6 @@
 
 ### Server 工具链审计（2026-09-29）
 
-- [ ] gh-dash 扩展无供应机制：`gd` 启动器与 `home/.config/gh-dash/` 配置已入库，
-      但扩展本机未装（`gd` 当前不可用）。候选：`plugin-lists/gh.txt` +
-      `scripts/plugins --app gh`（走 `gh extension install`）vs docs/wsl.md
-      例外工具表记手动安装；gh 二进制（不在 Ubuntu 官方源，本机
-      `~/.local/bin/gh` 手动安装）一并入例外表。
 - [ ] bat/fd-find 适配：Debian/Ubuntu 命令名为 `batcat`/`fdfind`，`fr`/`fp`
       alias 与 yazi `md-preview.sh` 依赖 bat。候选：apt 加包 + aliases
       fallback 适配 vs 保持可选缺失。
@@ -113,4 +108,22 @@
 后续：yazi 26.9.1 在 tmux pane 内启动后前数秒吞键（裸 yazi 同样复现，
       与本改动无关，输入就绪后一切正常）；macOS mktemp -t 不展开 XXXXXX
       （BSD 前缀语义），cwd 临时文件名含字面 XXXXXX 但唯一，无功能影响。
+```
+
+```text
+日期：2026-10-11
+环境：wsl（Ubuntu，复用 server profile）
+操作：gh + gh-dash 安装与使用文档化。gh 二进制手动装到 ~/.local/bin/gh
+      （预编译 tarball → ~/.local/opt/，软链），gh-dash 经
+      `gh extension install dlvhdr/gh-dash` 安装（v4.26.1）。docs/gh-dash.md
+      改名为 docs/gh.md 并重写（gh CLI + gh-dash）；docs/wsl.md 第 3/6 节补
+      gh/gh-dash 例外工具条目；
+      关闭 Server 工具链审计的 gh-dash 供应机制待办（采用「例外工具表记手动
+      安装」方案，不做 plugin-lists/gh.txt + scripts/plugins --app gh）。
+结果：通过
+证据：gh version 2.102.0 (2026-09-30)；gh extension list 输出
+      `gh dash dlvhdr/gh-dash v4.26.1`；which -a gh 仅 ~/.local/bin/gh
+      （先前 ~/.opencode/bin/gh 冗余软链已删）。
+后续：macOS 侧 gh 走 brew（brew-formulae.txt 已有），gh-dash 扩展需在 macOS
+      实机 `gh extension install dlvhdr/gh-dash` 后经 gd 验证。
 ```
