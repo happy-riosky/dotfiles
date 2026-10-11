@@ -37,7 +37,13 @@
     ],
     "profiles":
     {
-        "defaults": {},
+        "defaults":
+        {
+            "font":
+            {
+                "face": "JetBrainsMono NFM"
+            }
+        },
         "list":
         [
             {

@@ -28,7 +28,10 @@
 安装；现有包清单不安装它。插件/工具安装还会用到 Git、make、C 编译器、unzip、
 curl、ripgrep、fd 与 tree-sitter CLI。剪贴板集成需要合适的平台剪贴板 provider。
 已启用 Nerd Font（`vim.g.have_nerd_font = true`）；kitty 配置使用
-`FiraCode Nerd Font Mono`，请在每台机器安装该字体（或两处一起改）。
+`JetBrainsMono Nerd Font Mono`，请在每台机器安装该字体（或两处一起改）。
+WSL 走 Windows Terminal：在 Windows 侧安装 JetBrainsMono Nerd Font，并把
+`manual/windows-terminal/settings.json` 的 `profiles.defaults.font.face` 设为
+`JetBrainsMono NFM`（DEVCOM 包的 Mono 族名，非官方全名）。
 
 在已有配置的机器上链接前，先退出 Neovim，并把旧配置移到受管源树之外的备份
 位置。安装器刻意拒绝替换已存在的未受管文件。
