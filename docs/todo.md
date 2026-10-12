@@ -1,8 +1,8 @@
-# Dotfiles 活跃待办与操作记录
+# Dotfiles 活跃待办
 
 重构收尾的历史记录已归档到 [`archive/process.md`](./archive/process.md)，已完成
 的操作记录迁入 [`archive/operations.md`](./archive/operations.md)；本文档只跟踪
-仍未完成的事项、备忘与近期操作记录，追加与归档规则见文末。
+仍未完成的事项与备忘，操作记录（开发日志）见 [`progress.md`](./progress.md)。
 
 ## 1. 活跃待办
 
@@ -56,74 +56,3 @@
 - kitty 标题栏切主题闪青/白（macOS 26 Liquid Glass + kitty 标题栏色 hack，
   2026-10-06）：纯瞬态、最终态正确，暂不处理；完整根因与源码依据见
   `docs/theming.md` 排障节，日后有兴趣可据此报上游 issue。
-
-## 3. 操作记录
-
-每次收尾操作在本文末尾追加一条记录，至少包含：
-
-```text
-日期：YYYY-MM-DD
-环境：darwin | server | termux | 临时 HOME
-操作：执行的命令或结构调整
-结果：通过 | 失败 | 部分通过
-证据：关键输出、diff 或测试命令
-后续：仍需处理的事项
-```
-
-归档规则：待办条目完成或记录超过一个季度后，把对应记录整条迁入
-[`archive/operations.md`](./archive/operations.md)（按时间正序插入，内容原样
-保留，不改写）；本文只保留仍被活跃待办引用的记录。2026-09 的 5 条记录已
-归档。
-
-```text
-日期：2026-10-07
-环境：darwin
-操作：rmpc/MPD 入库：platforms/darwin/home/.mpdconf（osx 输出、
-      ~/.local/state/mpd 运行时数据）与 platforms/darwin/home/.config/rmpc/
-      config.ron（lyrics_dir=~/Music）leaf-link 管理；brew-formulae.txt 加
-      mpd/rmpc；aliases.sh 加 mpu；下载 .lrc 批量补 [ti:]/[ar:] 头；新增
-      docs/rmpc.md 并在 README/AGENTS 加引用。
-结果：通过
-证据：rmpc lyricsindex 18/18 匹配（title/artist 非空）、rmpc listall
-      19 曲、scripts/doctor 与 tests/link|shell|packages 全绿。
-后续：rmpc TUI 原子重写会吃掉 ~/.config/rmpc/config.ron 叶子链接
-      （2026-10-07 已复现一次，./install full 恢复；同备忘节 Otty 原子写
-      问题），恢复法见 docs/rmpc.md 排障节。
-```
-
-```text
-日期：2026-10-08
-环境：darwin
-操作：yazi 原地重启入库：keymap.toml 绑 R → quit --code=99（默认键位无
-      单键 R；进程无法自行重启，见 sxyazi/yazi#1757，须由外层拉起），
-      aliases.sh 的 y() 改哨兵循环——退出码 99 时重刷 tinty/generate 并经
-      --cwd-file 回到最后浏览目录重新拉起（重启后原显式参数丢弃；正常
-      退出仍不改 shell cwd）；theming.md yazi 节与排障同步。
-结果：通过
-证据：tests/shell.sh 新增 test_yazi_restart_wrapper（zsh+bash：99 重启、
-      cwd 恢复、generate 每次启动前重跑、退出码透传、无 cwd 文件时保留
-      原参数）；隔离 tmux server 真机 smoke：R 后进程参数为
-      `yazi ~/dotfiles --cwd-file=…`，R→q 往返 YRC:0；全套件（link/shell/
-      packages/plugins/termux/tmux/vim）与 install --dry-run、doctor 绿。
-后续：yazi 26.9.1 在 tmux pane 内启动后前数秒吞键（裸 yazi 同样复现，
-      与本改动无关，输入就绪后一切正常）；macOS mktemp -t 不展开 XXXXXX
-      （BSD 前缀语义），cwd 临时文件名含字面 XXXXXX 但唯一，无功能影响。
-```
-
-```text
-日期：2026-10-11
-环境：wsl（Ubuntu，复用 server profile）
-操作：gh + gh-dash 安装与使用文档化。gh 二进制手动装到 ~/.local/bin/gh
-      （预编译 tarball → ~/.local/opt/，软链），gh-dash 经
-      `gh extension install dlvhdr/gh-dash` 安装（v4.26.1）。docs/gh-dash.md
-      改名为 docs/gh.md 并重写（gh CLI + gh-dash）；docs/wsl.md 第 3/6 节补
-      gh/gh-dash 例外工具条目；
-      关闭 Server 工具链审计的 gh-dash 供应机制待办（采用「例外工具表记手动
-      安装」方案，不做 plugin-lists/gh.txt + scripts/plugins --app gh）。
-结果：通过
-证据：gh version 2.102.0 (2026-09-30)；gh extension list 输出
-      `gh dash dlvhdr/gh-dash v4.26.1`；which -a gh 仅 ~/.local/bin/gh
-      （先前 ~/.opencode/bin/gh 冗余软链已删）。
-后续：macOS 侧 gh 走 brew（brew-formulae.txt 已有），gh-dash 扩展需在 macOS
-      实机 `gh extension install dlvhdr/gh-dash` 后经 gd 验证。
-```

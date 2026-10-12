@@ -91,7 +91,7 @@ docs/                          # 文档，索引见 docs/README.md（平台指�
 ./install <profile> --dry-run && scripts/doctor
 bash -n install scripts/link scripts/unlink scripts/doctor
 zsh -n home/.zshenv home/.zshrc scripts/shell/load.zsh scripts/shell/aliases.sh
-git diff --check && tests/link.sh && tests/shell.sh && tests/packages.sh && tests/plugins.sh && tests/termux.sh && bash tests/tmux.sh && bash tests/tmux-zen.sh
+git diff --check && tests/link.sh && tests/shell.sh && tests/packages.sh && tests/plugins.sh && tests/termux.sh && bash tests/tmux.sh && bash tests/tmux-zen.sh && bash tests/chat-popup.sh
 bash tests/vim.sh # 需要 vim + Lightline 插件
 ```
 
@@ -147,5 +147,6 @@ DOTFILES_PLATFORM=<p> [DOTFILES_PROFILE=<pr>]`；覆盖项：
   `@zen-*` 为运行时窗口选项，绝不入库；无缝边框经 `after-set-option[90]`
   钩子随主题热切换自动重渲染（主题工具零耦合）。细节与 tmux 3.5a 钩子/
   CLI 实测记于 zen.sh 头部注释（代码即文档，不另立 doc）。
-- 活跃待办与操作记录在 `docs/todo.md`（归档规则见文内）——动手前先读；重构
-  历史（迁移计划、收尾记录、已完成操作记录）归档在 `docs/archive/`。
+- 活跃待办与备忘在 `docs/todo.md`，操作记录（开发日志）在
+  `docs/progress.md`（归档规则见文内）——动手前先读；重构历史（迁移计划、
+  收尾记录、已完成操作记录）归档在 `docs/archive/`。

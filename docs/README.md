@@ -26,7 +26,8 @@
 | 文档 | 内容 |
 |---|---|
 | [tinty-themes.md](tinty-themes.md) | 特殊 base16 主题速查（纯黑/灰度/纯白/复古），含复现命令 |
-| [todo.md](todo.md) | 活跃待办、备忘与近期操作记录（归档规则见文内） |
+| [todo.md](todo.md) | 活跃待办与备忘 |
+| [progress.md](progress.md) | 操作记录（开发日志），归档规则见文内 |
 
 ## 归档
 

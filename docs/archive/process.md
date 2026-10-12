@@ -1,7 +1,7 @@
 # Dotfiles 重构收尾记录
 
 > **已归档（2026-09-16）**：重构收尾完成，本文档仅作历史记录。仍活跃的待办与
-> 今后的操作记录见 [`../todo.md`](../todo.md)。
+> 今后的操作记录见 [`../progress.md`](../progress.md)。
 
 这份文档记录迁移计划完成后的验证、真实设备反馈和后续优化。迁移计划已归档到
 [`MIGRATION_PLAN.md`](./MIGRATION_PLAN.md)，OpenCode 配置说明见
