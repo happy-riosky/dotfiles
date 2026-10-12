@@ -10,6 +10,7 @@ gui:
   language: "en"
   fileTreeSortOrder: filesFirst
   showNumstatInFilesView: true
+  scrollHeight: 32
 
 git:
   paging:
