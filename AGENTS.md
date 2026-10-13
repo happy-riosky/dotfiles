@@ -123,7 +123,10 @@ DOTFILES_PLATFORM=<p> [DOTFILES_PROFILE=<pr>]`；覆盖项：
   `~/.config/yazi/flavors/tinty-{dark,light}.yazi/`、
   `~/.config/tinted-theming/tinty-glow.json`、`~/.config/lazygit/tinty.yml`
   与 `~/.config/gh-dash/tinty{,-context}.yml`（运行时产物；gh-dash 经
-  `home/.local/bin/gd` 启动器标记校验后 `--config` 叠加）。细节见
+  `home/.local/bin/gd` 启动器标记校验后 `--config` 叠加）。yazi 实心块分两档：
+  黄锚点 base0A 仅限"当前"语义（marker/count 选中与 indicator.current 光标
+  条）；其余实心块（indicator.parent/preview、mode.normal_main=NOR+位置块）
+  用 base03 海拔 + base05 字色向中亮度收敛。细节见
   `docs/theming.md`。
 - OMO/OpenCode：`home/.omo/omo.jsonc` 与 `home/.config/opencode/` 由本仓库
   leaf-link 管理；`~/.omo/{codegraph,lsp-daemon}/`、`node_modules/`、
