@@ -127,3 +127,20 @@
       project.nvim 条目；install --dry-run 与 doctor 绿。
 后续：无。
 ```
+
+```text
+日期：2026-10-13
+环境：darwin
+操作：prefix+O ocv→opencode 兜底：home/.tmux.conf 改为 run-shell 先探测
+      （zsh -c "command -v ocv || command -v opencode"，非交互 .zshenv 亦
+      组装 nvm/Homebrew PATH），有则 new-window 经 zsh -c exec 绝对路径
+      （ocv launcher 为 #!/usr/bin/env node 需 node 上 PATH），都缺则零
+      副作用不开窗；弃 zsh -ic（无 tty 污染 stderr "zle"）。tests/tmux.sh
+      增 test_prefix_o_fallback_chain 契约。
+结果：通过
+证据：tests/tmux.sh 与 tmux-zen.sh 绿、git diff --check 干净；隔离
+      server e2e：真 HOME 按键路径开新窗（cmd=node、cwd=目标 pane 路径），
+      HOME+PATH 双清环境零开窗（仅剩初始 1 窗），仅 opencode 时探测返回
+      /opt/homebrew/bin/opencode（exec 路径与 ocv 分支同一机制）。
+后续：无。
+```

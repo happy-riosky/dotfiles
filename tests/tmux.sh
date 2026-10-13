@@ -49,9 +49,21 @@ test_update_environment_keeps_term_vars() {
   [ "$has_tp" = 1 ] || fail 'update-environment is missing TERM_PROGRAM (yazi requirement)'
 }
 
+# prefix+O 契约：ocv 优先、opencode 兜底；都缺则绝不 new-window。
+test_prefix_o_fallback_chain() {
+  local conf="$ROOT/home/.tmux.conf"
+  grep -q '^bind O run ' "$conf" || \
+    fail 'prefix+O must be a guarded run-shell binding'
+  grep -q 'command -v ocv || command -v opencode' "$conf" || \
+    fail 'prefix+O does not resolve ocv-then-opencode fallback'
+  grep -qF '[ -n "$app" ] && tmux new-window' "$conf" || \
+    fail 'prefix+O missing empty-guard: neither binary must open a window'
+}
+
 # zen 生命周期契约测试已拆至 tests/tmux-zen.sh（需 tmux 运行时，缺失时跳过）。
 
 test_no_percent_before_hash_expansion
 test_server_path_fix_precedes_tpm
 test_update_environment_keeps_term_vars
+test_prefix_o_fallback_chain
 printf 'tmux integration tests passed\n'
