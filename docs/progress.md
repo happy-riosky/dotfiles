@@ -67,11 +67,10 @@
       tinty 蓝（ANSI 34=color4=base0D，随 tinty apply 自动跟随，无 tinty
       降级终端蓝；\001/\002 防 readline 折行错乱）；AI 前缀染 ANSI 33=
       color3=base0A 黄锚点（仅显示侧 printf，convo 转写保持纯文本协议，
-      普通 printf 无需 \001/\002）；PgUp 向上翻页进
-      copy-mode（root 表绑 PPage——tmux 3.x 无 window 级绑定，key 名
-      PageUp rc=0 但静默无效，实测 3.5a；弹窗场景绑到内层临时 server 随
-      销毁消失，直跑场景 trap EXIT unbind，既有 PPage 绑定跳过不覆盖；
-      PgDn/滚轮 copy-mode 内原生翻页，q 返回）；Ctrl-D EOF 直接退出（免
+      普通 printf 无需 \001/\002）；PgUp copy-mode 绑定曾实现后按需移除
+      （tmux 3.x key table server 全局、key 名须 PPage、PageUp rc=0 静默
+      无效，实测 3.5a——留档备查；弹窗内滚轮/prefix+[ 原生翻滚 scrollback
+      已覆盖需求，脚本回归零 tmux 耦合）；Ctrl-D EOF 直接退出（免
       尾部复制提示，/q 保留）；read -e 输入历史（启动 history -c 防 ↑
       翻出 shell 历史、unset HISTFILE 防退出写回 bash_history，聊天不留
       本地痕迹；连续重复去重；非交互 tty 直跑自动 re-exec bash -i）；
@@ -79,19 +78,19 @@
       打印并更新 resp 供 /y 复制，不进 convo 转写）。banner 热键清单外移 /h 帮助命令（banner 只
       留 "(/h for help)"）。尾部复制键改读 stdin（弹窗内等价、headless
       可测）。新增 tests/chat-popup.sh（stub aichat/pbcopy + 隔离 tmux
-      server 绑定断言；prompt 着色与 ↑/C-r 历史需真 tty，经 BSD script
+      server 绑定断言——随 PgUp 移除一并删除；prompt 着色与 ↑/C-r 历史需
+      真 tty，经 BSD script
       pty 烟测覆盖）。
 结果：通过
 证据：bash tests/chat-popup.sh 绿（对话/复制/转写/EOF 直退//tr //po
       prompt+convo 纯净/AI 前缀 ESC[33m 字节断言/usage//h 帮助与 banner
-      外移/绑定装拆与不覆盖）；
+      外移）；
       全套件 link/shell/
       packages/plugins/termux/tmux/tmux-zen 与 install full --dry-run +
       doctor 绿；pty 烟测：prompt 含 ESC[34m 且无 \001 泄漏、↑ 召回重发、
       Ctrl-D 无尾提示直退。
 后续：候选——经 ~/.config 配置自定义 /xx 一次性命令（prompt 替换类，
-      /tr /po 同款机制），需要时再设计；真机 C-g 弹窗内 PgUp 实键体验
-      待日常使用确认。
+      /tr /po 同款机制），需要时再设计。
 ```
 
 ```text
@@ -143,4 +142,19 @@
       HOME+PATH 双清环境零开窗（仅剩初始 1 窗），仅 opencode 时探测返回
       /opt/homebrew/bin/opencode（exec 路径与 ocv 分支同一机制）。
 后续：无。
+```
+```text
+日期：2026-10-14
+环境：darwin
+操作：tests/chat-popup.sh 补两条变异实验证实的覆盖缺口：(1) /q 尾部
+      y/Y 复制路径（此前尾部按键只发过 n，chat-popup.sh 内联复制分支
+      0% 覆盖）——断言 close... (copied) 标记与 pbcopy 字节，空回复时
+      静默；(2) aichat 失败路径——stub 遇 prompt 含 boom 即 exit 1，
+      覆盖主循环与 oneshot 的 [error] 输出及 set -e 下循环存活。
+结果：通过
+证据：bash -n + bash tests/chat-popup.sh 全绿；变异复核：尾部 == y 改
+      == x、两处 [error] %s 改 BOOM %s 均由原「存活」转为「被抓」；
+      git diff --check 干净（shellcheck 未装）。
+后续：banner head -n 4 启发式检查（Nit）可换 banner 逐字节前缀精确
+      断言；错误路径的 resp 残留语义（/y 复制到错误文本）仍未钉。
 ```
