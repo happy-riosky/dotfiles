@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# chat-popup.sh 契约测试：headless（stdin 管道，read -e 自动降级为普通 read、
+# askai.sh 契约测试：headless（stdin 管道，read -e 自动降级为普通 read、
 # prompt 不打印）覆盖命令流——对话往返、/y /yq 复制（stub pbcopy）、/l 转写、
 # Ctrl-D EOF 直退（无尾部提示）、/q 尾部复制提示与尾部 y/Y 复制（空回复静默，
 # 不复用 copy_last）、/tr /po 的 prompt 注入
@@ -13,7 +13,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 fail() { printf 'FAIL: %s\n' "$*" >&2; exit 1; }
 
-SCRIPT="$ROOT/home/.tmux/scripts/chat-popup.sh"
+SCRIPT="$ROOT/home/.tmux/scripts/askai.sh"
 [ -r "$SCRIPT" ] || fail "script missing: $SCRIPT"
 
 tmp="$(mktemp -d)"
@@ -61,7 +61,7 @@ run() {
 test_roundtrip_copy_transcript() {
   local out
   out="$(run 'hello\n/y\n/l\n/q\nn\n')" || fail 'roundtrip: rc'
-  case "$out" in *'chat-popup  model: stub-model'*) ;; *) fail 'roundtrip: banner model' ;; esac
+  case "$out" in *'askai  model: stub-model'*) ;; *) fail 'roundtrip: banner model' ;; esac
   case "$out" in *$'\033[33mAI: \033[0mstub-reply'*) ;; *) fail 'roundtrip: colored AI reply' ;; esac
   case "$out" in *'(copied)'*) ;; *) fail 'roundtrip: /y copy' ;; esac
   [ "$(cat "$PB_LOG")" = 'stub-reply' ] || fail 'roundtrip: pbcopy content'
@@ -159,4 +159,4 @@ test_tail_copy_on_quit
 test_help
 test_tr_po
 test_ai_error_survives
-printf 'chat-popup: all tests passed\n'
+printf 'askai: all tests passed\n'

@@ -158,3 +158,18 @@
 后续：banner head -n 4 启发式检查（Nit）可换 banner 逐字节前缀精确
       断言；错误路径的 resp 残留语义（/y 复制到错误文本）仍未钉。
 ```
+```text
+日期：2026-10-14
+环境：darwin
+操作：chat-popup 更名 askai：脚本与测试 git mv（home/.tmux/scripts/
+      askai.sh、tests/askai.sh，历史保留），banner 改「askai  model:」，
+      .tmux.conf C-g 绑定路径与 AGENTS.md 验证链同步；历史 progress
+      记录按归档规则不改写；~/.tmux/scripts/ 旧悬挂链接清除、新链接
+      就位。
+结果：通过
+证据：bash tests/askai.sh 绿（banner 新字面量断言）；install full
+      --dry-run 与 doctor 绿（askai.sh 链接 OK）；git diff --check
+      干净；home/tests/AGENTS.md/docs 无 chat-popup 残留引用。
+后续：运行中 tmux server 需 prefix+: source-file ~/.tmux.conf 或重启
+      后新路径生效。
+```

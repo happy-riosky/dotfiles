@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# chat-popup.sh - prefix+C-g 极简 CLI 聊天：read → aichat → 打印，死循环。
+# askai.sh - prefix+C-g 极简 CLI 聊天：read → aichat → 打印，死循环。
 # aichat 无 --session 完全无状态，对话不落任何本地库（opencode run 每轮写
 # session 库，故弃用）。convo=Human:/AI: 转写完整重放（整段重放）；resp=最后
 # 一条回复（/tr、/po 的结果同样更新 resp，供 /y 复制，但不进 convo 转写）。
@@ -56,7 +56,7 @@ esac
 # aichat 加 -S（关流式）：流式重组在长回复下曾出现丢字/乱码（"canД"），
 # 关流式让回复一次性写出；NO_COLOR 兜底去 ANSI。
 model=$(NO_COLOR=1 aichat --info </dev/null 2>/dev/null | awk '$1=="model"{print $2; exit}')
-printf '\nchat-popup  model: %s  (/h for help)\n\n' "${CHAT_MODEL:-${model:-aichat default}}"
+printf '\naskai  model: %s  (/h for help)\n\n' "${CHAT_MODEL:-${model:-aichat default}}"
 
 help_text='commands:
   /h            this help
