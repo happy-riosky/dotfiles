@@ -1,0 +1,549 @@
+#!/usr/bin/env python3
+"""nemdl — NetEase Music Downloader（rmpc 曲库配套，底层由 vncmd 完成下载）。
+
+曲库布局（零工具痕迹，目录以音乐命名，文件名「艺人 - 歌名」）：
+
+    <root>/playlists/<歌单名>/   ← 账号自建歌单
+    <root>/albums/<专辑名>/      ← 账号收藏专辑
+    <root> 默认 ~/Music/net-ease-music，可用 -o 或 VNCMD_DL_DIR 覆盖
+
+工作原理：
+  - 复用 vncmd 的 cookie（~/.vSoft/vncmd/cookie）调网易云 web API 列账号内容；
+  - 下载调 `vncmd playlist|album <id> -d -o <root>`（断点续传、元数据、歌词、封面）；
+  - vncmd 批量下载会在 root 下建时间戳子目录（checkpoint 绑定它），下载完成后
+    nemdl 把文件并入 <名称>/ 并改写 checkpoint 的 download_dir —— 重跑同名歌单
+    依然精准续传，只补缺失曲目；
+  - 任何下载收尾自动 `rmpc update`（--no-update 跳过）。
+
+用法速查见 manual/rmpc/README.md。
+"""
+
+import argparse
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+import time
+import unicodedata
+import urllib.error
+import urllib.request
+from pathlib import Path
+
+BASE_URL = "https://music.163.com"
+UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+      "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+AUDIO_EXTS = {".flac", ".mp3", ".m4a", ".wav", ".ogg", ".opus", ".wma", ".ape"}
+
+# 每类收藏/自建判定见 fetch_playlists()
+
+
+def vncmd_home() -> Path:
+    return Path(os.environ.get("VNCMD_HOME", "~/.vSoft/vncmd")).expanduser()
+
+
+def default_root() -> Path:
+    env = os.environ.get("VNCMD_DL_DIR")
+    return Path(env).expanduser() if env else Path("~/Music/net-ease-music").expanduser()
+
+
+def die(msg: str, code: int = 1):
+    print(f"nemdl: {msg}", file=sys.stderr)
+    sys.exit(code)
+
+
+# ---------------------------------------------------------------- API ----
+
+def _cookie() -> str:
+    p = vncmd_home() / "cookie"
+    if not p.is_file() or not p.read_text().strip():
+        die(f"cookie 不存在或为空：{p}（先 vncmd cookie \"...\"）")
+    return p.read_text().strip()
+
+
+def _get_json(path: str, retries: int = 3) -> dict:
+    req = urllib.request.Request(BASE_URL + path, headers={
+        "Cookie": _cookie(), "User-Agent": UA, "Referer": BASE_URL + "/",
+    })
+    for attempt in range(1, retries + 1):
+        try:
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                return json.load(resp)
+        except urllib.error.URLError as e:
+            if attempt == retries:
+                die(f"请求 {path.split('?')[0]} 失败：{e}")
+            time.sleep(attempt * 2)
+
+
+def _fmt_ms(ms) -> str:
+    if not ms:
+        return ""
+    s = int(ms) // 1000
+    return f"{s // 60}:{s % 60:02d}"
+
+
+def get_account() -> dict:
+    d = _get_json("/api/nuser/account/get")
+    prof = d.get("profile") or {}
+    if d.get("code") != 200 or not prof.get("userId"):
+        die("cookie 已失效，请重新设置（vncmd cookie \"...\"）")
+    return prof
+
+
+def fetch_playlists() -> list:
+    """返回 [{id,name,count,kind}]，kind: mine=自建 liked=收藏他人 favorites=喜欢的音乐"""
+    uid = get_account()["userId"]
+    out, offset = [], 0
+    while True:
+        d = _get_json(f"/api/user/playlist/?uid={uid}&limit=100&offset={offset}")
+        pls = d.get("playlist") or []
+        out.extend(pls)
+        if not d.get("more") or not pls:
+            break
+        offset += 100
+    res = []
+    for pl in out:
+        if pl.get("specialType") == 5 and pl.get("userId") == uid:
+            kind = "favorites"
+        elif pl.get("userId") == uid:
+            kind = "mine"
+        else:
+            kind = "liked"
+        res.append({"id": pl["id"], "name": pl["name"],
+                    "count": pl.get("trackCount", 0), "kind": kind})
+    return res
+
+
+def fetch_albums() -> list:
+    out, offset = [], 0
+    while True:
+        d = _get_json(f"/api/album/sublist?limit=100&offset={offset}")
+        data = d.get("data") or []
+        out.extend(data)
+        if not d.get("hasMore") or not data:
+            break
+        offset += 100
+    res = []
+    for al in out:
+        artist = ", ".join(a["name"] for a in al.get("artists") or [])
+        res.append({"id": al["id"], "name": al["name"], "count": al.get("size", 0),
+                    "artist": artist, "kind": "album"})
+    return res
+
+
+def fetch_tracks(kind: str, item_id: int) -> dict:
+    """返回 {name, tracks:[{id,title,artist,album,duration}], removed:[...]}"""
+    if kind == "playlist":
+        d = _get_json(f"/api/v6/playlist/detail/?id={item_id}&n=2000")
+        pl = d.get("playlist") or die(f"歌单 {item_id} 未找到或无权访问")
+        tids = {t["id"] if isinstance(t, int) else t.get("id")
+                for t in pl.get("trackIds") or []}
+        present = {t["id"] for t in pl.get("tracks") or []}
+        tracks = [{
+            "id": t["id"], "title": t["name"],
+            "artist": ", ".join(a["name"] for a in t.get("ar") or []),
+            "album": (t.get("al") or {}).get("name", ""),
+            "duration": _fmt_ms(t.get("dt")),
+        } for t in pl.get("tracks") or []]
+        return {"name": pl["name"], "tracks": tracks,
+                "removed": sorted(tids - present)}
+    d = _get_json(f"/api/v1/album/{item_id}")
+    album = d.get("album") or die(f"专辑 {item_id} 未找到")
+    tracks = [{
+        "id": s["id"], "title": s["name"],
+        "artist": ", ".join(a["name"] for a in s.get("ar") or []),
+        "album": album.get("name", ""),
+        "duration": _fmt_ms(s.get("dt")),
+    } for s in d.get("songs") or []]
+    return {"name": album["name"], "tracks": tracks, "removed": []}
+
+
+# --------------------------------------------------------- checkpoint ----
+
+def cp_path(kind: str, item_id) -> Path:
+    return vncmd_home() / "cache" / "download" / f"{kind}_{item_id}.json"
+
+
+def cp_load(kind: str, item_id) -> dict:
+    p = cp_path(kind, item_id)
+    if not p.is_file():
+        return None
+    try:
+        d = json.loads(p.read_text())
+        return d if isinstance(d.get("tracks"), dict) else None
+    except (ValueError, OSError):
+        return None
+
+
+def cp_save(cp: dict):
+    cp_path(cp["type"], cp["id"]).write_text(
+        json.dumps(cp, ensure_ascii=False, indent=2))
+
+
+def cp_done(cp: dict) -> set:
+    return {k for k, v in (cp or {}).get("tracks", {}).items() if v}
+
+
+def all_checkpoints() -> list:
+    d = vncmd_home() / "cache" / "download"
+    out = []
+    if d.is_dir():
+        for p in sorted(d.glob("*.json")):
+            cp = cp_load(*_parse_cp_name(p.stem))
+            if cp:
+                out.append(cp)
+    return out
+
+
+def _parse_cp_name(stem: str):
+    m = re.match(r"(\w+)_(\d+)$", stem)
+    return (m.group(1), m.group(2)) if m else (None, None)
+
+
+# ------------------------------------------------------------- helpers ----
+
+def sanitize(name: str) -> str:
+    name = re.sub(r'[\\/:]', "_", name)
+    name = re.sub(r"\s+", " ", name).strip(" .")
+    return name[:100]
+
+
+def disp_width(text: str) -> int:
+    return sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in text)
+
+
+def pad(text: str, width: int) -> str:
+    return text + " " * max(width - disp_width(text), 0)
+
+
+def table(rows: list, headers: list):
+    cols = list(zip(*rows)) if rows else [[] for _ in headers]
+    widths = [max(disp_width(h), *(disp_width(c) for c in col)) if col else disp_width(h)
+              for h, col in zip(headers, cols)]
+    print("  ".join(pad(h, w) for h, w in zip(headers, widths)))
+    for row in rows:
+        print("  ".join(pad(c, w) for c, w in zip(row, widths)))
+
+
+def find_vncmd() -> str:
+    exe = shutil.which("vncmd")
+    return exe or die("找不到 vncmd，请先 pip install vncmd")
+
+
+def config_filename_format() -> str:
+    p = vncmd_home() / "config.toml"
+    m = re.search(r'filename_format\s*=\s*"([^"]+)"',
+                  p.read_text() if p.is_file() else "")
+    return m.group(1) if m else ""
+
+
+def resolve_targets(kind: str, args_list: list) -> list:
+    """把 ID/名称关键词解析为账号内的条目；歧义时报候选并退出。"""
+    pool = fetch_playlists() if kind == "playlist" else fetch_albums()
+    res = []
+    for arg in args_list:
+        if arg.isdigit():
+            hit = next((x for x in pool if str(x["id"]) == arg), None)
+            if not hit:
+                die(f"{kind} {arg} 不在你的账号内")
+        else:
+            low, exact, subs = arg.lower(), [], []
+            for x in pool:
+                name = x["name"].lower()
+                (exact if name == low else subs if low in name else []).append(x)
+            if len(exact) == 1:
+                hit = exact[0]
+            elif len(exact) + len(subs) == 1:
+                hit = (exact or subs)[0]
+            elif not exact and not subs:
+                die(f"找不到名为「{arg}」的{ '歌单' if kind=='playlist' else '专辑' }")
+            else:
+                print(f"「{arg}」匹配到多条，请用 ID 精确指定：", file=sys.stderr)
+                for x in exact + subs:
+                    print(f"  {x['id']}  {x['name']}", file=sys.stderr)
+                sys.exit(2)
+        res.append(hit)
+    return res
+
+
+# ------------------------------------------------------------ download ----
+
+def final_dir(root: Path, kind: str, meta: dict, pool: list) -> Path:
+    sub = "playlists" if kind == "playlist" else "albums"
+    base = sanitize(meta["name"])
+    clash = [x for x in pool if x["name"] == meta["name"] and x["id"] != meta["id"]]
+    if clash:
+        base = f"{base} {meta['id']}"
+    return root / sub / base
+
+
+def adopt_ts_dir(cp: dict, final: Path, ts: Path):
+    """把 vncmd 时间戳批次的产物并入命名目录，并改写 checkpoint 指向它。"""
+    final.mkdir(parents=True, exist_ok=True)
+    for f in ts.iterdir():
+        if f.name == "_temp":
+            continue
+        dst = final / f.name
+        if dst.exists():
+            if f.is_file() and f.stat().st_size > dst.stat().st_size:
+                dst.unlink()
+                shutil.move(str(f), str(dst))
+                print(f"  替换更大的文件 {dst.name}")
+        else:
+            shutil.move(str(f), str(dst))
+    shutil.rmtree(ts, ignore_errors=True)
+    cp["download_dir"] = str(final)
+    cp_save(cp)
+
+
+def download_one(kind: str, meta: dict, pool: list, opt) -> bool:
+    item_id = meta["id"]
+    final = final_dir(Path(opt.output), kind, meta, pool)
+    label = f"{meta['name']}（{item_id}，{meta['count']} 首）"
+    cp = cp_load(kind, item_id)
+
+    # checkpoint 指向的目录已被移动/改名 → 重新绑定到命名目录，保持续传
+    if cp:
+        old = cp.get("download_dir")
+        if old and Path(old) != final and not Path(old).is_dir() and final.is_dir():
+            cp["download_dir"] = str(final)
+            cp_save(cp)
+            print(f"· checkpoint 重新绑定 {old} → {final}")
+
+    cmd = [find_vncmd(), kind, str(item_id), "-d", "-o", str(opt.output)]
+    if opt.quality:
+        cmd += ["-q", opt.quality]
+
+    done_before = len(cp_done(cp))
+    if opt.dry_run:
+        print(f"[dry-run] {' '.join(cmd)}   → {final}")
+        return True
+    print(f"\n▼ {label}")
+    rc = subprocess.run(cmd).returncode
+
+    cp = cp_load(kind, item_id)
+    if cp:
+        ts = cp.get("download_dir")
+        if ts and Path(ts).is_dir() and Path(ts) != final:
+            adopt_ts_dir(cp, final, Path(ts))
+        done = len(cp_done(cp))
+        total = len(cp.get("tracks", {}))
+        audio = count_audio(final)
+        state = "完成" if done == total and total else f"进行中 {done}/{total}"
+        print(f"· {state}，目录 {final}（音频文件 {audio}）")
+    return rc == 0
+
+
+def count_audio(d: Path) -> int:
+    return sum(1 for f in d.rglob("*") if f.is_file() and f.suffix.lower() in AUDIO_EXTS)
+
+
+def rmpc_update():
+    exe = shutil.which("rmpc")
+    if exe:
+        print("\n· rmpc update")
+        subprocess.run([exe, "update"])
+
+
+# ------------------------------------------------------------- commands ----
+
+KIND_TAG = {"mine": "自建", "liked": "收藏", "favorites": "喜欢", "album": ""}
+
+
+def cmd_list(kind: str, opt):
+    pool = fetch_playlists() if kind == "playlist" else fetch_albums()
+    rows = []
+    for x in pool:
+        if kind == "playlist":
+            if opt.mine and x["kind"] not in ("mine",):
+                continue
+            if opt.liked and x["kind"] != "liked":
+                continue
+        tag = KIND_TAG.get(x["kind"], "")
+        name = x["name"] + (f" — {x['artist']}" if x.get("artist") else "")
+        rows.append([str(x["id"]), f"[{tag}]" if tag else "", name, str(x["count"])])
+    if not rows:
+        print("（无匹配条目）")
+        return
+    nick = get_account().get("nickname", "")
+    print(f"账号：{nick}｜{len(rows)} 项")
+    table(rows, ["ID", "类别" if kind == "playlist" else "", "名称", "曲目"])
+
+
+def cmd_show(kind: str, target: str, opt):
+    (meta,) = resolve_targets(kind, [target])
+    info = fetch_tracks(kind, meta["id"])
+    cp = cp_load(kind, meta["id"])
+    done = cp_done(cp)
+    rows, missing = [], 0
+    for t in info["tracks"]:
+        mark = "·"
+        if cp:
+            mark = "✓" if str(t["id"]) in done else "✗"
+            if mark == "✗":
+                missing += 1
+        rows.append([mark, str(t["id"]), t["title"], t["artist"],
+                     t.get("album", ""), t["duration"]])
+    local = f"｜本地 {len(done)}/{len(cp.get('tracks', {}))}" if cp else "｜未下载"
+    pend = f"｜待下载 {missing}" if missing else ""
+    print(f"{info['name']}（{meta['id']}，{len(rows)} 首{local}{pend}）")
+    table(rows, ["", "ID", "标题", "艺人", "专辑", "时长"])
+    if info["removed"]:
+        print(f"\n下架曲目 {len(info['removed'])} 首：{', '.join(map(str, info['removed']))}")
+
+
+def batch_pool(kind: str, opt) -> list:
+    pool = fetch_playlists() if kind == "playlist" else fetch_albums()
+    if kind == "playlist":
+        kinds = {"mine"}
+        if opt.liked:
+            kinds.add("liked")
+        if opt.favorites:
+            kinds.add("favorites")
+        sel = [x for x in pool if x["kind"] in kinds]
+    else:
+        sel = pool
+    if not sel:
+        die("没有匹配的条目")
+    return sel
+
+
+def run_downloads(kind: str, metas: list, pool: list, opt):
+    if config_filename_format() != "01":
+        print("提示：建议 vncmd 配置 filename_format = \"01\"（艺人 - 歌名），"
+              "否则文件名为「歌名 - 艺人」", file=sys.stderr)
+    fails = []
+    for m in metas:
+        if not download_one(kind, m, pool, opt):
+            fails.append(m["name"])
+    if not opt.dry_run and not opt.no_update:
+        rmpc_update()
+    if fails:
+        die("失败：" + ", ".join(fails))
+
+
+def cmd_dl(kind: str, targets: list, opt):
+    pool = fetch_playlists() if kind == "playlist" else fetch_albums()
+    run_downloads(kind, resolve_targets(kind, targets), pool, opt)
+
+
+def cmd_status(opt):
+    cps = all_checkpoints()
+    if not cps:
+        print(f"尚无下载记录（checkpoint 目录 {vncmd_home() / 'cache' / 'download'}）")
+        return
+    pl_pool = fetch_playlists()
+    al_pool = fetch_albums()
+    by_id = {("playlist", str(x["id"])): x for x in pl_pool}
+    by_id.update({("album", str(x["id"])): x for x in al_pool})
+    rows = []
+    for cp in cps:
+        meta = by_id.get((cp["type"], str(cp["id"])))
+        name = meta["name"] if meta else "<账号中已不存在>"
+        d = Path(cp.get("download_dir", ""))
+        total = len(cp.get("tracks", {}))
+        rows.append([cp["type"], str(cp["id"]), name,
+                     f"{len(cp_done(cp))}/{total}",
+                     str(count_audio(d)) if d.is_dir() else "目录缺失",
+                     str(d)])
+    print(f"曲库根：{opt.output}")
+    table(rows, ["类型", "ID", "名称", "进度", "音频数", "目录"])
+
+
+def cmd_sync(opt):
+    cps = all_checkpoints()
+    if not cps:
+        print("尚无下载记录")
+        return
+    pl_pool = fetch_playlists()
+    al_pool = fetch_albums()
+    metas = []
+    for cp in cps:
+        kind = cp["type"]
+        src = al_pool if kind == "album" else pl_pool
+        m = next((x for x in src if str(x["id"]) == str(cp["id"])), None)
+        if m:
+            metas.append((kind, m))
+        else:
+            print(f"· 跳过 {kind}_{cp['id']}（账号中已不存在）")
+    fails = []
+    for kind, m in metas:
+        if not download_one(kind, m, pl_pool + al_pool, opt):
+            fails.append(m["name"])
+    if not opt.dry_run and not opt.no_update:
+        rmpc_update()
+    if fails:
+        die("失败：" + ", ".join(fails))
+
+
+# --------------------------------------------------------------- main ----
+
+def build_parser() -> argparse.ArgumentParser:
+    ap = argparse.ArgumentParser(prog="nemdl",
+                                 description="NetEase Music 下载器（封装 vncmd，曲库零工具痕迹）")
+    ap.add_argument("--version", action="version", version="nemdl 1.0")
+    sub = ap.add_subparsers(dest="cmd", required=True)
+
+    p_pl = sub.add_parser("playlist", aliases=["p"], help="歌单")
+    s = p_pl.add_subparsers(dest="action", required=True)
+    common = argparse.ArgumentParser(add_help=False)
+    common.add_argument("-o", "--output", default=str(default_root()),
+                        help="曲库根目录（默认 ~/Music/net-ease-music 或 VNCMD_DL_DIR）")
+    common.add_argument("-q", "--quality", help="音质 128/192/320/999")
+    common.add_argument("--dry-run", action="store_true", help="只显示计划，不执行")
+    common.add_argument("--no-update", action="store_true", help="跳过收尾 rmpc update")
+    lp = s.add_parser("list", parents=[common], help="列出账号歌单")
+    lp.add_argument("--mine", action="store_true", help="仅自建")
+    lp.add_argument("--liked", action="store_true", help="仅收藏他人")
+    s.add_parser("show", parents=[common], help="查看歌单曲目").add_argument("target")
+    dp = s.add_parser("dl", parents=[common], help="下载歌单")
+    dp.add_argument("targets", nargs="+")
+    ap_all = s.add_parser("all", parents=[common], help="批量下载歌单")
+    ap_all.add_argument("--mine", action="store_true", help="仅自建（默认行为）")
+    ap_all.add_argument("--liked", action="store_true", help="加收藏的他人歌单")
+    ap_all.add_argument("--favorites", action="store_true", help="加「喜欢的音乐」")
+
+    p_al = sub.add_parser("album", aliases=["a"], help="专辑")
+    s = p_al.add_subparsers(dest="action", required=True)
+    s.add_parser("list", parents=[common], help="列出收藏专辑")
+    s.add_parser("show", parents=[common], help="查看专辑曲目").add_argument("target")
+    dp = s.add_parser("dl", parents=[common], help="下载专辑")
+    dp.add_argument("targets", nargs="+")
+    s.add_parser("all", parents=[common], help="批量下载全部收藏专辑")
+
+    st = sub.add_parser("status", help="本地下载总览")
+    st.add_argument("-o", "--output", default=str(default_root()))
+    sy = sub.add_parser("sync", help="增量补齐所有已下载项")
+    sy.add_argument("-o", "--output", default=str(default_root()))
+    sy.add_argument("-q", "--quality")
+    sy.add_argument("--dry-run", action="store_true")
+    sy.add_argument("--no-update", action="store_true")
+    return ap
+
+
+def main(argv=None):
+    opt = build_parser().parse_args(argv)
+    cmd = {"p": "playlist", "a": "album"}.get(opt.cmd, opt.cmd)
+    if cmd in ("playlist", "album"):
+        kind = cmd
+        act = opt.action
+        if act == "list":
+            cmd_list(kind, opt)
+        elif act == "show":
+            cmd_show(kind, opt.target, opt)
+        elif act == "dl":
+            cmd_dl(kind, opt.targets, opt)
+        elif act == "all":
+            if kind == "playlist" and not (opt.mine or opt.liked or opt.favorites):
+                opt.mine = True
+            full = fetch_playlists() if kind == "playlist" else fetch_albums()
+            run_downloads(kind, batch_pool(kind, opt), full, opt)
+    elif cmd == "status":
+        cmd_status(opt)
+    elif cmd == "sync":
+        cmd_sync(opt)
+
+
+if __name__ == "__main__":
+    main()
