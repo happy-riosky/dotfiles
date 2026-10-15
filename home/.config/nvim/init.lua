@@ -479,9 +479,55 @@ do
     vim.cmd.colorscheme 'catppuccin-frappe'
   end
 
+  -- jsdoc @tag 去粗：tag_name 经 @keyword → Statement 继承 bold；专用捕获
+  -- 子组 @keyword.jsdoc（queries/jsdoc/highlights.scm，priority 110）按主题
+  -- Statement 色重建为非粗，随 tinty 主题切换重放（tinty 重载只清它自己
+  -- 定义的组，但 fg 需重新解析）
+  local jsdoc_tag_hl = function()
+    local fg = vim.api.nvim_get_hl(0, { name = 'Statement' }).fg
+    if fg then
+      vim.api.nvim_set_hl(0, '@keyword.jsdoc', { fg = fg, bold = false, italic = false })
+    end
+  end
+  jsdoc_tag_hl()
+  vim.api.nvim_create_autocmd('FocusGained', { callback = jsdoc_tag_hl })
+
   -- Highlight todo, notes, etc in comments
   vim.pack.add { gh 'folke/todo-comments.nvim' }
-  require('todo-comments').setup { signs = false }
+  -- @tag 形式走第二条 pattern（排前以便 colon 形态也拿到含 @ 的整词 span）：
+  -- \v 下关键词含裸 @ 会炸 regex（pcall 吞错致全部行失效），故 alt 不带 @、
+  -- 由 [@] 前缀组补全——m[2]=@ts-expect-error（span）、m[3]=ts-expect-error
+  -- （查表映射到 canonical 组名）。jsdoc tag_name 词法止于连字符，整词高亮
+  -- 由本插件补齐。
+  require('todo-comments').setup {
+    signs = false,
+    keywords = {
+      TSDIRECTIVE = {
+        color = 'error',
+        alt = { 'ts-expect-error', 'ts-ignore', 'ts-nocheck', 'ts-check' },
+      },
+    },
+    highlight = {
+      -- bg 而非 kickstart 默认 wide：wide 的 finish+1 在关键词行尾时越界，
+      -- 一行报错毁掉整个 buffer 高亮；bg 分支精确 span 同为色块且安全。
+      -- after=''（非 kickstart 的 'fg'）：after/multiline 段用 TodoFg<kw>
+      -- 且无法按关键词豁免，@ts-* 的尾段与续行会被误染红
+      keyword = 'bg',
+      after = '',
+      pattern = { [[.*([@](KEYWORDS))\s*]], [[.*<(KEYWORDS)\s*:]] },
+    },
+  }
+
+  -- @ts-* 不随全局色块风格：在 todo-comments 延迟 _setup 的 colors() 之前
+  -- 显式定义（hi def 不覆盖已存在组），TodoBg 重定义为前景红非粗
+  local tsdir_hl = function()
+    local fg = vim.api.nvim_get_hl(0, { name = 'DiagnosticError' }).fg
+    if fg then
+      vim.api.nvim_set_hl(0, 'TodoBgTSDIRECTIVE', { fg = fg, bold = false, italic = false })
+    end
+  end
+  tsdir_hl()
+  vim.api.nvim_create_autocmd('FocusGained', { callback = tsdir_hl })
 
   -- [[ mini.nvim ]]
   --  A collection of various small independent plugins/modules
@@ -1050,7 +1096,7 @@ do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   -- Ensure basic parsers are installed
-  local parsers = { 'bash', 'c', 'css', 'diff', 'html', 'javascript', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'tsx', 'typescript', 'vim', 'vimdoc', 'vue' }
+  local parsers = { 'bash', 'c', 'css', 'diff', 'html', 'javascript', 'jsdoc', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'tsx', 'typescript', 'vim', 'vimdoc', 'vue' }
   require('nvim-treesitter').install(parsers)
 
   ---@param buf integer
