@@ -6,7 +6,7 @@
 # 协议指令 sysprompt 内嵌于本脚本（自包含，不依赖机器本地 role 文件，换机
 # 即可用）。
 #
-# 命令与按键（banner 只指路 /h，全量帮助由 /h 打印）：
+# 命令与按键（全量帮助由 /h 打印，banner 不枚举）：
 #   /h          帮助（命令与按键全量清单）
 #   /tr <text>  一次性翻译：主要中文→地道英文，否则→地道中文；按普通回复
 #               格式打印
@@ -56,7 +56,12 @@ esac
 # aichat 加 -S（关流式）：流式重组在长回复下曾出现丢字/乱码（"canД"），
 # 关流式让回复一次性写出；NO_COLOR 兜底去 ANSI。
 model=$(NO_COLOR=1 aichat --info </dev/null 2>/dev/null | awk '$1=="model"{print $2; exit}')
-printf '\naskai  model: %s  (/h for help)\n\n' "${CHAT_MODEL:-${model:-aichat default}}"
+m="${CHAT_MODEL:-${model:-aichat default}}"
+m="${m//://}"
+printf '  __    __   _      __    _\n'
+printf ' / /\\  ( (` | |_/  / /\\  | |\n'
+printf '/_/--\\ _)_) |_| \\ /_/--\\ |_|\n'
+printf 'model: %s \n\n' "$m"
 
 help_text='commands:
   /h            this help

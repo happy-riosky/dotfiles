@@ -36,7 +36,7 @@ export AI_LOG PB_LOG
 cat >"$stub/aichat" <<'EOF'
 #!/usr/bin/env bash
 if [ "${1:-}" = --info ]; then
-  printf 'model stub-model\n'
+  printf 'model deepseek:stub-chat\n'
   exit 0
 fi
 for prompt; do :; done
@@ -61,7 +61,7 @@ run() {
 test_roundtrip_copy_transcript() {
   local out
   out="$(run 'hello\n/y\n/l\n/q\nn\n')" || fail 'roundtrip: rc'
-  case "$out" in *'askai  model: stub-model'*) ;; *) fail 'roundtrip: banner model' ;; esac
+  case "$out" in *'model: deepseek/stub-chat'*) ;; *) fail 'roundtrip: banner model' ;; esac
   case "$out" in *$'\033[33mAI: \033[0mstub-reply'*) ;; *) fail 'roundtrip: colored AI reply' ;; esac
   case "$out" in *'(copied)'*) ;; *) fail 'roundtrip: /y copy' ;; esac
   [ "$(cat "$PB_LOG")" = 'stub-reply' ] || fail 'roundtrip: pbcopy content'
@@ -107,10 +107,9 @@ test_help() {
   local out
   : >"$AI_LOG"
   out="$(run '/h\n/q\nn\n')" || fail 'help: rc'
-  case "$out" in *'(/h for help)'*) ;; *) fail 'help: banner pointer' ;; esac
   case "$out" in *'/tr <text>'*) ;; *) fail 'help: /tr line' ;; esac
   case "$out" in *'Up/Down/C-r'*) ;; *) fail 'help: keys section' ;; esac
-  # banner 只指路 /h，不再枚举热键
+  # banner 不枚举热键
   if head -n 4 <<<"$out" | grep -q '/tr translate'; then
     fail 'help: banner must not enumerate hotkeys'
   fi
