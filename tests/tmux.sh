@@ -60,10 +60,48 @@ test_prefix_o_fallback_chain() {
     fail 'prefix+O missing empty-guard: neither binary must open a window'
 }
 
+# prefix+. 换号契约：dense 编号下 stock 裸 move-window 必报 index in use，
+# 被占号必须 park 到 :999 再 -b 插入落位；空缺号才直接 move。占位符必须
+# %1——command-prompt 只替换首个 %%（man 语义），%1 才全替换；模板多处
+# %% 会让后续 move-window 收到字面 %%（实测翻车），故禁用 %%。
+test_prefix_dot_renumber_binding() {
+  local conf="$ROOT/home/.tmux.conf" line
+  grep -q '^bind \. command-prompt' "$conf" || \
+    fail 'prefix+. must stay a command-prompt binding'
+  line="$(grep '^bind \. ' "$conf")"
+  case "$line" in *%%*) \
+    fail 'prefix+. template must not use %% (only first occurrence is substituted)' ;; \
+  esac
+  case "$line" in *%1*%1*) ;; *) \
+    fail 'prefix+. template needs %1 (all-occurrence substitution) at least twice' ;; \
+  esac
+  grep -qF 'grep -q ^%1:' "$conf" || \
+    fail 'prefix+. must probe target-index occupancy before choosing branch'
+  grep -qF 'move-window -t :999; move-window -b -t :%1' "$conf" || \
+    fail 'prefix+. occupied branch must park at :999 then insert with -b'
+}
+
+# prefix+S-Left/S-Right 契约：swap 必须 -d（焦点随窗口走，否则留在原槽
+# 位）；首/末窗口守卫防 swap -1/+1 环绕；#{window_index} 必须 ## 双写——
+# run 绑定参数触发时做格式展开，单写会被外层吞成当前窗口常量。
+test_relative_shift_bindings() {
+  local conf="$ROOT/home/.tmux.conf"
+  grep -q '^bind S-Left run ' "$conf" || fail 'prefix+S-Left shift binding missing'
+  grep -q '^bind S-Right run ' "$conf" || fail 'prefix+S-Right shift binding missing'
+  grep -qF 'tmux swap-window -d -t -1' "$conf" || \
+    fail 'S-Left must swap with -d (focus follows the window)'
+  grep -qF 'tmux swap-window -d -t +1' "$conf" || \
+    fail 'S-Right must swap with -d (focus follows the window)'
+  grep -qF '"##{window_index}"' "$conf" || \
+    fail 'shift bindings must double-escape #{window_index} (##) for inner tmux'
+}
+
 # zen 生命周期契约测试已拆至 tests/tmux-zen.sh（需 tmux 运行时，缺失时跳过）。
 
 test_no_percent_before_hash_expansion
 test_server_path_fix_precedes_tpm
 test_update_environment_keeps_term_vars
 test_prefix_o_fallback_chain
+test_prefix_dot_renumber_binding
+test_relative_shift_bindings
 printf 'tmux integration tests passed\n'
