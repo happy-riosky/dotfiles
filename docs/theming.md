@@ -146,15 +146,7 @@ init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 
   退 base05）。PR/issue 正文明暗由 OSC 11 探测，tmux 内由 gd 发 pane 级
   SET/复位修正。机制与实测详见 `docs/gh.md`。
 - **yazi**：`[flavor] dark/light` 同指生成的 `tinty-{dark,light}`（明暗
-  探测无关化）；`y` 启动前刷新。模板 base16 槽位外有语义强调槽 `c_emph`
-  （浅色取 base05，防 kissa-latte 这类 base07=bright white 的白字白底）。
-  实心色块分两档：黄锚点 base0A 仅限"当前"语义——marker_selected/
-  count_selected（Space/v 选中块与计数徽标）与 indicator.current（当前列光标
-  条），深浅 scheme 皆中亮度（中性实心块在深色 scheme 近白过亮、浅色近黑
-  过暗）；其余实心块（indicator.parent/preview 父/预览列指示条、
-  mode.normal_main——NOR 块与右下 N/M 位置块，status.lua 同源 normal_main）
-  用 base03 中性海拔 + base05 字色，深浅 scheme 自动向中亮度收敛（select/
-  unset 模式块保持绿/粉强调）。
+  探测无关化）；`y` 启动前刷新。
   无热重载：`y` 包装内按 `R` 原地重启（`quit --code=99` 哨兵循环——进程
   无法自行重启，由包装函数重新拉起；重启前重刷生成器、经 `--cwd-file`
   回到最后浏览目录、原显式参数丢弃；正常退出不改 shell cwd；裸 `yazi`

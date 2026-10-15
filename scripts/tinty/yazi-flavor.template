@@ -3,14 +3,17 @@
 #   #232634(crust)→base00  #737994(overlay0)/#838ba7(overlay1)→base04
 #   #949cbb/#a5adce/#b5bfe2→base05  #ffffff→base07  #ea999c(maroon)→base08
 #   #99d1db(sapphire)/#85c1dc(sky)→base0C  #f4b8e4(pink)→base0F
-# 实心色块分两档：base0A 黄锚点仅限"当前"语义——marker_selected/
-# count_selected（Space/v 选中块、计数徽标）与 indicator.current（当前列
-# 光标条），深浅 scheme 皆中亮度（c_emph/base05 中性实心块在深色 scheme 近白
-# 过亮、浅色近黑过暗；黄色深色非中性、与 tmux seg1/lightline 黄锚点一致）；
-# 其余实心块（indicator.parent/preview 父/预览列指示条、mode.normal_main
-# ——NOR 块与右下 N/M 位置块，status.lua 同源于 normal_main）用 base03 中性
-# 海拔 + base05 字色，深浅 scheme 自动向中亮度收敛（select/unset 模式块保持
-# 绿/粉强调）。
+# 色块/高亮语义：
+# - base0A 黄锚点 = "当前"语义：marker_selected/count_selected（选中块、
+#   计数徽标）与 indicator.current（当前列 hover 整行条，yazi #3419 起
+#   hovered 并入）——中性实心块深色 scheme 近白过亮、浅色近黑过暗，
+#   黄深浅皆中亮度，对齐 tmux seg1/lightline 黄锚点
+# - 其余实心块（indicator.parent/preview、mode.normal_main——NOR 块与
+#   右下 N/M 位置块，status.lua 同源）用 base03 海拔 + base05 字色，
+#   深浅 scheme 自动向中亮度收敛；select/unset 模式块保持绿/粉强调
+# - find_keyword = base00 字 + base0C 底 + bold：不用 base0A（会与
+#   indicator.current 琥珀 hover 行同色互吞），实心底块在普通行与
+#   琥珀 hover 行上皆醒目
 # 生成器：scripts/tinty/generate；输出为运行时产物，不入库。
 
 [app]
@@ -19,7 +22,7 @@ overall = { bg = "{{base00}}" }
 [mgr]
 cwd = { fg = "{{base0C}}" }
 
-find_keyword  = { fg = "{{base0A}}", italic = true }
+find_keyword  = { fg = "{{base00}}", bg = "{{base0C}}", bold = true, italic = true }
 find_position = { fg = "{{base0F}}", bg = "reset", italic = true }
 
 marker_copied   = { fg = "{{base0B}}", bg = "{{base0B}}" }
