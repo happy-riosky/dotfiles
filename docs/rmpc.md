@@ -16,7 +16,10 @@ rmpc 是 MPD（Music Player Daemon）的 TUI 客户端；MPD 由 brew services�
 
 ## 日常工作流（新增音乐）
 
-1. 音乐放进 `~/Music` 任意子目录（同名 `.lrc` 与歌曲同目录）
+1. 音乐放进 `~/Music` 任意子目录（同名 `.lrc` 与歌曲同目录）。下载入口：
+    - 网易云 / YouTube / Bilibili：`manual/rmpc/` 的 `nemdl` / `ymdl`
+      （自动落到 `~/Music/net-ease-music/` / `~/Music/stream-rip/`，
+      收尾自动 `rmpc update`，用法见 `manual/rmpc/README.md`）
 2. `.lrc` 补 `[ti:]/[ar:]` 头（下载器不带 tags，从同名 flac 提取）：
 
    ```bash

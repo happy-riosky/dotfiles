@@ -37,4 +37,5 @@ vim
 wget
 xclip
 yazi
+yt-dlp
 zoxide

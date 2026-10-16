@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+# ymdl — YouTube/Bilibili 音频下载器（rmpc 曲库配套，底层 yt-dlp 完成下载）。
+#
+# 曲库布局（零工具痕迹，目录以音乐命名，文件名「艺人 - 歌名」）：
+#
+#     <root>/<来源>/<歌单|频道|UP主>/艺人 - 歌名.<opus|m4a|flac|...>
+#     <root> 默认 ~/Music/stream-rip，可用 -o 或 YMDL_DIR 覆盖
+#     来源   bilibili（bilibili.com/b23.tv）| youtube（youtube.com/youtu.be）
+#           | 其他 yt-dlp 支持站点取域名
+#
+# 工作原理：
+#   - yt-dlp -f bestaudio/best -x：原始最佳音质，不做有损重编码
+#     （YouTube 源多为 opus，Bilibili 源为 m4a/flac）；
+#   - --embed-metadata --embed-thumbnail：内嵌 tags 与封面（rmpc 直接显示）；
+#   - --download-archive 记录于 ~/.local/state/ymdl/（运行时产物，不入库），
+#     重跑同一歌单 URL 即增量同步，只补新增曲目；
+#   - env YMDL_COOKIES_FROM_BROWSER=<browser> 透传 --cookies-from-browser
+#     （会员/登录内容，如 Bilibili 大会员 hi-res）；
+#   - 下载收尾自动 `rmpc update`（--no-update 跳过）。
+#
+# 用法速查见 manual/rmpc/README.md。
+
+set -euo pipefail
+
+PROG="ymdl"
+VERSION="ymdl 1.0"
+DEFAULT_ROOT="${YMDL_DIR:-$HOME/Music/stream-rip}"
+ARCHIVE="$HOME/.local/state/ymdl/archive.txt"
+NO_UPDATE=0
+DRY_RUN=0
+ROOT_OUT="$DEFAULT_ROOT"
+URLS=()
+
+die() { printf '%s: %s\n' "$PROG" "$*" >&2; exit 1; }
+usage() { printf 'usage: %s [-o <dir>] [--dry-run] [--no-update] <url>...\n' "$PROG"; }
+
+while (($#)); do
+  case "$1" in
+    -h|--help) usage; exit 0 ;;
+    --version) printf '%s\n' "$VERSION"; exit 0 ;;
+    -o|--output) (($# >= 2)) || { usage >&2; exit 2; }; ROOT_OUT="$2"; shift 2 ;;
+    --dry-run) DRY_RUN=1; shift ;;
+    --no-update) NO_UPDATE=1; shift ;;
+    --) shift; while (($#)); do URLS+=("$1"); shift; done ;;
+    -*) printf 'usage: %s [-o <dir>] [--dry-run] [--no-update] <url>...\n' "$PROG" >&2; exit 2 ;;
+    *) URLS+=("$1"); shift ;;
+  esac
+done
+
+((${#URLS[@]})) || { usage >&2; exit 2; }
+
+command -v yt-dlp >/dev/null 2>&1 || \
+  die "yt-dlp 不在 PATH（scripts packages full 或 brew install yt-dlp）"
+
+COOKIE_ARGS=()
+[[ -n "${YMDL_COOKIES_FROM_BROWSER:-}" ]] && \
+  COOKIE_ARGS=(--cookies-from-browser "$YMDL_COOKIES_FROM_BROWSER")
+
+# 来源分流：bilibili / youtube / 其余取域名
+source_of() {
+  local url="$1" host
+  case "$url" in
+    *bilibili.com*|*b23.tv*|*biliintl.com*) printf 'bilibili'; return ;;
+    *youtube.com*|*youtu.be*|*youtube-nocookie.com*) printf 'youtube'; return ;;
+  esac
+  host="$(printf '%s\n' "$url" | sed -E 's#^[a-zA-Z]+://([^/?#]+).*#\1#')"
+  printf '%s' "${host#www.}"
+}
+
+# 字段逗号分隔 = 依次取第一个非空值（| 是默认字面量，勿用）
+OUT_TMPL='%(playlist_title,channel,uploader,title)s/%(artist,uploader,channel)s - %(title)s.%(ext)s'
+FAILED=0
+
+if ((!DRY_RUN)); then
+  mkdir -p "$(dirname "$ARCHIVE")"
+fi
+
+# 清理孤立封面：失败下载遗留的同名干音频图片（正常嵌入成功后 yt-dlp 自删）
+clean_orphan_thumbs() {
+  local dir="$1" img stem
+  [[ -d "$dir" ]] || return 0
+  while IFS= read -r img; do
+    stem="${img%.*}"
+    for ext in opus m4a flac mp3 ogg wav; do
+      [[ -e "$stem.$ext" ]] && continue 2
+    done
+    printf '· 清理孤立封面 %s\n' "$img"
+    rm -- "$img"
+    rmdir "${img%/*}" 2>/dev/null || true
+  done < <(find "$dir" -maxdepth 2 -type f \( -name '*.jpg' -o -name '*.png' -o -name '*.webp' \) -print)
+}
+
+for url in "${URLS[@]}"; do
+  [[ -n "$url" ]] || continue
+  src="$(source_of "$url")"
+  printf '· %s → %s/%s/\n' "$url" "$ROOT_OUT" "$src"
+  if ((DRY_RUN)); then
+    yt-dlp --simulate --flat-playlist -f 'bestaudio/best' \
+      -o "$ROOT_OUT/$src/$OUT_TMPL" "$url" || FAILED=1
+  else
+    log="$(mktemp)"
+    if yt-dlp \
+      -f 'bestaudio/best' -x \
+      --embed-metadata --embed-thumbnail \
+      --download-archive "$ARCHIVE" \
+      -o "$ROOT_OUT/$src/$OUT_TMPL" \
+      ${COOKIE_ARGS[@]+"${COOKIE_ARGS[@]}"} \
+      "$url" 2>&1 | tee "$log"; then
+      :
+    else
+      FAILED=1
+      # 已知问题：mcdn PCDN（仅 CN 可达）经海外代理出口 TLS 握手即死
+      if [[ "$src" == bilibili ]] && \
+         grep -Eq 'UNEXPECTED_EOF_WHILE_READING|SSL_ERROR_SYSCALL' "$log"; then
+        printf 'ymdl: 疑似 Bilibili mcdn PCDN 经海外代理不可达。\n' >&2
+        printf '  对策见 manual/rmpc/README.md「已知问题」：稍后重跑 / clash 将 bilivideo.cn 设为 DIRECT / YMDL_COOKIES_FROM_BROWSER 透传会员 cookies。\n' >&2
+      fi
+    fi
+    rm -f "$log"
+    clean_orphan_thumbs "$ROOT_OUT/$src"
+  fi
+done
+
+if ((!NO_UPDATE && !DRY_RUN)) && command -v rmpc >/dev/null 2>&1; then
+  printf '· rmpc update\n'
+  rmpc update || FAILED=1
+fi
+
+((FAILED)) && die "部分下载失败，详见上方日志"
+exit 0

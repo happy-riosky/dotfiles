@@ -195,3 +195,53 @@
 后续：server/Termux 机器各自首启 nvim 时克隆该插件（安装状态按机器隔离）；
       若上游 global.json 的 date 格式变化，再考虑自定义 LuaSnip 片段覆盖。
 ```
+
+```text
+日期：2026-10-14
+环境：darwin
+操作：ymdl 入库（YouTube/Bilibili 音频下载，rmpc 曲库配套）：新建
+      manual/rmpc/ymdl bash wrapper（yt-dlp -f bestaudio/best -x 原始
+      音质不重编码，--embed-metadata/--embed-thumbnail，输出模板逗号
+      交替字段 %(playlist_title,channel,uploader,title)s 等注意：| 是
+      默认字面量不是交替；--trim-filenames 按"整路径"计数且会截断，
+      已弃用；--download-archive ~/.local/state/ymdl/ 需先 mkdir 父
+      目录；失败下载的孤立封面自动清理），来源分流
+      ~/Music/stream-rip/{youtube,bilibili}/，收尾 rmpc update，
+      YMDL_COOKIES_FROM_BROWSER 透传会员 cookies；brew-formulae.txt
+      加 yt-dlp；manual/rmpc/README.md 重构为 nemdl+ymdl 双下载器
+      （含 Bilibili PCDN 海外代理不可达排障）；docs/rmpc.md 日常工作流
+      加下载入口指引。
+结果：部分通过
+证据：YouTube e2e 绿：opus 入库 ~/Music/stream-rip/youtube/Rick
+      Astley/、tags/封面内嵌、archive 增量（重跑 skip）、rmpc listall
+      可见；bash -n + tests/packages.sh + install full --dry-run +
+      doctor 全绿。Bilibili：提取/模板/封面全对，音频流被 mcdn PCDN
+      （仅 CN 可达）+ 本机 clash 日本出口阻断（TLS SSL_ERROR_SYSCALL，
+      curl 直连/代理均复现，upos CDN 可达），排障与对策记 README。
+后续：Bilibili 音频流待网络侧修复后复验（clash 把 bilivideo.cn 改
+      DIRECT 或等 B 站改发可达 CDN）；无 .lrc 抓取（两站无歌词源），
+      歌词仍走 docs/rmpc.md 手动流程。
+```
+```text
+日期：2026-10-15
+环境：darwin
+操作：① ymdl 失败诊断升级：BV14J8F6sEqN 复现 mcdn PCDN 阻断
+      （音频流仅发 xy*.mcdn.bilivideo.cn:8082，元数据/封面正常），
+      wrapper 增加 SSL 特征检测（UNEXPECTED_EOF_WHILE_READING/
+      SSL_ERROR_SYSCALL + bilibili 来源），命中即打印指向 README
+      已知问题的对策提示，孤立封面清理照常。② link 抗 Finder 噪音：
+      用户浏览仓库后 home/ 出现 .DS_Store，source_entries 把
+      ~/.DS_Store 当受管目标触发 check_target_conflicts 中止；
+      lib-dotfiles.sh source_entries 按basename 跳过任意深度的
+      .DS_Store，仓库内现存 7 个已删，tests/link.sh 新增
+      test_ds_store_is_ignored（顶层+嵌套+用户已有 ~/.DS_Store
+      三态断言）。
+结果：通过
+证据：诊断输出（mcdn host + 10×SSL EOF）；ymdl 对 BV14J8F6sEqN
+      打印对策提示；tests/link.sh 含新用例全绿；全套件（link/shell/
+      packages/plugins/termux/tmux/tmux-zen/askai）+ install full
+      --dry-run + doctor + git diff --check 全绿。
+后续：PCDN 阻断本体属网络侧（clash 日本出口 + CN-only PCDN 节点），
+      待用户在 clash 加 bilivideo.cn DIRECT 规则或 B 站改发 upos
+      CDN 后复验；YouTube 路径不受影响。
+```
