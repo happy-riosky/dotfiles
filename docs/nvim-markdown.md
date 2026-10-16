@@ -28,6 +28,11 @@ q                           # 关侧栏回到正文
 | `:RenderMarkdown expand` / `contract` | 增/减光标周围原文显示范围 |
 | `:RenderMarkdown config` | 查看与默认配置的差异（调优起点） |
 
+Checkbox 状态渲染：obsidian.nvim 的 `<cr>` / `<leader>ch` 默认循环
+` ` → `~` → `!` → `>` → `x`（`- [-]` 手输）；`~`/`!`/`>`/`-` 以 ASCII 字符
+渲染着色（蓝/红/橙/暗），配置见 `custom/plugins/render-markdown.lua` 的
+`checkbox.custom`。
+
 ## 二、TOC 侧栏 — aerial.nvim
 
 开关：`<leader>a`（`:AerialToggle`，无 bang = 打开并聚焦）。
