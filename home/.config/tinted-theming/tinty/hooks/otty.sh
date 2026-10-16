@@ -2,7 +2,7 @@
 # tinty hook：渲染 ~/.config/otty/themes/tinty-<scheme-slug>.ottytheme
 # （运行时产物，16 色 base16 标准映射，与 kitty 同源）。Otty 保存配置为
 # 原子写（temp+rename 不跟随软链），受管软链会被顶回（2026-09-16 退管，
-# 见 docs/archive/process.md），故不经 link 管理。`config reload` 不重读
+# 见 docs/archive/progress.md），故不经 link 管理。`config reload` 不重读
 # 同名主题文件的内容、也不对已存在窗口重应用主题（实测）——故 theme/
 # theme-dark 经 otty-cli config set 指到**当前 slug**（键值变化让 reload
 # 后新建窗口/标签即时拿到新配色；旧窗口需重开，app 重启必然正确）。

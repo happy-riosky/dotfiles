@@ -34,7 +34,7 @@
 只读历史，不再更新：
 
 - [archive/MIGRATION_PLAN.md](archive/MIGRATION_PLAN.md)：重构迁移计划
-- [archive/process.md](archive/process.md)：重构收尾记录（含 A–E 待办清单）
+- [archive/progress.md](archive/progress.md)：重构收尾记录（含 A–E 待办清单）
 - [archive/operations.md](archive/operations.md)：已完成的操作记录
 
 ## 第三方

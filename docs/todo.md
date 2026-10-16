@@ -1,6 +1,6 @@
 # Dotfiles 活跃待办
 
-重构收尾的历史记录已归档到 [`archive/process.md`](./archive/process.md)，已完成
+重构收尾的历史记录已归档到 [`archive/progress.md`](./archive/progress.md)，已完成
 的操作记录迁入 [`archive/operations.md`](./archive/operations.md)；本文档只跟踪
 仍未完成的事项与备忘，操作记录（开发日志）见 [`progress.md`](./progress.md)。
 
@@ -20,7 +20,7 @@
 ### Termux
 
 - [ ] 确认 doctor 在 Termux 上依赖 `/bin/bash` 的问题（2026-08-14 记录，见
-      `archive/process.md` 的真实 Termux 验证节）。
+      `archive/progress.md` 的真实 Termux 验证节）。
 
 ### Neovim Diffview 移除
 
@@ -49,6 +49,12 @@
 
 ## 2. 备忘
 
+- opencode 时间戳 TUI 插件已整体 stash（2026-10-16，`wip(opencode):
+  riosky.timestamps TUI plugin`）：侧栏操作时间线 + 输入框旁 user/ai 时间对。
+  恢复：`git stash pop` → `./scripts/link` → `tui.json` plugin 数组重加
+  `["./tui-plugins/timestamps.tsx", {"maxRows": 15}]`（TSX 依赖已装在
+  `~/.config/opencode/node_modules`；教训：远程 spec 每次启动走网络解析会卡
+  启动，只用本地 file spec）。原生全消息时间戳跟踪：opencode#41589。
 - Otty：已退管（2026-09-16）；其保存配置用原子写（temp+rename），rename 不跟随
   软链，会把叶子软链顶回实体文件。若未来需要版本化，改用
   `platforms/darwin/managed/` 黄金文件 + export/restore 模式（参照 macOS

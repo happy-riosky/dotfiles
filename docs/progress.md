@@ -144,6 +144,33 @@
 后续：无。
 ```
 ```text
+日期：2026-10-13
+环境：darwin
+操作：接入 opencode-claude-code-bridge@latest：home/.config/opencode/
+      opencode.json 增顶层 plugin 数组（与 tui.json 的 tinty-theme 数组按
+      官方语义合并，不互覆盖）；AGENTS.md OMO/OpenCode 节与 docs/opencode.md
+      新增「Claude Code bridge 插件」说明（MCP 导入/skill 桥接/TUI 斜杠
+      命令、mcp:false 选项、调试开关、ecc repair 不受影响）。
+结果：通过
+证据：python3 -m json.tool 经 ~/.config/opencode/opencode.json 软链校验
+      通过；./install full --dry-run 与 scripts/doctor 全绿（opencode.json
+      链接在位）；git diff --check 干净。
+后续：重启 OpenCode 后在 TUI 斜杠面板确认 /lark-doc 等 skill 命令可补全
+      （可加 OPENCODE_CLAUDE_CODE_BRIDGE_DEBUG=1 看 injected wrappers）。
+``````text
+日期：2026-10-13
+环境：darwin
+操作：opencode.json 的 permission.external_directory 增
+      "~/.claude/skills/**": "allow"——skill 兼容根 ~/.claude/skills 未
+      放行，agent 读该根加载的 skill 会命中 "*": "ask" 触发授权弹窗；
+      docs/opencode.md bridge 节补权限说明。
+结果：通过
+证据：python3 -m json.tool 校验通过；install full --dry-run 与
+      scripts/doctor 绿；git diff --check 干净。
+后续：重启 OpenCode 生效。
+```
+
+```text
 日期：2026-10-14
 环境：darwin
 操作：tests/chat-popup.sh 补两条变异实验证实的覆盖缺口：(1) /q 尾部
@@ -173,29 +200,6 @@
 后续：运行中 tmux server 需 prefix+: source-file ~/.tmux.conf 或重启
       后新路径生效。
 ```
-
-```text
-日期：2026-10-16
-环境：darwin
-操作：Neovim 片段补全启用：uncomment init.lua LuaSnip 节预留的
-      friendly-snippets 两行（vim.pack.add + from_vscode.lazy_load）。
-      其 global.json 跨 filetype 提供 date（YYYY-MM-DD）/datetime/time 等
-      日期片段（$CURRENT_* 变量展开时取值），blink 菜单 <C-y> 展开即插入
-      今日日期；经评估未新增自定义片段模块（内置 date 前缀已满足需求）。
-      docs/neovim.md 增「片段（friendly-snippets）」一节。
-结果：通过
-证据：nvim --headless 首启克隆 friendly-snippets（首次尝试 transient
-      git config 锁失败且目录自清，重试成功）；nvim-pack-lock.json 新增
-      friendly-snippets 条目（rev b4d01b0，git diff 仅此一条）；headless
-      校验 setf markdown 后 get_snippets('all') 含 trig=date，
-      snip_expand 输出与 os.date('%Y-%m-%d') 同值（2026-10-16）、markdown
-      片段 76 个；scripts/doctor 通过；git diff --check 干净；
-      tests/{link,shell,packages,plugins,termux}.sh 与 tmux/tmux-zen/
-      askai 测试全绿。
-后续：server/Termux 机器各自首启 nvim 时克隆该插件（安装状态按机器隔离）；
-      若上游 global.json 的 date 格式变化，再考虑自定义 LuaSnip 片段覆盖。
-```
-
 ```text
 日期：2026-10-14
 环境：darwin
@@ -244,6 +248,153 @@
 后续：PCDN 阻断本体属网络侧（clash 日本出口 + CN-only PCDN 节点），
       待用户在 clash 加 bilivideo.cn DIRECT 规则或 B 站改发 upos
       CDN 后复验；YouTube 路径不受影响。
+```
+
+```text
+日期：2026-10-15
+环境：darwin
+操作：tmux 窗口换号/位移键位。① prefix+. 重定义：目标号被占不报错、不
+      交换——先 park 到 :999（renumber-windows 收敛到末尾）再
+      move-window -b 插到目标窗口之前，精确落位 n、其余窗口顺位补号
+      （-b 是"紧邻目标之前"语义，左侧邻位是 no-op、左侧远处只贴前一格，
+      park 保证恒从右侧插入；3.5a 隔离 server 逐条实测）；号空缺（超界）
+      则直接 move-window 收敛到末尾；焦点随窗口走。② prefix+S-Left/
+      S-Right：当前窗口左/右移一位，swap -d 让焦点随窗口走（无 -d 焦点
+      留在原槽位，实测确认），首/末窗口守卫防 -1/+1 环绕（实测会环绕）；
+      run 绑定参数触发时做格式展开，#{window_index} 必须 ## 双写留给
+      内层 tmux 逐窗口展开。③ tests/tmux.sh 加两条静态契约
+      （test_prefix_dot_renumber_binding / test_relative_shift_bindings）；
+      新增 tests/tmux-window-move.sh 运行时测试（zen 模式：隔离 server，
+      从 conf 提取真实绑定串驱动，断言占位落位/顺位补号/超界收敛/自指
+      稳定/焦点跟随/边界不环绕）；AGENTS.md 验证清单加该测试。
+结果：通过
+证据：bash tests/tmux-window-move.sh / tmux.sh / tmux-zen.sh 绿；全套件
+      （link/shell/packages/plugins/termux/tmux/tmux-zen/tmux-window-move/
+      askai）+ install full --dry-run + doctor + git diff --check 全绿；
+      活跃 server source-file 重载后 list-keys 确认三键就位。
+后续：无
+```
+
+```text
+日期：2026-10-15
+环境：darwin
+操作：修复 prefix+. 换号键 "can't find window: %%"。根因：command-prompt
+      模板占位符语义——%% 只替换首个出现、%1 才全替换（man 原文），原
+      模板三处 %% 仅 grep 里那处拿到数字，两处 move-window 收到字面 %%。
+      测试漏网原因：提取路径自行替换占位符，绕过了 command-prompt 替换
+      层。修复：① 模板三处 %% → %1（conf 注释记录该语义）；②
+      tests/tmux.sh 静态契约加禁用 %% / 至少两处 %1 守卫；③
+      tests/tmux-window-move.sh 新增 pty 端到端（script(1) 附着真实客户端
+      按键驱动 prefix+. → 提示符 → 提交，断言拼接落位）：pty 驱动三个
+      实测陷阱——先到的字节被 canonical 行规程吃 \r、与 prefix 同批的
+      正文被提示符接管输入时丢弃（须分批 0.3s 间隔）、按键丢失 attach
+      不退（后台 + 10s 看门狗）；script 语法 BSD/util-linux 探测，缺失
+      跳过。用旧 %% 模板回归验证 e2e 确实失败（布局不变）。
+结果：通过
+证据：bash tests/tmux-window-move.sh（含 e2e）/ tmux.sh 绿；旧 %% 模板
+      下 e2e 场景布局不变（bug 复现）；全套件 + git diff --check 绿；
+      活跃 server 重载后 list-keys 确认模板已是 %1。
+后续：无
+```
+
+```text
+日期：2026-10-15
+环境：darwin
+操作：按用户要求移除 tests/tmux-window-move.sh（提取式运行时断言与 pty
+      端到端覆盖随之放弃——command-prompt %1 替换链路失去 e2e 守卫，静态
+      契约（tests/tmux.sh 禁 %%、要求 %1）仍在）。AGENTS.md 验证清单与
+      .tmux.conf 注释中的引用同步回退。
+结果：通过
+证据：bash tests/tmux.sh / tmux-zen.sh 绿；AGENTS.md、.tmux.conf 无残留
+      tmux-window-move 引用（progress.md 历史记录除外）。
+ 后续：无
+```
+
+```text
+日期：2026-10-15
+环境：darwin
+操作：① treesitter 安装清单加 jsdoc parser；用户查询扩展注入——
+      queries/ecma/injections.scm（// 与 /* */ 注释含 @tag 时注入
+      jsdoc）、queries/html_tags/injections.scm（<!-- --> 同理，vue/
+      html 经 html_tags 继承一并覆盖）。
+      ② queries/jsdoc/highlights.scm 整体替换 runtime 查询（无 extends
+      即接管）：tag_name → @keyword.jsdoc，init.lua 按主题 Statement
+      色定义为非粗（去除 Keyword→Statement 的 bold 泄漏），FocusGained
+      随 tinty 换主题重放。
+      ③ todo-comments：TSDIRECTIVE（alt=ts-expect-error 等，canonical
+      名做组名）整词补齐 @ts-* 高亮——\v 正则关键词含裸 @ 会炸且
+      pcall 吞错、wide 风格 finish+1 行尾越界毁全 buffer，故 alt 不带
+      @ + 模式自带 [@] 前缀组 + keyword=bg 精确 span；TodoBgTSDIRECTIVE
+      在延迟 colors() 前重定义为前景红，豁免大写关键词的色块风格。
+结果：通过
+证据：headless nvim 实测 6 种注释形态（/** */、//、/* */、<!-- -->、
+      @param、@ts-expect-error）capture=keyword.jsdoc 无旧捕获泄漏；
+      todo extmark 精确 span（TODO 青绿底块加粗、@ts-* 前景红非粗、
+      行尾关键词不越界）；install full --dry-run + doctor 通过。
+后续：queries/jsdoc/highlights.scm 为 runtime 查询的 fork，插件升级时
+      需人工比对同步；本记录待与 rmpc/.DS_Store 流的 progress.md 改动
+      一并提交。
+```
+
+```text
+日期：2026-10-15
+环境：darwin
+操作：opencode TUI 时间戳显示落地：自研本地插件
+      home/.config/opencode/tui-plugins/timestamps.tsx（id
+      riosky.timestamps）注册 sidebar_content（操作时间线，新到旧，
+      user/thinking/response/tool 纯文字标签，主题色区分，默认折叠，
+      maxRows 15）与 session_prompt_right（dim "user · ai" 时间对）两个
+      slot；时钟当天 HH:MM:SS、跨天 MM-DD HH:MM；message.updated /
+      message.part.updated 事件 + 5s 自愈轮询驱动重渲染。
+      先用第三方 spec（github:gmammolo/opencode-timestamps、
+      @aii4all/opencode-show-timestamps）验证可行性后弃用：@latest/
+      github: spec 每次启动走 npm/git 网络解析，慢路由卡启动（用户实测
+      launch 挂起）；github: 能装不能载（加载 pass 解析不出入口）；
+      aii4all 的 pkg/tui 子路径 spec 是非法包名，安装静默失败。已清
+      ~/.cache/opencode/packages 对应目录与 plugin-meta.json 残留条目。
+      TSX 运行时依赖一次性装进 ~/.config/opencode/node_modules
+      （solid-js/@opentui/core/@opentui/solid，运行时产物不入库）。
+      AGENTS.md OMO 节、docs/opencode.md「时间戳显示插件」同步改写
+      （含远程 spec 教训）。插件加载确认后修 prompt 对配色：opentui
+      <text> 无 dim prop（静默忽略落回默认白），改用
+      api.theme.current.textMuted（与输入框 footer provider 标签同色，
+      参照 v1.18.26 prompt/index.tsx fadeColor(textMuted, 1) 的稳态）。
+结果：通过
+证据：python3 -m json.tool 校验 tui.json 通过；./install full
+      --dry-run 与 scripts/doctor 全绿（timestamps.tsx 叶子链接由
+      link 建立）；npm install 102 包成功；plugin-meta.json 残留
+      aii4all 条目已 prune。重启后 plugin-meta 出现 riosky.timestamps
+      条目、侧栏 Timestamps 区块与 prompt 时间对可见。
+后续：次日正式启用前按用户要求 git stash 整体存档（wip(opencode):
+      riosky.timestamps TUI plugin）：tui.json 撤下 spec、HOME 侧叶子链接
+      已摘、plugin-meta 再 prune riosky.timestamps 条目；node_modules
+      依赖保留在 ~/.config/opencode。恢复 = stash pop + scripts.link +
+      tui.json plugin 数组重加 ["./tui-plugins/timestamps.tsx",
+      {"maxRows": 15}]。AGENTS.md 精简改版后不再记应用细节；应用文档按
+      用户要求不写（仅 docs/todo.md 备忘几行）；opencode 原生支持全消息
+      时间戳（issue #41589）后可考虑退役。
+```
+
+```text
+日期：2026-10-16
+环境：darwin
+操作：Neovim 片段补全启用：uncomment init.lua LuaSnip 节预留的
+      friendly-snippets 两行（vim.pack.add + from_vscode.lazy_load）。
+      其 global.json 跨 filetype 提供 date（YYYY-MM-DD）/datetime/time 等
+      日期片段（$CURRENT_* 变量展开时取值），blink 菜单 <C-y> 展开即插入
+      今日日期；经评估未新增自定义片段模块（内置 date 前缀已满足需求）。
+      docs/neovim.md 增「片段（friendly-snippets）」一节。
+结果：通过
+证据：nvim --headless 首启克隆 friendly-snippets（首次尝试 transient
+      git config 锁失败且目录自清，重试成功）；nvim-pack-lock.json 新增
+      friendly-snippets 条目（rev b4d01b0，git diff 仅此一条）；headless
+      校验 setf markdown 后 get_snippets('all') 含 trig=date，
+      snip_expand 输出与 os.date('%Y-%m-%d') 同值（2026-10-16）、markdown
+      片段 76 个；scripts/doctor 通过；git diff --check 干净；
+      tests/{link,shell,packages,plugins,termux}.sh 与 tmux/tmux-zen/
+      askai 测试全绿。
+后续：server/Termux 机器各自首启 nvim 时克隆该插件（安装状态按机器隔离）；
+      若上游 global.json 的 date 格式变化，再考虑自定义 LuaSnip 片段覆盖。
 ```
 
 ```text

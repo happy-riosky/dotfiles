@@ -68,7 +68,7 @@ init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 
   会被主题文件的显式 hex 覆盖）。
 - **otty**：无上游 tinty 模板，且 Otty 保存配置为原子写（temp+rename
   不跟随软链），受管软链会被顶回（2026-09-16 退管，见
-  `docs/archive/process.md`），故不经 link 管理——`hooks/otty.sh` 把
+  `docs/archive/progress.md`），故不经 link 管理——`hooks/otty.sh` 把
   当前 scheme 渲染为 `~/.config/otty/themes/tinty-<scheme>.ottytheme`
   （16 色 base16 标准映射，与 kitty 同源；base00 加权亮度判
   `[meta] mode`；旧 scheme 文件自动清理）。`config reload` **不重读
