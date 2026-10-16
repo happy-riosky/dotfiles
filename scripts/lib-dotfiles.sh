@@ -69,6 +69,8 @@ source_entries() {
   while IFS= read -r source_path; do
     relative="${source_path#"$source_root"/}"
     [[ "$relative" == .gitkeep ]] && continue
+    # .DS_Store 是 Finder 浏览仓库时随时再生的元数据，任何深度都跳过
+    [[ "${relative##*/}" == .DS_Store ]] && continue
     [[ "$relative" == .config/dotfiles/* ]] && continue
     [[ "$relative" == .config/karabiner/* ]] && continue
     printf '%s\t%s\n' "$relative" "$source_path"

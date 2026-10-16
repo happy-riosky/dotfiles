@@ -64,6 +64,22 @@ test_existing_target_conflict() {
   [[ "$(< "$home/.gitconfig")" == local ]] || fail 'link changed existing target'
 }
 
+test_ds_store_is_ignored() {
+  local fixture="$TMP_ROOT/dsstore-repo" home="$TMP_ROOT/dsstore-home"
+  make_fixture "$fixture"
+  mkdir -p "$home"
+  printf 'finder\n' > "$fixture/home/.DS_Store"
+  printf 'finder\n' > "$fixture/home/.tmux/.DS_Store"
+  printf 'mine\n' > "$home/.DS_Store"
+
+  HOME="$home" DOTFILES_ROOT="$fixture" DOTFILES_PLATFORM=darwin \
+    "$ROOT/scripts/link" || fail 'link aborted on Finder .DS_Store noise'
+  [[ ! -L "$home/.DS_Store" ]] || fail 'link created a .DS_Store link'
+  [[ ! -e "$home/.tmux/.DS_Store" ]] || fail 'link created nested .DS_Store'
+  [[ "$(< "$home/.DS_Store")" == mine ]] || fail 'link touched user .DS_Store'
+  assert_link "$home/.gitconfig" "$fixture/home/.gitconfig"
+}
+
 test_legacy_shell_links_are_removed() {
   local fixture="$TMP_ROOT/legacy-repo" home="$TMP_ROOT/legacy-home"
   make_fixture "$fixture"
@@ -178,6 +194,7 @@ test_darwin_spaced_path_link() {
 
 test_link_lifecycle
 test_existing_target_conflict
+test_ds_store_is_ignored
 test_legacy_shell_links_are_removed
 test_unmanaged_legacy_link_is_preserved
 test_wrong_symlink_conflict
