@@ -45,6 +45,8 @@ require('neo-tree').setup {
         ['<leader>e'] = 'close_window',
         -- 释放 <space>，让全局 <leader> 快捷键在树内可用
         ['<space>'] = 'none',
+        -- Z 递归展开光标节点（z 收起全部）
+        ['Z'] = 'expand_all_subnodes',
       },
     },
   },
