@@ -167,6 +167,15 @@ Neovim 对应物。
 `<leader>f` 移到了 `<leader>cf`（which-key 的 `[C]ode` 组），把 `<leader>f`
 让给 Treesitter 选择。
 
+## 片段（friendly-snippets）
+
+init.lua 的 LuaSnip 节已启用 [friendly-snippets](https://github.com/rafamadriz/friendly-snippets)
+（VSCode JSON 格式的语言/框架样板），经 `luasnip.loaders.from_vscode` 按 filetype
+懒加载；blink.cmp 的 snippets 源（`preset = 'luasnip'`）把片段并入补全菜单，
+`<C-y>` 接受即展开，`<Tab>`/`<S-Tab>` 跳占位符。跨 filetype 的 `global.json`
+提供日期时间片段：`date`（YYYY-MM-DD）、`datetime`、`dateDMY`/`dateMDY`、
+`time`/`timeHMS`（`$CURRENT_*` 变量，展开时取值，本地时区）。
+
 ## 维护
 
 编辑 `~/dotfiles/home/.config/nvim/init.lua`（或其链接的 HOME 路径）。Neovim

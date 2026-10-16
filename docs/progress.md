@@ -173,3 +173,25 @@
 后续：运行中 tmux server 需 prefix+: source-file ~/.tmux.conf 或重启
       后新路径生效。
 ```
+
+```text
+日期：2026-10-16
+环境：darwin
+操作：Neovim 片段补全启用：uncomment init.lua LuaSnip 节预留的
+      friendly-snippets 两行（vim.pack.add + from_vscode.lazy_load）。
+      其 global.json 跨 filetype 提供 date（YYYY-MM-DD）/datetime/time 等
+      日期片段（$CURRENT_* 变量展开时取值），blink 菜单 <C-y> 展开即插入
+      今日日期；经评估未新增自定义片段模块（内置 date 前缀已满足需求）。
+      docs/neovim.md 增「片段（friendly-snippets）」一节。
+结果：通过
+证据：nvim --headless 首启克隆 friendly-snippets（首次尝试 transient
+      git config 锁失败且目录自清，重试成功）；nvim-pack-lock.json 新增
+      friendly-snippets 条目（rev b4d01b0，git diff 仅此一条）；headless
+      校验 setf markdown 后 get_snippets('all') 含 trig=date，
+      snip_expand 输出与 os.date('%Y-%m-%d') 同值（2026-10-16）、markdown
+      片段 76 个；scripts/doctor 通过；git diff --check 干净；
+      tests/{link,shell,packages,plugins,termux}.sh 与 tmux/tmux-zen/
+      askai 测试全绿。
+后续：server/Termux 机器各自首启 nvim 时克隆该插件（安装状态按机器隔离）；
+      若上游 global.json 的 date 格式变化，再考虑自定义 LuaSnip 片段覆盖。
+```
