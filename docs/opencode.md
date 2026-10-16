@@ -141,6 +141,34 @@ rg -i anthropic ~/.opencode/opencode.json
 }
 ```
 
+## Claude Code bridge 插件
+
+npm 插件 [`opencode-claude-code-bridge@latest`](https://github.com/EmilioEsposito/opencode-claude-code-bridge)
+声明于 `~/.config/opencode/opencode.json` 顶层 `plugin` 数组，OpenCode 启动时
+自动安装、每次重启拉最新版；与 `tui.json` 的 `plugin` 数组按官方语义合并，
+不互覆盖。声明在 dotfiles 管理的文件里，`ecc repair` 不会动它。
+
+作用（每次 OpenCode 启动时重读 Claude 侧配置）：
+
+- 导入 Claude Code MCP：`~/.claude.json` 的 `mcpServers`、项目 `.mcp.json`
+  （尊重 `enabledMcpjsonServers` 白名单）、Claude 插件捆绑 MCP。同名冲突时
+  `opencode.json` 显式条目胜出；`{ "mcp": false }` 选项可整体关闭 MCP 导入
+  （skill 桥接保留）。
+- Claude 插件捆绑 skills symlink 到 `~/.config/opencode/skills/<name>`；
+  skill 文件内容编辑即时可见，结构变更需重启。
+- TUI `/skill` 斜杠命令：为所有发现根（`~/.config/opencode/skills`、
+  `~/.claude/skills`、`~/.agents/skills`）注入 `source: "command"` shim，
+  `/lark-doc` 等可在斜杠面板补全（Desktop 客户端原生渲染，自动跳过；用户
+  自有 command 与内置命令永不被覆盖；纯 config hook 注入，不落盘）。
+
+尚不支持（v1）：插件捆绑 agents、hooks。调试：
+`OPENCODE_CLAUDE_CODE_BRIDGE_DEBUG=1` 启动查看发现与注入日志。
+
+权限注意：skill 三个发现根都需在 `opencode.json` 的
+`permission.external_directory` 显式 allow（`~/.agents/skills/**`、
+`~/.claude/skills/**`、`~/.opencode/skills/**`），否则从该根加载的 skill
+被 agent 读取时会命中 `"*": "ask"` 触发授权弹窗。
+
 ## 验证与排查
 
 OpenCode 启动时加载配置，不会热更新。修改后完全退出，重新启动并新建会话。

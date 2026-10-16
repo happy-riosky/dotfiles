@@ -1,6 +1,9 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": false,
+  "plugin": [
+    "opencode-claude-code-bridge@latest"
+  ],
   "permission": {
     "external_directory": {
       "*": "ask",
@@ -10,6 +13,7 @@
       "~/.cache/opencode/tmp/**": "allow",
       "~/.agents/personal-harness/**": "allow",
       "~/.agents/skills/**": "allow",
+      "~/.claude/skills/**": "allow",
       "~/.opencode/skills/**": "allow",
       "~/Documents/Obsidian/sisyphus/llm-backup/": "allow"
     }
