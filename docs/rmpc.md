@@ -9,7 +9,7 @@ rmpc 是 MPD（Music Player Daemon）的 TUI 客户端；MPD 由 brew services�
 | --- | --- | --- |
 | `platforms/darwin/home/.mpdconf` → `~/.mpdconf` | MPD 配置：music 目录 `~/Music`、`osx` 输出（插件名是 `osx` 不是 `coreaudio`，且无硬件 mixer，故 `mixer_type "software"` 使 rmpc 音量滑块实际生效，100% = 不衰减）、运行时数据 `~/.local/state/mpd/` | dotfiles |
 | `platforms/darwin/home/.config/rmpc/config.ron` → `~/.config/rmpc/config.ron` | 仅设 `lyrics_dir: Some("~/Music")`（rmpc 支持 `~` 展开，省略字段用默认值） | dotfiles |
-| `platforms/darwin/home/.config/rmpc/config-popup.ron` → `~/.config/rmpc/config-popup.ron` | popup 专用（C-f 经 `rmpc -c` 加载）：Queue 去 AlbumArt、左列整列 Lyrics、tabs 仅 Queue/Directories/Search | dotfiles |
+| `platforms/darwin/home/.config/rmpc/config-popup.ron` → `~/.config/rmpc/config-popup.ron` | popup 专用（C-f 经 `rmpc -c` 加载）：Queue 去 AlbumArt/Lyrics 满宽、tabs 仅 Queue/Directories/Search | dotfiles |
 | `~/.local/state/mpd/` | database/state/sticker/playlists，运行时产物 | 本机 |
 | `~/Music/` | 音乐库根（即 MPD music 目录），任意子目录均会被扫描；同名 `.lrc` 放在歌曲旁 | 本机 |
 | `package-lists/brew-formulae.txt` | `mpd`、`rmpc` 两行 | dotfiles |
