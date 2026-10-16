@@ -137,6 +137,9 @@ init`（每个交互式 zsh 启动）恢复。定居某个主题后，再更新 
   切换后陈旧深浅错配）；不符按 `tinty current variant` 回退
   `frappe.yml`(dark)/`latte-theme.yml`(light)，无 tinty 时统一
   `frappe.yml`（对齐 `:LazyGit` 兜底）；不经 `lg` 的裸 lazygit 用内建主题。
+  tmux `prefix+C-l` 弹窗走简化路径：仅按存在性叠加 `tinty.yml`（lazygit
+  对缺失文件硬报错），不刷新不校验标记——theme 切换后维持旧 scheme，
+  直到下次 `lg()`/`gd()` 启动刷新（env 经 `new-session -e` 注入会话）。
   macOS 经 `platform/darwin.sh` 的 `CONFIG_DIR` 统一到 `~/.config/lazygit`
   （App Support 下无重复副本）。
 - **gh-dash**：`gd`（受管启动器）启动前刷新 `~/.config/gh-dash/tinty.yml`
