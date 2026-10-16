@@ -14,7 +14,8 @@
 
 可选插件示例保持禁用；自定义加载器（`init.lua` 中的
 `require 'custom.plugins'`）已启用，加载每个 `lua/custom/plugins/*.lua`
-（aerial、flash、lazygit、neo-tree、oil、project、render-markdown、toggleterm；
+（aerial、flash、lazygit、neo-tree、obsidian、oil、project、render-markdown、
+toggleterm；
 `<leader>tt` 经 toggleterm.nvim 开关浮动终端，与 `<leader>gg` 的 lazygit 浮窗
 相互独立）。上游 Git 检出、GitHub templates/workflows、生成的 `doc/tags` 与
 上游 `.gitignore` 不受管。后者忽略 lockfile，而个人配置中保留它是有用的。
@@ -69,6 +70,7 @@ neo-tree 是文件浏览器，配置在 `lua/custom/plugins/neo-tree.lua`。`<le
 - `/` 边输入边模糊过滤树，同时保留匹配项的目录结构；`<C-n>`/`<C-p>` 在结果间
   移动，`<CR>` 打开，`<C-x>` 清除过滤，`H` 切换隐藏/被过滤项。
 - `f` 提交时过滤并保持树的过滤状态；`D` 仅模糊查找目录。
+- `Z` 递归展开光标下目录的全部子目录；`z` 收起整棵树，`C` 逐级收起。
 
 点文件与 gitignore 的文件默认显示（`filtered_items`）。目录、文件与 Git 图标
 来自 Nerd Font：mini.icons（由 `vim.g.have_nerd_font` 启用）为 neo-tree 与
@@ -98,6 +100,24 @@ Telescope mock 了 `nvim-web-devicons`。
   `w` 改 cwd、`d` 删除历史条目、`n` 重命名（insert 模式对应 `<C-*>`）。
 - 项目历史存于 `~/.local/share/nvim/project_nvim/`（运行时数据，不入库）。
 - `:checkhealth project` 查看检测方法与配置。
+
+## Obsidian 集成（obsidian.nvim）
+
+[obsidian.nvim](https://github.com/epwalsh/obsidian.nvim) 在 Neovim 内管理
+Obsidian vault，配置在 `lua/custom/plugins/obsidian.lua`。vault 列表硬编码在
+配置中并按本机存在性过滤（`vim.uv.fs_stat`）：无 vault 的机器（server/Termux）
+整模块跳过；目前注册 agentic-wiki、Life、Computer、sisyphus。
+
+- 打开 vault 内 markdown buffer 自动按 `.obsidian` 根切换 workspace。
+- 全局入口 `<leader>o` 前缀：`oo` 快速切换笔记（telescope）、`os` 全文搜索、
+  `on` 新笔记、`od` 今日日记、`ob` 反向链接、`ow` 切换 vault、`oi` 剪贴板
+  贴图（需 `brew install pngpaste`）。
+- vault buffer 内上游默认映射：`gf` 跟随链接、`<cr>` 智能动作（跟链/切
+  checkbox）、`<leader>ch` 切 checkbox；其余命令见 `:Obsidian*` 前缀。
+- picker 走 telescope；渲染交由 render-markdown.nvim（`ui.enable = false`
+  避免双重 extmark）。wiki 链接/标签补全上游仅支持 nvim-cmp，本配置用
+  blink.cmp，补全不可用。
+- 前置：ripgrep（搜索/快速切换）。
 
 ## LazyGit 集成
 

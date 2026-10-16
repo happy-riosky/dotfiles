@@ -439,6 +439,7 @@ do
       { '<leader>t', group = '[T]oggle' },
       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
       { '<leader>g', group = '[G]it diff/history' },
+      { '<leader>o', group = '[O]bsidian' },
       { '<leader>x', group = 'Diagnostics' },
       { 'gr', group = 'LSP Actions', mode = { 'n' } },
     },
