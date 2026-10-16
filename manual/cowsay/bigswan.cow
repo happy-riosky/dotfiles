@@ -1,0 +1,15 @@
+##
+## Big swan — left-facing
+## Source: Joan Stark — https://asciiart.website/art/273
+##
+$the_cow = <<"EOC";
+    $thoughts
+     $thoughts   ___
+      $thoughts /,_ \\    _,
+        |/ )/   / |
+          //  _/  |
+         / ( /   _)
+        /   `   _/)
+        \\  ~=-   /,
+     ~^~^~^~^~^~^~^~^~^~
+EOC

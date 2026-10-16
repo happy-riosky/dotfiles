@@ -127,4 +127,15 @@ command -v tinty >/dev/null 2>&1 && command -v fzf >/dev/null 2>&1 && \
 # mpd.conf 的 auto_update 不生效，rmpc update 走 MPD update 命令）
 command -v rmpc >/dev/null 2>&1 && \
 	alias mpu='rmpc update'
+# swansay/swanthink/swanhonk：天鹅 cowfile（manual/cowsay/{swan,swanhonk}.cow，
+# manual/ 不参与 link/unlink/doctor）经 -f 绝对路径直接调用——不装进 cowsay
+# 默认 cow 目录（macOS brew 的 /opt/homebrew/share/cowsay/cows/ 是 Cellar 符号
+# 链接，拷入的文件随 upgrade/reinstall 丢失），也无需 COWPATH。$DOTFILES_ROOT
+# 由 load.{zsh,bash} 导出；别名体单引号包裹，调用时才展开。
+command -v cowsay >/dev/null 2>&1 && \
+	alias swansay='cowsay -f "$DOTFILES_ROOT/manual/cowsay/swan.cow"'
+command -v cowthink >/dev/null 2>&1 && \
+	alias swanthink='cowthink -f "$DOTFILES_ROOT/manual/cowsay/swan.cow"'
+command -v cowsay >/dev/null 2>&1 && \
+	alias swanhonk='cowsay -f "$DOTFILES_ROOT/manual/cowsay/swanhonk.cow"'
 DOTFILES_LOAD_TRACE="${DOTFILES_LOAD_TRACE}:aliases"

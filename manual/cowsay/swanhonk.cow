@@ -1,0 +1,11 @@
+##
+## Mini swan honking — left-facing, beak agape
+## Variant of swan.cow: closed beak `_` opened to `>o`
+##
+$the_cow = <<"EOC";
+    $thoughts
+     $thoughts
+      $thoughts >o)
+           /_///
+          (____>
+EOC

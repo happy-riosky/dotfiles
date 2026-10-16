@@ -245,3 +245,35 @@
       待用户在 clash 加 bilivideo.cn DIRECT 规则或 B 站改发 upos
       CDN 后复验；YouTube 路径不受影响。
 ```
+
+```text
+日期：2026-10-16
+环境：darwin
+操作：swansay/swanthink 入库：aliases.sh 新增两个 command -v 守卫别名，
+      经 -f 直接指向 $DOTFILES_ROOT/manual/cowsay/swan.cow（manual/ 不
+      参与 link/unlink/doctor），不拷贝、不设 COWPATH；manual/cowsay/
+      README.md 重写——移除 ~/.cows + COWPATH 方案，改为别名即用，并记录
+      为何不装进 cowsay 默认 cow 目录（/opt/homebrew/share/cowsay/cows/
+      是 Cellar 符号链接，拷入文件随 brew upgrade/reinstall 丢失）。
+结果：通过
+证据：cowsay/cowthink -f manual/cowsay/swan.cow 直渲正常；zsh/bash 经
+      load.{zsh,bash} source 后 swansay 输出天鹅气泡；zsh -n aliases.sh；
+      git diff --check 干净；tests/shell.sh（含 scripts/shell 主机路径
+      grep）全绿。
+后续：无。
+```
+
+```text
+日期：2026-10-16
+环境：darwin
+操作：swanhonk 入库：新增 manual/cowsay/swanhonk.cow（swan.cow 自制变体，
+      闭合喙 _ 张开为 <<，朝气泡 honk 姿态，仍纯 / 线条零转义）；
+      aliases.sh 增 swanhonk 别名（-f 直指仓库文件，守卫/注释同步三个
+      别名）；manual/cowsay/README.md 改为双 cowfile 文档（新增变体说明、
+      swanhonk 用法与预览，修正 swansay 预览缩进）。
+结果：通过
+证据：cowsay -f manual/cowsay/swanhonk.cow "HONK!" 渲染 <<o) 喙形正常，
+      输出与 README 预览一致（三个别名逐一比对）；zsh -n aliases.sh；
+      git diff --check 干净；tests/shell.sh 全绿。
+后续：无。
+```

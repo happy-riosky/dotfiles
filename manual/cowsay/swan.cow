@@ -1,0 +1,10 @@
+##
+## Mini swan — left-facing
+##
+$the_cow = <<"EOC";
+    $thoughts
+     $thoughts
+      $thoughts _o)
+         /_///
+        (____>
+EOC
